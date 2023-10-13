@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.Edgerunner.Buffers", "Org.Edgerunner.Buffers\Org.Edgerunner.Buffers.csproj", "{476B63E8-2F28-4948-BC83-1333ED240E82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C277A062-4A60-4936-9C5E-46C468DA12CA}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{476B63E8-2F28-4948-BC83-1333ED240E82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{476B63E8-2F28-4948-BC83-1333ED240E82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{476B63E8-2F28-4948-BC83-1333ED240E82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{476B63E8-2F28-4948-BC83-1333ED240E82}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B593C9F6-DE44-4A7A-BF46-3624DB5D5199}
+	EndGlobalSection
+EndGlobal
