@@ -30,7 +30,7 @@ namespace Org.Edgerunner.Buffers
    using System;
 
    /// <summary>
-   ///    Represents the current character position and line number within a LineBuffer.
+   ///    Represents the current column and line number within a LineBuffer.
    /// </summary>
    [Serializable]
    public struct BufferPoint
@@ -45,24 +45,24 @@ namespace Org.Edgerunner.Buffers
       ///       Integer specifying the line number.
       ///    </para>
       /// </param>
-      /// <param name="position" type="int">
+      /// <param name="column" type="int">
       ///    <para>
-      ///       Integer specifying the character position.
+      ///       Integer specifying the column position.
       ///    </para>
       /// </param>
-      public BufferPoint(int line, int position)
+      public BufferPoint(int line, int column)
       {
          LineNumber = line;
-         CharacterPosition = position;
+         Column = column;
       }
 
       #endregion
 
       /// <summary>
-      /// Gets the character position.
+      /// Gets the column position.
       /// </summary>
-      /// <value>The character position.</value>
-      public int CharacterPosition { get; }
+      /// <value>The column position.</value>
+      public int Column { get; }
 
       /// <summary>
       /// Gets the line number.
@@ -83,7 +83,7 @@ namespace Org.Edgerunner.Buffers
          if (point1.LineNumber > point2.LineNumber)
             return true;
          if (point1.LineNumber == point2.LineNumber)
-            return point1.CharacterPosition > point2.CharacterPosition;
+            return point1.Column > point2.Column;
          return false;
       }
 
@@ -98,7 +98,7 @@ namespace Org.Edgerunner.Buffers
          if (point1.LineNumber < point2.LineNumber)
             return true;
          if (point1.LineNumber == point2.LineNumber)
-            return point1.CharacterPosition < point2.CharacterPosition;
+            return point1.Column < point2.Column;
          return false;
       }
 

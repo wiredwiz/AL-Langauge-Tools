@@ -69,7 +69,7 @@ namespace Org.Edgerunner.Buffers.Output
       /// <summary>
       ///    Gets the current character position on the current line.
       /// </summary>
-      public abstract int CharacterPosition { get; }
+      public abstract int ColumnPosition { get; }
 
       /// <summary>
       ///    Closes the output buffer.

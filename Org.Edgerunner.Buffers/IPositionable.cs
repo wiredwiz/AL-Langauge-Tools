@@ -43,8 +43,8 @@ namespace Org.Edgerunner.Buffers
       int LineNumber { get; set; }
 
       /// <summary>
-      ///    Gets or sets the current character position on the current line.
+      ///    Gets or sets the current column position on the current line.
       /// </summary>
-      int CharacterPosition { get; set; }
+      int ColumnPosition { get; set; }
    }
 }

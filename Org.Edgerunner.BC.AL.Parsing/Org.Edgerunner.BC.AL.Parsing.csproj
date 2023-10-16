@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Org.Edgerunner.Buffers\Org.Edgerunner.Buffers.csproj" />
+    <ProjectReference Include="..\Org.Edgerunner.Lexer\Org.Edgerunner.Lexers.csproj" />
+  </ItemGroup>
+
+</Project>

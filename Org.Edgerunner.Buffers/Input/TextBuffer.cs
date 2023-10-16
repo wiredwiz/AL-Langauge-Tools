@@ -25,6 +25,7 @@
 
 #endregion
 
+using System.Collections;
 using System.Text;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -34,32 +35,21 @@ namespace Org.Edgerunner.Buffers.Input
    /// <summary>
    /// Class representing a text buffer.
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.Buffers.ITextBuffer" />
-   /// <seealso cref="Org.Edgerunner.Buffers.IPositionable" />
-   /// <seealso cref="Org.Edgerunner.Buffers.IPointAccessible" />
-   public class TextBuffer : ITextBuffer, IPositionable, IPointAccessible
+   /// <seealso cref="ITextBuffer" />
+   /// <seealso cref="IEnumerable{T}" />
+   public class TextBuffer : ITextBuffer, IEnumerable<string>
    {
-      private Dictionary<int, string> _Lines;
-      private Dictionary<int, int> _AbsoluteIndexCounter;
+      private SortedDictionary<int, string> _Lines;
+      private SortedDictionary<int, int> _AbsoluteIndexCounter;
       private int _LineNumber;
       private int _MaxLineNo;
-      private int _CharacterPosition;
+      private int _ColumnPosition;
       private long _AbsolutePosition;
 
       /// <summary>
       ///    Constant character value that defines the end of file for the buffer.
       /// </summary>
       public const char EndOfFile = '\0';
-
-      /// <summary>
-      ///    Constant defining the message for "Buffer Is Empty" errors.
-      /// </summary>
-      protected const string BufferIsEmptyError = "Buffer is empty";
-
-      /// <summary>
-      ///    Constant defining the message for "Buffer Underflow" errors.
-      /// </summary>
-      protected const string BufferUnderflowError = "Buffer underflow";
 
       #region Constructors And Finalizers
 
@@ -118,14 +108,20 @@ namespace Org.Edgerunner.Buffers.Input
       /// <value>The current.</value>
       public char Current
       {
-         get => _Lines[_LineNumber][_CharacterPosition - 1];
+         get => _Lines[_LineNumber][_ColumnPosition - 1];
       }
 
       /// <summary>
-      /// Gets a value indicating whether this <see cref="ITextBuffer" /> is empty.
+      /// Gets a value indicating whether this <see cref="ICharacterBuffer" /> is empty.
       /// </summary>
       /// <value><c>true</c> if empty; otherwise, <c>false</c>.</value>
       public bool IsEmpty => _MaxLineNo == 1 && _Lines[1].Length == 1;
+
+      /// <summary>
+      /// Gets the total text line count in the buffer.
+      /// </summary>
+      /// <value>The total text lines.</value>
+      public int TotalLines => IsEmpty ? 0 : _MaxLineNo;
 
       /// <summary>
       /// Determines whether the current position is at the beginning of the buffer.
@@ -133,7 +129,7 @@ namespace Org.Edgerunner.Buffers.Input
       /// <returns><c>true</c> if the current position is at the beginning of the buffer; <c>false</c> otherwise.</returns>
       public bool AtBeginningOfBuffer()
       {
-         return _LineNumber == 1 && _CharacterPosition == 1;
+         return _LineNumber == 1 && _ColumnPosition == 1;
       }
 
       /// <summary>
@@ -142,7 +138,18 @@ namespace Org.Edgerunner.Buffers.Input
       /// <returns><c>true</c> if the current position is at the end of the buffer; <c>false</c> otherwise.</returns>
       public bool AtEndOfBuffer()
       {
-         return _LineNumber == _MaxLineNo && _CharacterPosition == _Lines[_MaxLineNo].Length;
+         return _LineNumber == _MaxLineNo && _ColumnPosition == _Lines[_MaxLineNo].Length;
+      }
+
+      /// <summary>
+      /// Gets the line of text for the specified line number.
+      /// </summary>
+      /// <param name="lineNumber">The line number.</param>
+      /// <returns>A <see cref="string" /> containing the text line.</returns>
+      /// <exception cref="KeyNotFoundException">The line corresponding to <paramref name="lineNumber" /> does not exist in the buffer.</exception>
+      public string GetLine(int lineNumber)
+      {
+         return _Lines[lineNumber];
       }
 
       /// <summary>
@@ -155,23 +162,23 @@ namespace Org.Edgerunner.Buffers.Input
          if (!_Lines.TryGetValue(_LineNumber, out var currentLine))
             throw new BufferException("Unable to access current line number in buffer for some reason");
 
-         if (_CharacterPosition == currentLine.Length && currentLine[_CharacterPosition - 1] == EndOfFile)
+         if (_ColumnPosition == currentLine.Length && currentLine[_ColumnPosition - 1] == EndOfFile)
             return EndOfFile;
 
-         if (_CharacterPosition == currentLine.Length && _LineNumber == _MaxLineNo)
+         if (_ColumnPosition == currentLine.Length && _LineNumber == _MaxLineNo)
             throw new BufferException("Buffer missing end of file marker");
 
-         if (_CharacterPosition == currentLine.Length)
+         if (_ColumnPosition == currentLine.Length)
          {
             _LineNumber++;
-            _CharacterPosition = 1;
+            _ColumnPosition = 1;
             _AbsolutePosition++;
             return _Lines[_LineNumber][0];
          }
 
-         _CharacterPosition++;
+         _ColumnPosition++;
          _AbsolutePosition++;
-         return currentLine[_CharacterPosition - 1];
+         return currentLine[_ColumnPosition - 1];
       }
 
       /// <summary>
@@ -184,21 +191,21 @@ namespace Org.Edgerunner.Buffers.Input
       {
          var currentLine = _Lines[_LineNumber];
 
-         if (_LineNumber == 1 && _CharacterPosition == 1)
+         if (_LineNumber == 1 && _ColumnPosition == 1)
             return currentLine[1];
 
-         if (_CharacterPosition == 1)
+         if (_ColumnPosition == 1)
          {
             _LineNumber--;
             _AbsolutePosition--;
             var previousLine = _Lines[_LineNumber];
-            _CharacterPosition = previousLine.Length;
+            _ColumnPosition = previousLine.Length;
             return previousLine[^1];
          }
 
-         _CharacterPosition--;
+         _ColumnPosition--;
          _AbsolutePosition--;
-         return currentLine[_CharacterPosition - 1];
+         return currentLine[_ColumnPosition - 1];
       }
 
       /// <summary>
@@ -206,11 +213,11 @@ namespace Org.Edgerunner.Buffers.Input
       /// </summary>
       /// <returns>Character at the first position in the buffer.</returns>
       /// <exception cref="KeyNotFoundException">A line within the buffer cannot be accessed.</exception>
-      public char MoveToBeginning()
+      public char MoveToBeginningOfBuffer()
       {
          _AbsolutePosition = 1;
          _LineNumber = 1;
-         _CharacterPosition = 1;
+         _ColumnPosition = 1;
          return _Lines[1][0];
       }
 
@@ -219,12 +226,12 @@ namespace Org.Edgerunner.Buffers.Input
       /// </summary>
       /// <returns>Character at the last position in the buffer.</returns>
       /// <exception cref="KeyNotFoundException">A line within the buffer cannot be accessed.</exception>
-      public char MoveToEnd()
+      public char MoveToEndOfBuffer()
       {
          var lastLine = _Lines[_MaxLineNo];
          _AbsolutePosition = _AbsoluteIndexCounter[_MaxLineNo];
          _LineNumber = _MaxLineNo;
-         _CharacterPosition = lastLine.Length;
+         _ColumnPosition = lastLine.Length;
          return lastLine[^1];
       }
 
@@ -274,7 +281,7 @@ namespace Org.Edgerunner.Buffers.Input
 
             var offset = line > 1 ? _AbsoluteIndexCounter[line - 1] : 0;
             _LineNumber = line;
-            _CharacterPosition = (int)(value - offset);
+            _ColumnPosition = (int)(value - offset);
 
             _AbsolutePosition = value;
          }
@@ -296,29 +303,29 @@ namespace Org.Edgerunner.Buffers.Input
                throw new ArgumentOutOfRangeException(nameof(value), "Line number exceeds the range within the buffer");
 
             var offset = value > 1 ? _AbsoluteIndexCounter[value - 1] : 0;
-            _AbsolutePosition = offset + _CharacterPosition;
+            _AbsolutePosition = offset + _ColumnPosition;
             _LineNumber = value;
          }
       }
 
       /// <summary>
-      /// Gets or sets the current character position on the current line.
+      /// Gets or sets the current column position on the current line.
       /// </summary>
-      /// <value>The position.</value>
-      /// <exception cref="ArgumentOutOfRangeException" accessor="set">Character position is outside the valid range.</exception>
-      public int CharacterPosition
+      /// <value>The column position.</value>
+      /// <exception cref="ArgumentOutOfRangeException" accessor="set">Column position is outside the valid range.</exception>
+      public int ColumnPosition
       {
-         get => _CharacterPosition;
+         get => _ColumnPosition;
          set
          {
             if (value < 1)
-               throw new ArgumentOutOfRangeException(nameof(value), "Non-positive character positions are invalid");
+               throw new ArgumentOutOfRangeException(nameof(value), "Non-positive column positions are invalid");
             if (value > _Lines[_LineNumber].Length)
-               throw new ArgumentOutOfRangeException(nameof(value), "Character position exceeds the length of the current line");
+               throw new ArgumentOutOfRangeException(nameof(value), "Column position exceeds the length of the current line");
 
             var offset = _LineNumber > 1 ? _AbsoluteIndexCounter[_LineNumber - 1] : 0;
             _AbsolutePosition = offset + value;
-            _CharacterPosition = value;
+            _ColumnPosition = value;
          }
       }
 
@@ -328,7 +335,7 @@ namespace Org.Edgerunner.Buffers.Input
       /// <returns>A <see cref="BufferPoint" /> that defines the current buffer position.</returns>
       public BufferPoint GetBufferPoint()
       {
-         return new BufferPoint(_LineNumber, _CharacterPosition);
+         return new BufferPoint(_LineNumber, _ColumnPosition);
       }
 
       /// <summary>
@@ -338,7 +345,7 @@ namespace Org.Edgerunner.Buffers.Input
       public void SetBufferPoint(BufferPoint point)
       {
          _LineNumber = point.LineNumber;
-         CharacterPosition = point.CharacterPosition;
+         ColumnPosition = point.Column;
       }
 
       /// <summary>
@@ -348,8 +355,8 @@ namespace Org.Edgerunner.Buffers.Input
       /// <exception cref="IOException">An I/O error has occurred while reading from the <see cref="TextReader"/> instance.</exception>
       private void Initialize(TextReader source)
       {
-         _Lines = new Dictionary<int, string>();
-         _AbsoluteIndexCounter = new Dictionary<int, int>();
+         _Lines = new SortedDictionary<int, string>();
+         _AbsoluteIndexCounter = new SortedDictionary<int, int>();
          LoadFromReader(source);
       }
 
@@ -386,7 +393,25 @@ namespace Org.Edgerunner.Buffers.Input
          _MaxLineNo = line;
          _AbsolutePosition = 1;
          _LineNumber = 1;
-         _CharacterPosition = 1;
+         _ColumnPosition = 1;
+      }
+
+      /// <summary>
+      /// Returns an enumerator that iterates through the collection.
+      /// </summary>
+      /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+      IEnumerator<string> IEnumerable<string>.GetEnumerator()
+      {
+         return _Lines.Values.GetEnumerator();
+      }
+
+      /// <summary>
+      /// Returns an enumerator that iterates through a collection.
+      /// </summary>
+      /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+      public IEnumerator GetEnumerator()
+      {
+         return ((IEnumerable)_Lines.Values).GetEnumerator();
       }
    }
 }

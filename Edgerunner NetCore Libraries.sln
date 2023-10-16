@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.Edgerunner.Lexers", "Org.Edgerunner.Lexer\Org.Edgerunner.Lexers.csproj", "{D785133F-D2AB-4D83-BB85-3F63E2AECD60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.BC.AL.Parsing", "Org.Edgerunner.BC.AL.Parsing\Org.Edgerunner.BC.AL.Parsing.csproj", "{ECF23D88-5697-45E7-93A5-7EFE473A1551}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{476B63E8-2F28-4948-BC83-1333ED240E82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{476B63E8-2F28-4948-BC83-1333ED240E82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{476B63E8-2F28-4948-BC83-1333ED240E82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D785133F-D2AB-4D83-BB85-3F63E2AECD60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D785133F-D2AB-4D83-BB85-3F63E2AECD60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D785133F-D2AB-4D83-BB85-3F63E2AECD60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D785133F-D2AB-4D83-BB85-3F63E2AECD60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECF23D88-5697-45E7-93A5-7EFE473A1551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECF23D88-5697-45E7-93A5-7EFE473A1551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECF23D88-5697-45E7-93A5-7EFE473A1551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECF23D88-5697-45E7-93A5-7EFE473A1551}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -131,7 +131,7 @@ namespace Org.Edgerunner.Buffers.Output
       /// <summary>
       /// Gets the current character position on the current line.
       /// </summary>
-      public override int CharacterPosition => this._Position;
+      public override int ColumnPosition => this._Position;
 
       #region IDisposable Pattern
 

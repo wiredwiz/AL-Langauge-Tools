@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ITextBuffer.cs">
+// <copyright company = "Edgerunner.org" file = "IToken.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,40 +23,47 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.Buffers
+namespace Org.Edgerunner.Lexers
 {
    /// <summary>
-   /// Interface that defines a buffer of text lines.
-   /// Extends the <see cref="Org.Edgerunner.Buffers.ICharacterBuffer" />
-   /// Extends the <see cref="Org.Edgerunner.Buffers.IPositionable" />
-   /// Extends the <see cref="Org.Edgerunner.Buffers.IPointAccessible" />
+   /// Interface representing a language token.
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.Buffers.ICharacterBuffer" />
-   /// <seealso cref="Org.Edgerunner.Buffers.IPositionable" />
-   /// <seealso cref="Org.Edgerunner.Buffers.IPointAccessible" />
-   public interface ITextBuffer : ICharacterBuffer, IPositionable, IPointAccessible
+   public interface IToken
    {
       /// <summary>
-      /// Gets the total text line count in the buffer.
+      /// Gets the type of the token.
       /// </summary>
-      /// <value>The total text lines.</value>
-      int TotalLines { get; }
+      /// <value>The type of the token.</value>
+      int TokenType { get; }
 
       /// <summary>
-      /// Gets the line of text for the specified line number.
+      /// Gets the value of the token.
       /// </summary>
-      /// <param name="lineNumber">The line number.</param>
-      /// <returns>A <see cref="string"/> containing the text line.</returns>
-      string GetLine(int lineNumber);
-      
-      /// <summary>
-      ///    Moves the character position to the first position for the current line.
-      /// </summary>
-      public void MoveToBeginningOfLine();
+      /// <value>The token value.</value>
+      string Value { get; }
 
       /// <summary>
-      ///    Moves the character position to the last position for the current line.
+      /// Gets the starting line of the token.
       /// </summary>
-      public void MoveToEndOfLine();
+      /// <value>The starting line.</value>
+      int StartingLine { get; }
+
+      /// <summary>
+      /// Gets the ending line number of the token.
+      /// </summary>
+      /// <value>The ending line number.</value>
+      int EndingLine { get; }
+
+      /// <summary>
+      /// Gets the starting column position of the token.
+      /// </summary>
+      /// <value>The starting column position.</value>
+      int StartingColumn { get; }
+
+      /// <summary>
+      /// Gets the ending column position of the token.
+      /// </summary>
+      /// <value>The ending column position.</value>
+      int EndingColumn { get; }
    }
 }
