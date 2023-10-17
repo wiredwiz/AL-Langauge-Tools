@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlLexer.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "ReservedWords.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,21 +23,27 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.Buffers;
-using Org.Edgerunner.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Parsing
 {
-   public class AlLexer : ILexer
+   public enum ReservedWords
    {
-      public int[] GetTokenMap()
-      {
-         throw new NotImplementedException();
-      }
-
-      public IToken ReadTokenFromBuffer(ITextBuffer buffer)
-      {
-         throw new NotImplementedException();
-      }
+      None = 0,
+      IF,
+      ELSE,
+      WHILE,
+      DO,
+      REPEAT,
+      UNTIL,
+      BEGIN,
+      END,
+      FOR,
+      CASE,
+      MOD,
+      NOT,
+      AND,
+      OR,
+      EXIT,
+      TRUE,
+      FALSE
    }
 }

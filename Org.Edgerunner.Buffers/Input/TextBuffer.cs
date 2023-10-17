@@ -236,11 +236,65 @@ namespace Org.Edgerunner.Buffers.Input
       }
 
       /// <summary>
+      /// Returns the character in the buffer at an offset position from the current, without advancing the buffer.
+      /// </summary>
+      /// <param name="offset">The offset position to peek at.</param>
+      /// <returns>The character at position or null character if at end of the buffer.</returns>
+      /// <exception cref="Org.Edgerunner.Buffers.BufferException">Unable to access current line number in buffer for some reason.</exception>
+      /// <exception cref="Org.Edgerunner.Buffers.BufferException">Buffer missing end of file marker.</exception>
+      /// <exception cref="ArgumentOutOfRangeException">Offset exceeds bounds of the buffer.</exception>
+      public char PeekChar(int offset = 1)
+      {
+         if (!_Lines.TryGetValue(_LineNumber, out var currentLine))
+            throw new BufferException("Unable to access current line number in buffer for some reason");
+
+         var lineNumber = _LineNumber;
+         var position = _ColumnPosition;
+
+         while (offset != 0)
+         {
+            if (offset > 0)
+            {
+               if (position + offset > currentLine.Length)
+               {
+                  if (lineNumber == _MaxLineNo)
+                     throw new ArgumentOutOfRangeException(nameof(offset), "Offset exceeds bounds of the buffer");
+                  offset -= currentLine.Length - position + 1;
+                  lineNumber++;
+                  position = 1;
+                  if (!_Lines.TryGetValue(lineNumber, out currentLine))
+                     throw new BufferException("Unable to access current line number in buffer for some reason");
+               }
+               else
+                  return currentLine[position + offset - 1]; 
+            }
+            else
+            {
+               if (position - offset < 1)
+               {
+                  if (lineNumber == 1)
+                     throw new ArgumentOutOfRangeException(nameof(offset), "Offset exceeds bounds of the buffer");
+                  offset -= position;
+                  lineNumber--;
+                  if (!_Lines.TryGetValue(lineNumber, out currentLine))
+                     throw new BufferException("Unable to access current line number in buffer for some reason");
+                  position = currentLine.Length;
+               }
+               else
+                  return currentLine[position - offset - 1]; 
+            }
+         }
+
+         return Current;
+      }
+
+      /// <summary>
       /// Moves the character position to the first position for the current line.
       /// </summary>
       public void MoveToBeginningOfLine()
       {
-         throw new NotImplementedException();
+         _AbsolutePosition -= _ColumnPosition - 1;
+         _ColumnPosition = 1;
       }
 
       /// <summary>
@@ -248,7 +302,9 @@ namespace Org.Edgerunner.Buffers.Input
       /// </summary>
       public void MoveToEndOfLine()
       {
-         throw new NotImplementedException();
+         var length = _Lines[_LineNumber].Length;
+         _AbsolutePosition += length - _ColumnPosition;
+         _LineNumber = length;
       }
 
       /// <summary>

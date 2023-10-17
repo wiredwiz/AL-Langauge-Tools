@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ErrorToken.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "XmlCommentToken.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -24,32 +24,27 @@
 #endregion
 
 using Org.Edgerunner.Buffers;
-using Org.Edgerunner.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Parsing.Tokens
 {
    /// <summary>
-   /// Class representing an AL error token. This class cannot be inherited.
-   /// Implements the <see cref="IToken" />
+   /// Class representing an xml comment token. This class cannot be inherited.
+   /// Implements the <see cref="Org.Edgerunner.BC.AL.Parsing.Tokens.AlToken" />
    /// </summary>
-   /// <seealso cref="IToken" />
-   public sealed class ErrorToken : AlToken
+   /// <seealso cref="Org.Edgerunner.BC.AL.Parsing.Tokens.AlToken" />
+   public sealed class XmlCommentToken : AlToken
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ErrorToken" /> class.
+      /// Initializes a new instance of the <see cref="XmlCommentToken"/> class.
       /// </summary>
       /// <param name="value">The token value.</param>
       /// <param name="start">The token start.</param>
       /// <param name="end">The token end.</param>
-      /// <param name="message">The error message.</param>
-      public ErrorToken(string value, BufferPoint start, BufferPoint end, string message = "") : base(value, start, end)
+      public XmlCommentToken(string value, BufferPoint start, BufferPoint end) : base(value, start, end)
       {
-         Message = message;
       }
 
       /// <inheritdoc/>
-      public override int TokenType => (int)Tokens.TokenType.Error;
-
-      public string Message { get; }
+      public override int TokenType => (int)Tokens.TokenType.XmlComment;
    }
 }

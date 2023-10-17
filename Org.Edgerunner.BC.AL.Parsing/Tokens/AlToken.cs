@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "StringToken.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "AlToken.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,26 +23,23 @@
 // THE SOFTWARE.
 #endregion
 
-
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Parsing.Tokens
 {
    /// <summary>
-   /// Class representing an AL string token. This class cannot be inherited.
-   /// Implements the <see cref="IToken" />
+   /// Class that represents an AL language Token.
    /// </summary>
-   /// <seealso cref="IToken" />
-   public sealed class StringToken : IAlToken
+   public abstract class AlToken : IToken
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="StringToken" /> class.
+      /// Initializes a new instance of the <see cref="AlToken" /> class.
       /// </summary>
       /// <param name="value">The token value.</param>
       /// <param name="start">The token start.</param>
       /// <param name="end">The token end.</param>
-      public StringToken(string value, BufferPoint start, BufferPoint end)
+      protected AlToken(string value, BufferPoint start, BufferPoint end)
       {
          Value = value;
          StartingLine = start.LineNumber;
@@ -51,25 +48,22 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tokens
          EndingColumn = end.Column;
       }
 
-      /// <inheritdoc/>
-      public int TokenType => (int)TokenTypes.String;
+      /// <inheritdoc />
+      public virtual int TokenType { get; }
 
-      /// <inheritdoc/>
-      public string Value { get; }
+      /// <inheritdoc />
+      public virtual string Value { get; }
 
-      /// <inheritdoc/>
-      public int StartingLine { get; }
+      /// <inheritdoc />
+      public virtual int StartingLine { get; }
 
-      /// <inheritdoc/>
-      public int EndingLine { get; }
+      /// <inheritdoc />
+      public virtual int EndingLine { get; }
 
-      /// <inheritdoc/>
-      public int StartingColumn { get; }
+      /// <inheritdoc />
+      public virtual int StartingColumn { get; }
 
-      /// <inheritdoc/>
-      public int EndingColumn { get; }
-
-      /// <inheritdoc/>
-      public TokenClass Class => TokenClass.None;
+      /// <inheritdoc />
+      public virtual int EndingColumn { get; }
    }
 }

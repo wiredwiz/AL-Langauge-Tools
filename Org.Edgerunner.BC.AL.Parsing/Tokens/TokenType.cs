@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TokenTypes.cs">
+// <copyright company = "Edgerunner.org" file = "TokenType.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -26,13 +26,14 @@
 
 namespace Org.Edgerunner.BC.AL.Parsing.Tokens
 {
-   public enum TokenTypes
+   public enum TokenType
    {
       Error,
-      String,
       Identifier,
-      Number,
-      Special,
-      Comment
+      Literal,
+      Symbol,
+      Comment,
+      Whitespace,
+      XmlComment
    }
 }

@@ -34,7 +34,7 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tokens
    /// Implements the <see cref="IToken" />
    /// </summary>
    /// <seealso cref="IToken" />
-   public sealed class CommentToken : IAlToken
+   public sealed class CommentToken : AlToken
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="CommentToken" /> class.
@@ -42,34 +42,11 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tokens
       /// <param name="value">The token value.</param>
       /// <param name="start">The token start.</param>
       /// <param name="end">The token end.</param>
-      public CommentToken(string value, BufferPoint start, BufferPoint end)
+      public CommentToken(string value, BufferPoint start, BufferPoint end) : base(value, start, end)
       {
-         Value = value;
-         StartingLine = start.LineNumber;
-         EndingLine = end.LineNumber;
-         StartingColumn = start.Column;
-         EndingColumn = end.Column;
       }
 
       /// <inheritdoc/>
-      public int TokenType => (int)TokenTypes.Comment;
-
-      /// <inheritdoc/>
-      public string Value { get; }
-
-      /// <inheritdoc/>
-      public int StartingLine { get; }
-
-      /// <inheritdoc/>
-      public int EndingLine { get; }
-
-      /// <inheritdoc/>
-      public int StartingColumn { get; }
-
-      /// <inheritdoc/>
-      public int EndingColumn { get; }
-
-      /// <inheritdoc/>
-      public TokenClass Class => TokenClass.None;
+      public override int TokenType => (int)Tokens.TokenType.Comment;
    }
 }

@@ -473,3 +473,4 @@ csharp_indent_labels = one_less_than_current
 csharp_space_around_binary_operators = before_and_after
 dotnet_diagnostic.SA1633.severity = suggestion
 dotnet_diagnostic.SA1515.severity = warning
+dotnet_diagnostic.SA1520.severity = suggestion

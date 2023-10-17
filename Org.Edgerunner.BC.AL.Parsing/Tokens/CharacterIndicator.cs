@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ErrorToken.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "CharacterIndicator.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,33 +23,16 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.Buffers;
-using Org.Edgerunner.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Parsing.Tokens
 {
-   /// <summary>
-   /// Class representing an AL error token. This class cannot be inherited.
-   /// Implements the <see cref="IToken" />
-   /// </summary>
-   /// <seealso cref="IToken" />
-   public sealed class ErrorToken : AlToken
+   public enum CharacterIndicator
    {
-      /// <summary>
-      /// Initializes a new instance of the <see cref="ErrorToken" /> class.
-      /// </summary>
-      /// <param name="value">The token value.</param>
-      /// <param name="start">The token start.</param>
-      /// <param name="end">The token end.</param>
-      /// <param name="message">The error message.</param>
-      public ErrorToken(string value, BufferPoint start, BufferPoint end, string message = "") : base(value, start, end)
-      {
-         Message = message;
-      }
-
-      /// <inheritdoc/>
-      public override int TokenType => (int)Tokens.TokenType.Error;
-
-      public string Message { get; }
+      Error,
+      Identifier,
+      Number,
+      String,
+      Symbol,
+      Comment,
+      Whitespace
    }
 }

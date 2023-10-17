@@ -26,7 +26,6 @@
 
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Lexers;
-using System.Security.Claims;
 
 namespace Org.Edgerunner.BC.AL.Parsing.Tokens
 {
@@ -35,44 +34,27 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tokens
    /// Implements the <see cref="IToken" />
    /// </summary>
    /// <seealso cref="IToken" />
-   public sealed class IdentifierToken : IAlToken
+   public sealed class IdentifierToken : AlToken
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="StringToken" /> class.
+      /// Initializes a new instance of the <see cref="IdentifierToken" /> class.
       /// </summary>
       /// <param name="value">The token value.</param>
       /// <param name="start">The token start.</param>
       /// <param name="end">The token end.</param>
-      /// <param name="tokenClass">The token class.</param>
-      public IdentifierToken(string value, BufferPoint start, BufferPoint end, TokenClass tokenClass = TokenClass.None)
+      /// <param name="reservedWord">The reserved word corresponding to the token if there is one.</param>
+      public IdentifierToken(string value, BufferPoint start, BufferPoint end, bool reservedWord = false) : base(value, start, end)
       {
-         Value = value;
-         StartingLine = start.LineNumber;
-         EndingLine = end.LineNumber;
-         StartingColumn = start.Column;
-         EndingColumn = end.Column;
-         Class = tokenClass;
+         ReservedWord = reservedWord;
       }
 
       /// <inheritdoc/>
-      public int TokenType => (int)TokenTypes.Identifier;
-
-      /// <inheritdoc/>
-      public string Value { get; }
-
-      /// <inheritdoc/>
-      public int StartingLine { get; }
-
-      /// <inheritdoc/>
-      public int EndingLine { get; }
-
-      /// <inheritdoc/>
-      public int StartingColumn { get; }
-
-      /// <inheritdoc/>
-      public int EndingColumn { get; }
-
-      /// <inheritdoc/>
-      public TokenClass Class { get; set; }
+      public override int TokenType => (int)Tokens.TokenType.Identifier;
+      
+      /// <summary>
+      /// Gets a value indicating whether token is a reserved word.
+      /// </summary>
+      /// <value><c>true</c> if a reserved word; otherwise, <c>false</c>.</value>
+      public bool ReservedWord { get; }
    }
 }

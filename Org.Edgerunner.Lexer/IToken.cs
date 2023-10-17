@@ -23,6 +23,9 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Runtime.InteropServices.JavaScript;
+using Org.Edgerunner.Buffers;
+
 namespace Org.Edgerunner.Lexers
 {
    /// <summary>

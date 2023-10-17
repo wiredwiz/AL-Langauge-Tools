@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TokenClass.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "LiteralType.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,24 +23,16 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Parsing
+namespace Org.Edgerunner.BC.AL.Parsing.Tokens
 {
-   /// <summary>
-   /// Enumeration representing AL token classes for identifier tokens.
-   /// </summary>
-   public enum TokenClass
+   public enum LiteralType
    {
-      None = 0,
-      Table,
-      TableExtension,
-      Page,
-      PageExtension,
-      Query,
-      Codeunit,
-      Begin,
-      End,
-      Trigger,
-      Procedure,
-      Event
+      Integer,
+      Decimal,
+      Date,
+      Time,
+      DateTime,
+      String,
+      Boolean
    }
 }

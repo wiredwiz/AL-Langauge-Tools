@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "SpecialToken.cs">
+// <copyright company = "Edgerunner.org" file = "LiteralToken.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -30,46 +30,31 @@ using Org.Edgerunner.Lexers;
 namespace Org.Edgerunner.BC.AL.Parsing.Tokens
 {
    /// <summary>
-   /// Class representing an AL special symbol token. This class cannot be inherited.
+   /// Class representing an AL literal token. This class cannot be inherited.
    /// Implements the <see cref="IToken" />
    /// </summary>
    /// <seealso cref="IToken" />
-   public sealed class SpecialToken : IAlToken
+   public sealed class LiteralToken : AlToken
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="SpecialToken" /> class.
+      /// Initializes a new instance of the <see cref="LiteralToken" /> class.
       /// </summary>
       /// <param name="value">The token value.</param>
       /// <param name="start">The token start.</param>
       /// <param name="end">The token end.</param>
-      public SpecialToken(string value, BufferPoint start, BufferPoint end)
+      /// <param name="literalType">Type of the literal.</param>
+      public LiteralToken(string value, BufferPoint start, BufferPoint end, LiteralType literalType) : base(value, start, end)
       {
-         Value = value;
-         StartingLine = start.LineNumber;
-         EndingLine = end.LineNumber;
-         StartingColumn = start.Column;
-         EndingColumn = end.Column;
+         LiteralType = literalType;
       }
 
       /// <inheritdoc/>
-      public int TokenType => (int)TokenTypes.Special;
+      public override int TokenType => (int)Tokens.TokenType.Literal;
 
-      /// <inheritdoc/>
-      public string Value { get; }
-
-      /// <inheritdoc/>
-      public int StartingLine { get; }
-
-      /// <inheritdoc/>
-      public int EndingLine { get; }
-
-      /// <inheritdoc/>
-      public int StartingColumn { get; }
-
-      /// <inheritdoc/>
-      public int EndingColumn { get; }
-
-      /// <inheritdoc/>
-      public TokenClass Class => TokenClass.None;
+      /// <summary>
+      /// Gets or sets the type of the literal.
+      /// </summary>
+      /// <value>The type of the literal.</value>
+      public LiteralType LiteralType { get; }
    }
 }

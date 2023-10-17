@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "IAlToken.cs">
+// <copyright company = "Edgerunner.org" file = "AlLexer.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,21 +23,27 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Diagnostics.SymbolStore;
+using System.Text;
+using Org.Edgerunner.BC.AL.Parsing.Pooling;
+using Org.Edgerunner.BC.AL.Parsing.Tokens;
+using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Lexers;
+using static System.Net.Mime.MediaTypeNames;
+using SymbolToken = Org.Edgerunner.BC.AL.Parsing.Tokens.SymbolToken;
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tokens
+namespace Org.Edgerunner.BC.AL.Parsing.Lexers
 {
-   /// <summary>
-   /// Interface representing an AL language token.
-   /// Extends the <see cref="IToken" />
-   /// </summary>
-   /// <seealso cref="IToken" />
-   public interface IAlToken : IToken
+   public class AlLexer : ILexer
    {
-      /// <summary>
-      /// Gets the Al language token class.
-      /// </summary>
-      /// <value>The token class.</value>
-      TokenClass Class { get; }
+      public int[] GetTokenMap()
+      {
+         throw new NotImplementedException();
+      }
+
+      public IToken ReadTokenFromBuffer(ITextBuffer buffer)
+      {
+         throw new NotImplementedException();
+      }
    }
 }

@@ -93,5 +93,12 @@ namespace Org.Edgerunner.Buffers
       /// </returns>
       /// <exception cref="BufferException">Buffer is empty.</exception>
       char MoveToEndOfBuffer();
+
+      /// <summary>
+      /// Returns the character in the buffer at an offset position from the current, without advancing the buffer.
+      /// </summary>
+      /// <param name="offset">The offset position to peek at.</param>
+      /// <returns>The character at position or null character if at end of the buffer.</returns>
+      char PeekChar(int offset = 1);
    }
 }
