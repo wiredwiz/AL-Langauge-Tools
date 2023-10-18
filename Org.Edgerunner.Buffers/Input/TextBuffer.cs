@@ -386,16 +386,61 @@ namespace Org.Edgerunner.Buffers.Input
       /// </summary>
       /// <param name="offset">The offset position to fetch the buffer point for.</param>
       /// <returns>A <see cref="BufferPoint" /> that defines the current buffer position.</returns>
+      /// <exception cref="ArgumentOutOfRangeException">Offset would point to a position outside of the buffer.</exception>
+      // ReSharper disable once MethodTooLong
       public BufferPoint GetBufferPoint(int offset = 0)
       {
-         var currentPoint = new BufferPoint(_LineNumber, _ColumnPosition);
          if (offset == 0)
-            return currentPoint;
+            return new BufferPoint(_LineNumber, _ColumnPosition);
 
-         AbsolutePosition += offset;
-         var result = new BufferPoint(_LineNumber, _ColumnPosition);
-         SetBufferPoint(currentPoint);
-         return result;
+         var position = _ColumnPosition;
+         var lineNo = _LineNumber;
+         string? line;
+         if (offset > 0)
+         {
+            line = _Lines[lineNo];
+            while (offset != 0)
+            {
+               if (position + offset > line.Length)
+               {
+                  if (lineNo == _MaxLineNo)
+                     throw new ArgumentOutOfRangeException(nameof(offset), "Offset indicates a point outside of the buffer");
+
+                  offset -= line.Length - position + 1;
+                  lineNo++;
+                  line = _Lines[lineNo];
+                  position = 1;
+               }
+               else
+               {
+                  position += offset;
+                  offset = 0;
+               }
+            }
+
+            return new BufferPoint(lineNo, position);
+         }
+         
+         while (offset != 0)
+         {
+            if (position + offset < 1)
+            {
+               if (lineNo == 1)
+                  throw new ArgumentOutOfRangeException(nameof(offset), "Offset indicates a point outside of the buffer");
+
+               offset += position;
+               lineNo--;
+               line = _Lines[lineNo];
+               position = line.Length;
+            }
+            else
+            {
+               position += offset;
+               offset = 0;
+            }
+         }
+
+         return new BufferPoint(lineNo, position);
       }
 
       /// <summary>
