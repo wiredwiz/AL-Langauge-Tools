@@ -38,6 +38,18 @@ namespace Org.Edgerunner.Lexers
       /// <returns>An array of <see cref="int"/>.</returns>
       int[] GetTokenMap();
 
-      IToken ReadTokenFromBuffer(ITextBuffer buffer);
+      /// <summary>
+      /// Reads a token from the current position in a buffer.
+      /// </summary>
+      /// <param name="buffer">The buffer to read.</param>
+      /// <returns>A new <see cref="IToken"/> or null if at end of buffer.</returns>
+      IToken? ReadTokenFromBuffer(ITextBuffer buffer);
+
+      /// <summary>
+      /// Reads all tokens from the current position in a buffer.
+      /// </summary>
+      /// <param name="buffer">The buffer to read.</param>
+      /// <returns>A <see cref="List{IToken}"/> containing the tokens.</returns>
+      List<IToken> ReadTokensFromBuffer(ITextBuffer buffer);
    }
 }

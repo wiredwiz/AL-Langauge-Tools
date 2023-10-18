@@ -61,14 +61,13 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
                text.Append(buffer.Current);
             
             if (buffer.Current != '"')
-               return new ErrorToken(text.ToString(), start, new BufferPoint(buffer.LineNumber, buffer.ColumnPosition - 1),
-                                     "Quoted identifier not terminated correctly");
+               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "Quoted identifier not terminated correctly");
             
             text.Append(buffer.Current);
             buffer.GetNextChar();
          }
 
-         return new IdentifierToken(text.ToString(), start, buffer.GetBufferPoint(), Enum.TryParse(text.ToString(), true, out ReservedWords word));
+         return new IdentifierToken(text.ToString(), start, buffer.GetBufferPoint(), Enum.TryParse(text.ToString(), true, out ReservedWords _));
       }
    }
 }

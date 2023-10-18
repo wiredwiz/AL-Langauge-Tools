@@ -1,4 +1,5 @@
 ﻿#region MIT License
+
 // <copyright company = "Edgerunner.org" file = "AlLexer.cs">
 // Copyright(c)  2023
 // </copyright>
@@ -21,29 +22,99 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
-using System.Diagnostics.SymbolStore;
-using System.Text;
-using Org.Edgerunner.BC.AL.Parsing.Pooling;
 using Org.Edgerunner.BC.AL.Parsing.Tokens;
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Lexers;
-using static System.Net.Mime.MediaTypeNames;
-using SymbolToken = Org.Edgerunner.BC.AL.Parsing.Tokens.SymbolToken;
 
 namespace Org.Edgerunner.BC.AL.Parsing.Lexers
 {
    public class AlLexer : ILexer
    {
+      private readonly int[] _FileObjectMap = TokenMapping.GetFileObjectMap();
+
       public int[] GetTokenMap()
       {
-         throw new NotImplementedException();
+         return _FileObjectMap;
       }
 
-      public IToken ReadTokenFromBuffer(ITextBuffer buffer)
+      /// <inheritdoc />
+      // ReSharper disable once MethodTooLong
+      public IToken? ReadTokenFromBuffer(ITextBuffer buffer)
       {
-         throw new NotImplementedException();
+         SkipWhitespace(buffer);
+         if (buffer.AtEndOfBuffer()) return null;
+
+         var start = buffer.GetBufferPoint();
+         var indicator = (CharacterIndicator)_FileObjectMap[buffer.Current];
+         IToken? result = null;
+         switch (indicator)
+         {
+            case CharacterIndicator.Comment:
+            {
+               if (buffer.PeekChar() == '*')
+                  result = CommentTokenizer.ReadMultiLineCommentTokenFromBuffer(buffer);
+               if (buffer.PeekChar() == '/')
+                  result = CommentTokenizer.ReadSingleLineCommentTokenFromBuffer(buffer);
+
+               buffer.GetNextChar();
+               return result;
+            }
+            case CharacterIndicator.Number:
+            {
+               if (buffer.Current == '0')
+               {
+                  if (buffer.PeekChar() is 'D' or 'd')
+                     result = buffer.PeekChar(2) is 'T' or 't'
+                        ? LiteralTokenizer.ReadDateTimeLiteralFromBuffer(buffer)
+                        : LiteralTokenizer.ReadDateLiteralFromBuffer(buffer);
+                  else if (buffer.PeekChar() is 'T' or 't')
+                     result = LiteralTokenizer.ReadTimeLiteralFromBuffer(buffer);
+                  else
+                     result = LiteralTokenizer.ReadNumberLiteralTokenFromBuffer(buffer);
+               }
+               else
+                  result = LiteralTokenizer.ReadNumberLiteralTokenFromBuffer(buffer);
+
+               return result;
+            }
+            case CharacterIndicator.Symbol:
+               return SymbolTokenizer.ReadSymbolTokenFromBuffer(buffer);
+            case CharacterIndicator.String:
+               return LiteralTokenizer.ReadStringLiteralTokenFromBuffer(buffer);
+            case CharacterIndicator.Identifier:
+            {
+               if (buffer.Current is 'T' or 't' or 'F' or 'f')
+                  result = LiteralTokenizer.ReadBooleanLiteralFromBuffer(buffer);
+
+               return result ?? IdentifierTokenizer.ReadIdentifierTokenFromBuffer(buffer);
+            }
+         }
+
+         return new ErrorToken(buffer.Current.ToString(), start, buffer.GetBufferPoint(), "Invalid token character");
+      }
+
+      /// <inheritdoc />
+      public List<IToken> ReadTokensFromBuffer(ITextBuffer buffer)
+      {
+         var tokens = new List<IToken>();
+         // loop and add tokens until we reach null/end of buffer
+         while (ReadTokenFromBuffer(buffer) is {} token) tokens.Add(token);
+         return tokens;
+      }
+
+      /// <summary>
+      /// Skips the whitespace between the current position in the buffer and the next possible token.
+      /// </summary>
+      /// <param name="buffer">The buffer.</param>
+      private void SkipWhitespace(ITextBuffer buffer)
+      {
+         if (_FileObjectMap[buffer.Current] == (int)CharacterIndicator.Whitespace)
+#pragma warning disable S108
+            while (_FileObjectMap[buffer.GetNextChar()] == (int)CharacterIndicator.Whitespace) {}
+#pragma warning restore S108
       }
    }
 }

@@ -1,4 +1,5 @@
 ﻿#region MIT License
+
 // <copyright company = "Edgerunner.org" file = "SymbolTokenizer.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
@@ -21,10 +22,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
 using Org.Edgerunner.BC.AL.Parsing.Tokens;
 using Org.Edgerunner.Buffers;
+
+// ReSharper disable FlagArgument
 
 namespace Org.Edgerunner.BC.AL.Parsing.Lexers
 {
@@ -39,12 +43,14 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
       /// <param name="includeNextChar">if set to <c>true</c> advance and include the next character in the buffer.</param>
       /// <returns>A new <see cref="SymbolToken"/> instance.</returns>
       /// <remarks>Advances the buffer to the next character after the token.</remarks>
-      private static SymbolToken BuildSymbolTokenFromBuffer(ITextBuffer buffer, string text, BufferPoint start, bool includeNextChar)
+      private static SymbolToken BuildSymbolTokenFromBuffer(ITextBuffer buffer,
+                                                            string text,
+                                                            BufferPoint start,
+                                                            bool includeNextChar)
       {
          if (includeNextChar) text += buffer.GetNextChar();
-         var end = buffer.GetBufferPoint();
          buffer.GetNextChar();
-         return new SymbolToken(text, start, end);
+         return new SymbolToken(text, start, buffer.GetBufferPoint(-1));
       }
 
       /// <summary>
@@ -59,7 +65,6 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
 
          // begin our token reading process
          var start = buffer.GetBufferPoint();
-
          var text = buffer.Current.ToString();
          switch (buffer.Current)
          {
@@ -73,7 +78,8 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             case '<':
                return BuildSymbolTokenFromBuffer(buffer, text, start, buffer.PeekChar() is '>' or '=');
             default:
-               return new SymbolToken(text, start, buffer.GetBufferPoint());
+               buffer.GetNextChar();
+               return new SymbolToken(text, start, buffer.GetBufferPoint(-1));
          }
       }
    }

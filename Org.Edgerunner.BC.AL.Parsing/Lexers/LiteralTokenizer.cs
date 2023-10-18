@@ -23,11 +23,8 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Net;
 using Org.Edgerunner.BC.AL.Parsing.Tokens;
 using Org.Edgerunner.Buffers;
-using System.Text;
-using Microsoft.VisualBasic;
 using Org.Edgerunner.BC.AL.Parsing.Pooling;
 
 namespace Org.Edgerunner.BC.AL.Parsing.Lexers
@@ -57,15 +54,13 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             if (buffer.AtEndOfBuffer())
             {
                // we have reached end of buffer, thus our string is invalid, we return an error token instead
-               end = new BufferPoint(buffer.LineNumber, buffer.ColumnPosition - 1);
-               return new ErrorToken(text.ToString(), start, end, "String reached end of file without termination");
+               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "String reached end of file without termination");
             }
 
             // check for invalid line breaks in the string
             if (tk == '\n' || tk == '\r')
             {
-               end = new BufferPoint(buffer.LineNumber, buffer.ColumnPosition - 1);
-               return new ErrorToken(text.ToString(), start, end, "Strings cannot contain line breaks or carriage returns");
+               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "Strings cannot contain line breaks or carriage returns");
             }
 
             // append the currently read token and check for string termination character
@@ -79,8 +74,7 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
                   break;
                }
 
-               text.Append(tk);
-               buffer.GetNextChar();
+               text.Append(buffer.GetNextChar());
             }
          }
 
@@ -115,11 +109,10 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             if (buffer.GetNextChar().IsNumber())
                text.Append(ReadIntegerFromBuffer(buffer));
             else
-               return new ErrorToken(text.ToString(), start, new BufferPoint(buffer.LineNumber, buffer.ColumnPosition - 1),
-                                     "Expected exponent");
+               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "Decimal fraction is missing");
          }
          
-         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), hasDecimal ? LiteralType.Decimal : LiteralType.Integer);
+         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), hasDecimal ? LiteralType.Decimal : LiteralType.Integer);
       }
 
       /// <summary>
@@ -158,7 +151,9 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid date literal");
 
          text.Append(buffer.GetNextChar());
-         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.Date);
+         var result = new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.Date);
+         buffer.GetNextChar();
+         return result;
       }
 
       /// <summary>
@@ -183,7 +178,9 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid time literal");
          text.Append(buffer.GetNextChar());
 
-         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.Time);
+         var result = new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.Time);
+         buffer.GetNextChar();
+         return result;
       }
 
       /// <summary>
@@ -211,7 +208,9 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid datetime literal");
          text.Append(buffer.GetNextChar());
 
-         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.DateTime);
+         var result = new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.DateTime);
+         buffer.GetNextChar();
+         return result;
       }
 
       /// <summary>
@@ -227,7 +226,6 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
          // begin our token reading process
          var text = StringBuilderPool.Current.Get();
          var start = buffer.GetBufferPoint();
-         BufferPoint end = new BufferPoint(0,0);
          string booleanLiteral;
 
          if (buffer.Current.ToUpper() is 'T')
@@ -237,19 +235,16 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
          else
             return null;
 
-         for (var index = 0; index < booleanLiteral.Length; index++)
+         foreach (var letter in booleanLiteral)
          {
-            var letter = booleanLiteral[index];
             if (letter != buffer.Current.ToUpper())
                return null;
 
             text.Append(buffer.Current);
-            if (index == booleanLiteral.Length - 1)
-               end = buffer.GetBufferPoint();
             buffer.GetNextChar();
          }
 
-         return new LiteralToken(text.ToString(), start, end, LiteralType.Boolean);
+         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), LiteralType.Boolean);
       }
    }
 }

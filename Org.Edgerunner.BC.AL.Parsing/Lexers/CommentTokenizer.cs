@@ -87,7 +87,10 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
                if (buffer.GetNextChar() == '/')
                {
                   text.Append(buffer.Current);
-                  return new CommentToken(text.ToString(), start, buffer.GetBufferPoint());
+                  var result = new CommentToken(text.ToString(), start, buffer.GetBufferPoint());
+                  buffer.GetNextChar();
+
+                  return result;
                }
             }
             else
