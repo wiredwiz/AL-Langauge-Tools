@@ -33,12 +33,11 @@ namespace Org.Edgerunner.Buffers
    public interface IPointAccessible
    {
       /// <summary>
-      ///    Gets a new BufferPoint instance that defines the current buffer position.
+      /// Gets a new BufferPoint instance that defines the current buffer position.
       /// </summary>
-      /// <returns>
-      ///    A <see cref="BufferPoint" /> that defines the current buffer position.
-      /// </returns>
-      BufferPoint GetBufferPoint();
+      /// <param name="offset">The offset position to fetch the buffer point for.</param>
+      /// <returns>A <see cref="BufferPoint" /> that defines the current buffer position.</returns>
+      BufferPoint GetBufferPoint(int offset = 0);
 
       /// <summary>
       ///    Sets the buffer to a new position defined by point.

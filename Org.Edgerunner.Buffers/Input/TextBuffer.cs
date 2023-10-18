@@ -312,15 +312,11 @@ namespace Org.Edgerunner.Buffers.Input
       /// </summary>
       /// <value>The absolute position.</value>
       /// <exception cref="ArgumentOutOfRangeException" accessor="set">The value is outside the valid range for the buffer.</exception>
-      /// <exception cref="BufferException" accessor="set">Buffer is empty.</exception>
       public long AbsolutePosition
       {
          get => _AbsolutePosition;
          set
          {
-            if (_MaxLineNo == 0)
-               throw new BufferException("Buffer is empty");
-
             var line = 0;
             int length;
             do
@@ -388,10 +384,18 @@ namespace Org.Edgerunner.Buffers.Input
       /// <summary>
       /// Gets a new BufferPoint instance that defines the current buffer position.
       /// </summary>
+      /// <param name="offset">The offset position to fetch the buffer point for.</param>
       /// <returns>A <see cref="BufferPoint" /> that defines the current buffer position.</returns>
-      public BufferPoint GetBufferPoint()
+      public BufferPoint GetBufferPoint(int offset = 0)
       {
-         return new BufferPoint(_LineNumber, _ColumnPosition);
+         var currentPoint = new BufferPoint(_LineNumber, _ColumnPosition);
+         if (offset == 0)
+            return currentPoint;
+
+         AbsolutePosition += offset;
+         var result = new BufferPoint(_LineNumber, _ColumnPosition);
+         SetBufferPoint(currentPoint);
+         return result;
       }
 
       /// <summary>
