@@ -22,13 +22,13 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(2, "With a few lines of\r\n")]
       [InlineData(3, "\n")]
       [InlineData(4, "text to test The buffer")]
-      public void Get_a_line_from_the_buffer_works(int line, string text)
+      public void Getting_a_line_from_the_buffer_works(int lineNumber, string text)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
 
          // fetching a specified text line results in the right text
-         buffer.GetLine(line).Should().Be(text);
+         buffer.GetLine(lineNumber).Should().Be(text);
       }
 
       [Theory]
@@ -40,13 +40,13 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(69, 1, '\0')]
       [InlineData(25, -1, '\n')]
       [InlineData(24, -1, 'e')]
-      public void Peeking_at_a_character_in_a_buffer_works(int absolute, int offset, char peeked)
+      public void Peeking_at_a_character_in_a_buffer_works(int absolutePosition, int offset, char peeked)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
 
          // and moving to the specified absolute position
-         buffer.AbsolutePosition = absolute;
+         buffer.AbsolutePosition = absolutePosition;
 
          // Peeking at a character results in the right character
          buffer.PeekChar(offset).Should().Be(peeked);
@@ -57,17 +57,17 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(1, 2, -1, 1, 1)]
       [InlineData(2, 1, -1, 1, 24)]
       [InlineData(1, 23, 4, 2, 3)]
-      public void Getting_a_buffer_point_in_a_buffer_works(int line, int position, int offset, int resultLine, int resultPosition)
+      public void Getting_a_buffer_point_in_a_buffer_works(int lineNumber, int position, int offset, int resultLine, int resultPosition)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
 
          // and moving to the specified line and position
          buffer.ColumnPosition = 1;
-         buffer.LineNumber = line;
+         buffer.LineNumber = lineNumber;
          buffer.ColumnPosition = position;
 
-         // Then getting a buffer point results in the correct position
+         // Results in an accurate buffer point
          var point = buffer.GetBufferPoint(offset);
          point.LineNumber.Should().Be(resultLine);
          point.Column.Should().Be(resultPosition);
@@ -77,7 +77,7 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(1, 1)]
       [InlineData(1, 24)]
       [InlineData(3, 1)]
-      public void Setting_a_buffer_point_in_a_buffer_moves_to_the_correct_position(int line, int position)
+      public void Setting_a_buffer_point_in_a_buffer_moves_to_the_correct_position(int lineNumber, int position)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
@@ -86,8 +86,8 @@ namespace Org.Edgerunner.Buffers.Tests
          buffer.MoveToEndOfBuffer();
 
          // Then getting a buffer point results in the correct position
-         buffer.SetBufferPoint(new BufferPoint(line, position));
-         buffer.LineNumber.Should().Be(line);
+         buffer.SetBufferPoint(new BufferPoint(lineNumber, position));
+         buffer.LineNumber.Should().Be(lineNumber);
          buffer.ColumnPosition.Should().Be(position);
       }
 
@@ -97,13 +97,13 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(3, 'h')]
       [InlineData(26, 'W')]
       [InlineData(47, '\n')]
-      public void Getting_the_previous_character_in_a_buffer_works(int absolute, char next)
+      public void Getting_the_previous_character_in_a_buffer_works(int absolutePosition, char next)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
 
          // and moving to the specified absolute position
-         buffer.AbsolutePosition = absolute;
+         buffer.AbsolutePosition = absolutePosition;
 
          // getting the previous character results in the right character
          buffer.GetPreviousChar().Should().Be(next);
@@ -117,13 +117,13 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(46, 't')]
       [InlineData(69, '\0')]
       [InlineData(70, '\0')]
-      public void Getting_the_next_character_in_a_buffer_works(int absolute, char next)
+      public void Getting_the_next_character_in_a_buffer_works(int absolutePosition, char next)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
 
          // and moving to the specified absolute position
-         buffer.AbsolutePosition = absolute;
+         buffer.AbsolutePosition = absolutePosition;
 
          // getting the next character results in the right character
          buffer.GetNextChar().Should().Be(next);
@@ -133,20 +133,20 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(1, 24, 24)]
       [InlineData(2, 21, 45)]
       [InlineData(3, 1, 46)]
-      public void Moving_to_the_end_of_a_buffer_line_works(int line, int position, int absolute)
+      public void Moving_to_the_end_of_a_buffer_line_works(int lineNumber, int position, int absolutePosition)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
 
          // and moving to end of a specified line
-         buffer.LineNumber = line;
+         buffer.LineNumber = lineNumber;
          buffer.MoveToEndOfLine();
 
          // Buffer position and content is correct
          buffer.Current.Should().Be('\n');
-         buffer.LineNumber.Should().Be(line);
+         buffer.LineNumber.Should().Be(lineNumber);
          buffer.ColumnPosition.Should().Be(position);
-         buffer.AbsolutePosition.Should().Be(absolute);
+         buffer.AbsolutePosition.Should().Be(absolutePosition);
       }
 
       [Theory]
@@ -154,20 +154,20 @@ namespace Org.Edgerunner.Buffers.Tests
       [InlineData(2, 'W', 25)]
       [InlineData(3, '\n', 46)]
       [InlineData(4, 't', 47)]
-      public void Moving_to_the_beginning_of_a_buffer_line_works(int line, char letter, int absoluteIndex)
+      public void Moving_to_the_beginning_of_a_buffer_line_works(int lineNumber, char letter, int absolutePosition)
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
 
          // and moving to the beginning of a specified line
-         buffer.LineNumber = line;
+         buffer.LineNumber = lineNumber;
          buffer.MoveToBeginningOfLine();
 
          // Buffer position and content is correct
          buffer.Current.Should().Be(letter);
-         buffer.LineNumber.Should().Be(line);
+         buffer.LineNumber.Should().Be(lineNumber);
          buffer.ColumnPosition.Should().Be(1);
-         buffer.AbsolutePosition.Should().Be(absoluteIndex);
+         buffer.AbsolutePosition.Should().Be(absolutePosition);
       }
 
       [Fact]
