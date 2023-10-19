@@ -26,7 +26,11 @@
 #endregion
 
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Text;
+using System.Windows.Markup;
+using Microsoft.VisualBasic;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -229,7 +233,7 @@ namespace Org.Edgerunner.Buffers.Input
       public char MoveToEndOfBuffer()
       {
          var lastLine = _Lines[_MaxLineNo];
-         _AbsolutePosition = _AbsoluteIndexCounter[_MaxLineNo];
+         _AbsolutePosition = _AbsoluteIndexCounter[_MaxLineNo] + lastLine.Length;
          _LineNumber = _MaxLineNo;
          _ColumnPosition = lastLine.Length;
          return lastLine[^1];
@@ -251,6 +255,9 @@ namespace Org.Edgerunner.Buffers.Input
          var lineNumber = _LineNumber;
          var position = _ColumnPosition;
 
+         if (offset == 0)
+            return Current;
+
          while (offset != 0)
          {
             if (offset > 0)
@@ -270,22 +277,22 @@ namespace Org.Edgerunner.Buffers.Input
             }
             else
             {
-               if (position - offset < 1)
+               if (position + offset < 1)
                {
                   if (lineNumber == 1)
                      throw new ArgumentOutOfRangeException(nameof(offset), "Offset exceeds bounds of the buffer");
-                  offset -= position;
+                  offset += position;
                   lineNumber--;
                   if (!_Lines.TryGetValue(lineNumber, out currentLine))
                      throw new BufferException("Unable to access current line number in buffer for some reason");
                   position = currentLine.Length;
                }
                else
-                  return currentLine[position - offset - 1]; 
+                  return currentLine[position + offset - 1]; 
             }
          }
 
-         return Current;
+         return currentLine[position - 1];
       }
 
       /// <summary>
@@ -304,7 +311,7 @@ namespace Org.Edgerunner.Buffers.Input
       {
          var length = _Lines[_LineNumber].Length;
          _AbsolutePosition += length - _ColumnPosition;
-         _LineNumber = length;
+         _ColumnPosition = length;
       }
 
       /// <summary>
@@ -317,23 +324,26 @@ namespace Org.Edgerunner.Buffers.Input
          get => _AbsolutePosition;
          set
          {
-            var line = 0;
-            int length;
-            do
+            var lineNumber = 0;
+            int absoluteLength = 0;
+            bool found = false;
+            string line;
+
+            while (!found)
             {
-               line++;
+               lineNumber++;
 
-               if (!_AbsoluteIndexCounter.TryGetValue(line, out length))
+               if (!_AbsoluteIndexCounter.TryGetValue(lineNumber, out absoluteLength))
                   throw new ArgumentOutOfRangeException(nameof(value), "Absolute position is outside the valid range for the buffer");
+
+               if (!_Lines.TryGetValue(lineNumber, out line))
+                  throw new ArgumentOutOfRangeException(nameof(value), "Unable to fetch text line from buffer");
+
+               if (value > absoluteLength && value <= absoluteLength + line.Length) found = true;
             }
-            while (value < length);
 
-            if (value != length)
-               line--;
-
-            var offset = line > 1 ? _AbsoluteIndexCounter[line - 1] : 0;
-            _LineNumber = line;
-            _ColumnPosition = (int)(value - offset);
+            _LineNumber = lineNumber;
+            _ColumnPosition = (int)(value - absoluteLength);
 
             _AbsolutePosition = value;
          }
@@ -354,7 +364,7 @@ namespace Org.Edgerunner.Buffers.Input
             if (value > _Lines.Count)
                throw new ArgumentOutOfRangeException(nameof(value), "Line number exceeds the range within the buffer");
 
-            var offset = value > 1 ? _AbsoluteIndexCounter[value - 1] : 0;
+            var offset = _AbsoluteIndexCounter[value];
             _AbsolutePosition = offset + _ColumnPosition;
             _LineNumber = value;
          }
@@ -375,7 +385,7 @@ namespace Org.Edgerunner.Buffers.Input
             if (value > _Lines[_LineNumber].Length)
                throw new ArgumentOutOfRangeException(nameof(value), "Column position exceeds the length of the current line");
 
-            var offset = _LineNumber > 1 ? _AbsoluteIndexCounter[_LineNumber - 1] : 0;
+            var offset = _AbsoluteIndexCounter[_LineNumber];
             _AbsolutePosition = offset + value;
             _ColumnPosition = value;
          }
@@ -480,19 +490,18 @@ namespace Org.Edgerunner.Buffers.Input
 
          while ((character = source.Read()) != -1)
          {
-            text.Append(character);
+            text.Append((char)character);
             if (character != '\n')
                continue;
 
             _Lines.Add(++line, text.ToString());
-            absolute += text.Length;
             _AbsoluteIndexCounter.Add(line, absolute);
+            absolute += text.Length;
             text.Clear();
          }
 
          text.Append(EndOfFile);
          _Lines.Add(++line, text.ToString());
-         absolute += text.Length;
          _AbsoluteIndexCounter.Add(line, absolute);
 
          _MaxLineNo = line;
