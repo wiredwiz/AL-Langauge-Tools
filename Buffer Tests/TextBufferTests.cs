@@ -17,6 +17,20 @@ namespace Org.Edgerunner.Buffers.Tests
       }
 
       [Theory]
+      [InlineData(1, "This is an example file\n")]
+      [InlineData(2, "With a few lines of\r\n")]
+      [InlineData(3, "\n")]
+      [InlineData(4, "text to test The buffer")]
+      public void Get_a_line_from_the_buffer_works(int line, string text)
+      {
+         // Starting with a new buffer
+         var buffer = GenerateTestBuffer();
+
+         // fetching a specified text line results in the right text
+         buffer.GetLine(line).Should().Be(text);
+      }
+
+      [Theory]
       [InlineData(1, 1, 'h')]
       [InlineData(2, 1, 'i')]
       [InlineData(3, 1, 's')]
@@ -77,12 +91,31 @@ namespace Org.Edgerunner.Buffers.Tests
       }
 
       [Theory]
+      [InlineData(1, 'T')]
+      [InlineData(2, 'T')]
+      [InlineData(3, 'h')]
+      [InlineData(26, 'W')]
+      [InlineData(47, '\n')]
+      public void Getting_the_previous_character_in_a_buffer_works(int absolute, char next)
+      {
+         // Starting with a new buffer
+         var buffer = GenerateTestBuffer();
+
+         // and moving to the specified absolute position
+         buffer.AbsolutePosition = absolute;
+
+         // getting the previous character results in the right character
+         buffer.GetPreviousChar().Should().Be(next);
+      }
+
+      [Theory]
       [InlineData(1, 'h')]
       [InlineData(2, 'i')]
       [InlineData(3, 's')]
       [InlineData(24, 'W')]
       [InlineData(46, 't')]
       [InlineData(69, '\0')]
+      [InlineData(70, '\0')]
       public void Getting_the_next_character_in_a_buffer_works(int absolute, char next)
       {
          // Starting with a new buffer
@@ -197,6 +230,26 @@ namespace Org.Edgerunner.Buffers.Tests
          buffer.LineNumber.Should().Be(4);
          buffer.ColumnPosition.Should().Be(24);
          buffer.AbsolutePosition.Should().Be(70);
+      }
+
+      [Fact]
+      public void Buffer_is_empty_is_true()
+      {
+         // Starting with a new empty buffer
+         var buffer = new TextBuffer(string.Empty);
+
+         // buffer is empty is true
+         buffer.IsEmpty.Should().BeTrue();
+      }
+
+      [Fact]
+      public void Buffer_is_empty_is_false()
+      {
+         // Starting with a new test buffer
+         var buffer = GenerateTestBuffer();
+
+         // buffer is empty is false
+         buffer.IsEmpty.Should().BeFalse();
       }
 
       [Theory]
