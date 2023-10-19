@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Org.Edgerunner.Buffers.Input;
-using System;
+
+// ReSharper disable ExceptionNotDocumented
 
 namespace Org.Edgerunner.Buffers.Tests
 {
@@ -170,7 +171,7 @@ namespace Org.Edgerunner.Buffers.Tests
       }
 
       [Fact]
-      public void Testing_for_at_beginning_of_buffer_works()
+      public void Testing_for_beginning_of_buffer_position_works()
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
@@ -184,7 +185,7 @@ namespace Org.Edgerunner.Buffers.Tests
       }
 
       [Fact]
-      public void Testing_for_at_end_of_buffer_works()
+      public void Testing_for_end_of_buffer_position_works()
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
@@ -198,7 +199,7 @@ namespace Org.Edgerunner.Buffers.Tests
       }
       
       [Fact]
-      public void Moving_to_the_beginning_of_buffer_works()
+      public void Moving_to_the_beginning_of_a_buffer_works()
       {
          // Starting with a new buffer
          var buffer = GenerateTestBuffer();
@@ -233,7 +234,7 @@ namespace Org.Edgerunner.Buffers.Tests
       }
 
       [Fact]
-      public void Buffer_is_empty_is_true()
+      public void Buffer_IsEmpty_is_true()
       {
          // Starting with a new empty buffer
          var buffer = new TextBuffer(string.Empty);
@@ -243,7 +244,7 @@ namespace Org.Edgerunner.Buffers.Tests
       }
 
       [Fact]
-      public void Buffer_is_empty_is_false()
+      public void Buffer_IsEmpty_is_false()
       {
          // Starting with a new test buffer
          var buffer = GenerateTestBuffer();
