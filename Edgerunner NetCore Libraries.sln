@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.Edgerunner.Pooling", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buffer Tests", "Buffer Tests\Buffer Tests.csproj", "{CF18CC1A-65A6-4F25-95B5-384DC4947F78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AL Lexer Tests", "AL Lexer Tests\AL Lexer Tests.csproj", "{A84676A8-D272-45D9-89EC-6F590554C585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{CF18CC1A-65A6-4F25-95B5-384DC4947F78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF18CC1A-65A6-4F25-95B5-384DC4947F78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF18CC1A-65A6-4F25-95B5-384DC4947F78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A84676A8-D272-45D9-89EC-6F590554C585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A84676A8-D272-45D9-89EC-6F590554C585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A84676A8-D272-45D9-89EC-6F590554C585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A84676A8-D272-45D9-89EC-6F590554C585}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
