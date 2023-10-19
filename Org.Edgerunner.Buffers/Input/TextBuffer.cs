@@ -153,6 +153,15 @@ namespace Org.Edgerunner.Buffers.Input
       /// <exception cref="KeyNotFoundException">The line corresponding to <paramref name="lineNumber" /> does not exist in the buffer.</exception>
       public string GetLine(int lineNumber)
       {
+         if (lineNumber == _MaxLineNo)
+         {
+            var text = _Lines[lineNumber];
+            if (text.Length == 1)
+               return string.Empty;
+
+            return text.Substring(0, text.Length - 1);
+         }
+
          return _Lines[lineNumber];
       }
 
@@ -196,7 +205,7 @@ namespace Org.Edgerunner.Buffers.Input
          var currentLine = _Lines[_LineNumber];
 
          if (_LineNumber == 1 && _ColumnPosition == 1)
-            return currentLine[1];
+            return currentLine[0];
 
          if (_ColumnPosition == 1)
          {
