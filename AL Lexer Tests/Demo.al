@@ -133,7 +133,7 @@ table 14 Location
         }
         field(5720; "Country/Region Code"; Code[10])
         {
-            Caption = 'Country/Region Code';
+            Caption = 'Country/Region Code ''test''';
             TableRelation = "Country/Region";
 
             trigger OnValidate()
@@ -924,7 +924,17 @@ table 14 Location
     var
         IsHandled: Boolean;
         Result: Boolean;
+        TestDate: Date;
+        TestDateTime: Datetime;
+        TestTime: Time;
+        TestDecimal: Decimal
     begin
+        IF (TestDate = 0D)
+          TestDate := 01012008D;
+        IF (TestTime = 0T)
+          TestTime := 112032300T;
+        TestDateTime := 0DT;
+        TestDecimal := 2.53;
         IsHandled := false;
         OnBeforeIsBinBWReceiveOrShip(Rec, BinCode, Result, IsHandled);
         if IsHandled then
@@ -971,6 +981,12 @@ table 14 Location
         Validate(Name, UnspecifiedLocationLbl);
         Insert();
 
+        /*******************
+         * demo Multi-line *
+         * comment         *
+         *******************/
+
+
         if not IncludeOnlyUnspecifiedLocation then begin
             if ExcludeInTransitLocations then
                 Location.SetRange("Use As In-Transit", false);
@@ -986,6 +1002,10 @@ table 14 Location
         FindFirst();
     end;
 
+    /// <summary>
+    ///  Indicates whether the location is configured to pick using the first expire first out rule.
+    /// </summary>
+    /// <returns>True if picking is done according to first expire first out, otherwise false.</returns>
     procedure PickAccordingToFEFO(): Boolean
     begin
         exit(Rec."Require Pick" and ((Rec."Require Shipment" and Rec."Bin Mandatory") or (not Rec."Require Shipment")));
