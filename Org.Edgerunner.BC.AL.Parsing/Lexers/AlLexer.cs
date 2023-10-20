@@ -57,28 +57,16 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
                if (buffer.PeekChar() == '*')
                   result = CommentTokenizer.ReadMultiLineCommentTokenFromBuffer(buffer);
                if (buffer.PeekChar() == '/')
-                  result = CommentTokenizer.ReadSingleLineCommentTokenFromBuffer(buffer);
+                  result = buffer.PeekChar(2) == '/'
+                     ? CommentTokenizer.ReadXmlCommentTokenFromBuffer(buffer)
+                     : CommentTokenizer.ReadSingleLineCommentTokenFromBuffer(buffer);
 
                buffer.GetNextChar();
                return result;
             }
             case CharacterIndicator.Number:
             {
-               if (buffer.Current == '0')
-               {
-                  if (buffer.PeekChar() is 'D' or 'd')
-                     result = buffer.PeekChar(2) is 'T' or 't'
-                        ? LiteralTokenizer.ReadDateTimeLiteralFromBuffer(buffer)
-                        : LiteralTokenizer.ReadDateLiteralFromBuffer(buffer);
-                  else if (buffer.PeekChar() is 'T' or 't')
-                     result = LiteralTokenizer.ReadTimeLiteralFromBuffer(buffer);
-                  else
-                     result = LiteralTokenizer.ReadNumberLiteralTokenFromBuffer(buffer);
-               }
-               else
-                  result = LiteralTokenizer.ReadNumberLiteralTokenFromBuffer(buffer);
-
-               return result;
+               return LiteralTokenizer.ReadNumericBasedLiteralFromBuffer(buffer);
             }
             case CharacterIndicator.Symbol:
                return SymbolTokenizer.ReadSymbolTokenFromBuffer(buffer);

@@ -55,9 +55,7 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             text.Append(buffer.Current);
          } while (buffer.GetNextChar() is not '\n' and not '\r' and not '\0');
 
-         var end = new BufferPoint(buffer.LineNumber, buffer.ColumnPosition - 1);
-         text.Append(buffer.Current);
-         return new CommentToken(text.ToString(), start, end);
+         return new CommentToken(text.ToString(), start, buffer.GetBufferPoint(-1));
       }
 
       /// <summary>
@@ -92,6 +90,8 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
 
                   return result;
                }
+
+               text.Append(buffer.Current);
             }
             else
                text.Append(buffer.Current);
@@ -126,9 +126,7 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             text.Append(buffer.Current);
          } while (buffer.GetNextChar() is not '\n' and not '\r' and not '\0');
 
-         var end = new BufferPoint(buffer.LineNumber, buffer.ColumnPosition - 1);
-         text.Append(buffer.Current);
-         return new XmlCommentToken(text.ToString(), start, end);
+         return new XmlCommentToken(text.ToString(), start, buffer.GetBufferPoint(-1));
       }
    }
 }
