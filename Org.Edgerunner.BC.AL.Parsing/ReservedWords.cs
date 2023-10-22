@@ -44,6 +44,7 @@ namespace Org.Edgerunner.BC.AL.Parsing
       OR,
       EXIT,
       TRUE,
-      FALSE
+      FALSE,
+      GUIALLOWED
    }
 }
