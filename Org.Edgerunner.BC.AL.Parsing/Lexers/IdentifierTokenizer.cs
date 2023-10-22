@@ -67,7 +67,7 @@ namespace Org.Edgerunner.BC.AL.Parsing.Lexers
             buffer.GetNextChar();
          }
 
-         return new IdentifierToken(text.ToString(), start, buffer.GetBufferPoint(), Enum.TryParse(text.ToString(), true, out ReservedWords _));
+         return new IdentifierToken(text.ToString(), start, buffer.GetBufferPoint(-1), Enum.TryParse(text.ToString(), true, out ReservedWords _));
       }
    }
 }
