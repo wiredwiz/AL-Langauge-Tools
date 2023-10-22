@@ -23,9 +23,7 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Data;
-
-namespace Org.Edgerunner.BC.Objects.Code.TypeDeclarations
+namespace Org.Edgerunner.BC.AL.Objects.Code.TypeDeclarations
 {
    /// <summary>
    /// Class that defines a record variable declaration.

@@ -23,7 +23,7 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.Objects.Tables
+namespace Org.Edgerunner.BC.AL.Objects.Tables
 {
    /// <summary>
    /// Enum that defines field types in AL.

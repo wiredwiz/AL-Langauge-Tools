@@ -23,13 +23,13 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.Objects.Code.TypeDeclarations
+namespace Org.Edgerunner.BC.AL.Objects.Code.TypeDeclarations
 {
    /// <summary>
    /// Class that defines a variable declaration of the list type.
-   /// Implements the <see cref="Org.Edgerunner.BC.Objects.Code.TypeDeclarations.BasicVariableTypeDeclaration" />
+   /// Implements the <see cref="BasicVariableTypeDeclaration" />
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.BC.Objects.Code.TypeDeclarations.BasicVariableTypeDeclaration" />
+   /// <seealso cref="BasicVariableTypeDeclaration" />
    public class ListVariableTypeDeclaration : BasicVariableTypeDeclaration
    {
       /// <summary>

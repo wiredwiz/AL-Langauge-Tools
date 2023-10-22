@@ -23,7 +23,7 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.Objects.Code
+namespace Org.Edgerunner.BC.AL.Objects.Code
 {
    public class Method
    {

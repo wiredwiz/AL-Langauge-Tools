@@ -24,7 +24,7 @@
 #endregion
 
 
-namespace Org.Edgerunner.BC.Objects.Code.TypeDeclarations
+namespace Org.Edgerunner.BC.AL.Objects.Code.TypeDeclarations
 {
    public class BasicVariableTypeDeclaration
    {

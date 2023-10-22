@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.Objects.Code.TypeDeclarations;
+using Org.Edgerunner.BC.AL.Objects.Code.TypeDeclarations;
 
-namespace Org.Edgerunner.BC.Objects.Code
+namespace Org.Edgerunner.BC.AL.Objects.Code
 {
    /// <summary>
    /// Class that defines an AL variable.

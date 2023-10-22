@@ -24,7 +24,7 @@
 #endregion
 
 
-namespace Org.Edgerunner.BC.Objects.Code.TypeDeclarations
+namespace Org.Edgerunner.BC.AL.Objects.Code.TypeDeclarations
 {
    /// <summary>
    /// Class that defines a variable declaration of the array type.

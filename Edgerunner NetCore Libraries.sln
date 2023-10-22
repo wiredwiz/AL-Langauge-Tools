@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buffer Tests", "Buffer Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AL Lexer Tests", "AL Lexer Tests\AL Lexer Tests.csproj", "{A84676A8-D272-45D9-89EC-6F590554C585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.BC.Objects", "Org.Edgerunner.BC.Objects\Org.Edgerunner.BC.Objects.csproj", "{12D4091A-43A7-44DF-88EC-BA6EC0ACB42E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.BC.AL.Objects", "Org.Edgerunner.BC.Objects\Org.Edgerunner.BC.AL.Objects.csproj", "{12D4091A-43A7-44DF-88EC-BA6EC0ACB42E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
