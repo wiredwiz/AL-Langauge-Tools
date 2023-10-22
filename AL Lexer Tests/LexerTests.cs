@@ -102,6 +102,10 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tests
          // The token is a valid LiteralToken of type string
          token!.LiteralType.Should().Be(LiteralType.String);
          token.TokenType.Should().Be((int)TokenType.Literal);
+         token.StartingLine.Should().Be(lineNumber);
+         token.EndingLine.Should().Be(lineNumber);
+         token.StartingColumn.Should().Be(position);
+         token.EndingColumn.Should().Be(name.Length + position - 1);
          token.Value.Should().Be(name);
       }
 
@@ -214,12 +218,16 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tests
 
          // The token is a valid CommentToken
          token!.TokenType.Should().Be((int)TokenType.Comment);
+         token.StartingLine.Should().Be(lineNumber);
+         token.EndingLine.Should().Be(lineNumber);
+         token.StartingColumn.Should().Be(position);
+         token.EndingColumn.Should().Be(name.Length + position - 1);
          token.Value.Should().Be(name);
       }
 
       [Theory]
-      [InlineData(984, 9, "/*******************\r\n         * demo Multi-line *\r\n         * comment         *\r\n         *******************/")]
-      public void Fetching_a_multiline_comment_literal_token_results_in_the_correct_result(int lineNumber, int position, string name)
+      [InlineData(984, 9, 987, 29, "/*******************\r\n         * demo Multi-line *\r\n         * comment         *\r\n         *******************/")]
+      public void Fetching_a_multiline_comment_literal_token_results_in_the_correct_result(int lineNumber, int position, int endLine, int endPos, string name)
       {
          // Given a new AL lexer
          var lexer = new AlLexer();
@@ -235,6 +243,10 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tests
 
          // The token is a valid CommentToken
          token!.TokenType.Should().Be((int)TokenType.Comment);
+         token.StartingLine.Should().Be(lineNumber);
+         token.EndingLine.Should().Be(endLine);
+         token.StartingColumn.Should().Be(position);
+         token.EndingColumn.Should().Be(endPos);
          token.Value.Should().Be(name);
       }
 
@@ -286,6 +298,38 @@ namespace Org.Edgerunner.BC.AL.Parsing.Tests
          // The token is a valid SymbolToken
          token!.TokenType.Should().Be((int)TokenType.Symbol);
          token.Value.Should().Be(name);
+      }
+
+      [Fact]
+      public void Reading_a_series_of_tokens_succeeds()
+      {
+         // Given a new AL lexer
+         var lexer = new AlLexer();
+
+         // loading a demo al file
+         var buffer = new TextBuffer("demo.al", Encoding.Default.CodePage);
+
+         // setting the buffer position
+         buffer.SetBufferPoint(new BufferPoint(1075, 5));
+
+         // and then reading a series of tokens
+         var tokens = lexer.ReadTokensFromBuffer(buffer);
+         AlToken token;
+
+         // Results in the expected tokens
+         tokens.Count.Should().Be(38);
+         var last = tokens[37];
+         last.StartingLine.Should().Be(1079);
+         last.EndingLine.Should().Be(1079);
+         last.StartingColumn.Should().Be(1);
+         last.EndingColumn.Should().Be(1);
+         last.Value.Should().Be("}");
+         var other = tokens[10];
+         other.StartingLine.Should().Be(1076);
+         other.EndingLine.Should().Be(1076);
+         other.StartingColumn.Should().Be(21);
+         other.EndingColumn.Should().Be(48);
+         other.Value.Should().Be("OnBeforeIsBinBWReceiveOrShip");
       }
    }
 }
