@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -9,7 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Org.Edgerunner.BC.Objects\Org.Edgerunner.BC.AL.Objects.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Buffers\Org.Edgerunner.Buffers.csproj" />
-    <ProjectReference Include="..\Org.Edgerunner.Lexer\Org.Edgerunner.Lexers.csproj" />
+    <ProjectReference Include="..\Org.Edgerunner.Lexer\Org.Edgerunner.Language.Lexers.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Pooling\Org.Edgerunner.Pooling.csproj" />
   </ItemGroup>
 

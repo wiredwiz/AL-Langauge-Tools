@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ILexer.cs">
+// <copyright company = "Edgerunner.org" file = "LanguageError.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,34 +23,45 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.Buffers;
-
 namespace Org.Edgerunner.Language.Lexers
 {
    /// <summary>
-   /// Interface representing a language lexer.
+   /// Class that defines a language error.
    /// </summary>
-   public interface ILexer<T>
+   /// <typeparam name="T">The type of tokens used in the language</typeparam>
+   /// <seealso cref="IToken"/>
+   public class LanguageError<T>
    where T : IToken
    {
       /// <summary>
-      /// Gets the current token map.
+      /// Initializes a new instance of the <see cref="LanguageError{T}" /> class.
       /// </summary>
-      /// <returns>An array of <see cref="int"/>.</returns>
-      int[] GetTokenMap();
+      /// <param name="startToken">The token that starts the error.</param>
+      /// <param name="endToken">The token that ends the error.</param>
+      /// <param name="message">The message.</param>
+      public LanguageError(T startToken, T endToken, string message)
+      {
+         StartToken = startToken;
+         EndToken = endToken;
+         Message = message;
+      }
 
       /// <summary>
-      /// Reads a token from the current position in a buffer.
+      /// Gets the AL token that starts the error.
       /// </summary>
-      /// <param name="buffer">The buffer to read.</param>
-      /// <returns>A new <see cref="T"/> or null if at end of buffer.</returns>
-      T? ReadTokenFromBuffer(ITextBuffer buffer);
+      /// <value>The AL token.</value>
+      public T StartToken { get; }
 
       /// <summary>
-      /// Reads all tokens from the current position in a buffer.
+      /// Gets the AL token that ends the error.
       /// </summary>
-      /// <param name="buffer">The buffer to read.</param>
-      /// <returns>A <see cref="List{T}"/> containing the tokens.</returns>
-      List<T> ReadTokensFromBuffer(ITextBuffer buffer);
+      /// <value>The AL token.</value>
+      public T EndToken { get; }
+
+      /// <summary>
+      /// Gets or sets the error message.
+      /// </summary>
+      /// <value>The error message.</value>
+      public string Message { get; set; }
    }
 }

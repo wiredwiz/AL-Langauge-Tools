@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.Edgerunner.Lexers", "Org.Edgerunner.Lexer\Org.Edgerunner.Lexers.csproj", "{D785133F-D2AB-4D83-BB85-3F63E2AECD60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.Edgerunner.Language.Lexers", "Org.Edgerunner.Lexer\Org.Edgerunner.Language.Lexers.csproj", "{D785133F-D2AB-4D83-BB85-3F63E2AECD60}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.Edgerunner.BC.AL.Language", "Org.Edgerunner.BC.AL.Parsing\Org.Edgerunner.BC.AL.Language.csproj", "{ECF23D88-5697-45E7-93A5-7EFE473A1551}"
 EndProject
@@ -23,6 +23,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.BC.AL.Objects", "Org.Edgerunner.BC.Objects\Org.Edgerunner.BC.AL.Objects.csproj", "{12D4091A-43A7-44DF-88EC-BA6EC0ACB42E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.Common", "Org.Ederunner.Common\Org.Edgerunner.Common.csproj", "{35E13D58-5136-4C9A-9C8D-6320C7570BD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.Language.Parsers", "Org.Edgerunner.Language.Parsers\Org.Edgerunner.Language.Parsers.csproj", "{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +64,10 @@ Global
 		{35E13D58-5136-4C9A-9C8D-6320C7570BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35E13D58-5136-4C9A-9C8D-6320C7570BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35E13D58-5136-4C9A-9C8D-6320C7570BD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

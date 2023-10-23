@@ -25,7 +25,7 @@
 
 
 using Org.Edgerunner.Buffers;
-using Org.Edgerunner.Lexers;
+using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Tokens
 {

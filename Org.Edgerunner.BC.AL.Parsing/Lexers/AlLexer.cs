@@ -27,11 +27,11 @@
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
-using Org.Edgerunner.Lexers;
+using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
-   public class AlLexer : ILexer
+   public class AlLexer : ILexer<AlToken>
    {
       private readonly int[] _FileObjectMap = TokenMapping.GetFileObjectMap();
 
@@ -42,14 +42,14 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
 
       /// <inheritdoc />
       // ReSharper disable once MethodTooLong
-      public IToken? ReadTokenFromBuffer(ITextBuffer buffer)
+      public AlToken? ReadTokenFromBuffer(ITextBuffer buffer)
       {
          SkipWhitespace(buffer);
          if (buffer.AtEndOfBuffer()) return null;
 
          var start = buffer.GetBufferPoint();
          var indicator = (CharacterIndicator)_FileObjectMap[buffer.Current];
-         IToken? result = null;
+         AlToken? result = null;
          switch (indicator)
          {
             case CharacterIndicator.Comment:
@@ -85,9 +85,9 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       }
 
       /// <inheritdoc />
-      public List<IToken> ReadTokensFromBuffer(ITextBuffer buffer)
+      public List<AlToken> ReadTokensFromBuffer(ITextBuffer buffer)
       {
-         var tokens = new List<IToken>();
+         var tokens = new List<AlToken>();
          // loop and add tokens until we reach null/end of buffer
          while (ReadTokenFromBuffer(buffer) is {} token) tokens.Add(token);
          return tokens;

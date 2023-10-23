@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ILexer.cs">
+// <copyright company = "Edgerunner.org" file = "TableFieldParser.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,34 +23,23 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.Buffers;
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.BC.AL.Objects.Tables;
+using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.Language.Lexers
+namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   /// <summary>
-   /// Interface representing a language lexer.
-   /// </summary>
-   public interface ILexer<T>
-   where T : IToken
+   public static class TableFieldParser
    {
-      /// <summary>
-      /// Gets the current token map.
-      /// </summary>
-      /// <returns>An array of <see cref="int"/>.</returns>
-      int[] GetTokenMap();
+      public static Field ParseField(TokenStream<AlToken> stream)
+      {
+         AlToken token = stream.NextToken();
+         if (token is not SymbolToken { Value: "(" })
+         {
 
-      /// <summary>
-      /// Reads a token from the current position in a buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read.</param>
-      /// <returns>A new <see cref="T"/> or null if at end of buffer.</returns>
-      T? ReadTokenFromBuffer(ITextBuffer buffer);
+         }
 
-      /// <summary>
-      /// Reads all tokens from the current position in a buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read.</param>
-      /// <returns>A <see cref="List{T}"/> containing the tokens.</returns>
-      List<T> ReadTokensFromBuffer(ITextBuffer buffer);
+         return null;
+      }
    }
 }
