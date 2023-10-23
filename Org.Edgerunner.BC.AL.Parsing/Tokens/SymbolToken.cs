@@ -24,12 +24,10 @@
 #endregion
 
 
-using System.Security.Authentication.ExtendedProtection;
-using System.Text;
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tokens
+namespace Org.Edgerunner.BC.AL.Language.Tokens
 {
    /// <summary>
    /// Class representing an AL symbol token. This class cannot be inherited.

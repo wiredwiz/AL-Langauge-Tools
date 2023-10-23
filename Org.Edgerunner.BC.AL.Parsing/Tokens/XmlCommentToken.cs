@@ -25,13 +25,13 @@
 
 using Org.Edgerunner.Buffers;
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tokens
+namespace Org.Edgerunner.BC.AL.Language.Tokens
 {
    /// <summary>
    /// Class representing an xml comment token. This class cannot be inherited.
-   /// Implements the <see cref="Org.Edgerunner.BC.AL.Parsing.Tokens.AlToken" />
+   /// Implements the <see cref="AlToken" />
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.BC.AL.Parsing.Tokens.AlToken" />
+   /// <seealso cref="AlToken" />
    public sealed class XmlCommentToken : AlToken
    {
       /// <summary>

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Org.Ederunner.Common\Org.Edgerunner.Common.csproj" />
+  </ItemGroup>
+
 </Project>

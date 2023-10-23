@@ -25,12 +25,12 @@
 
 #endregion
 
-using Org.Edgerunner.BC.AL.Parsing.Tokens;
+using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
 
 // ReSharper disable FlagArgument
 
-namespace Org.Edgerunner.BC.AL.Parsing.Lexers
+namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
    public static class SymbolTokenizer
    {

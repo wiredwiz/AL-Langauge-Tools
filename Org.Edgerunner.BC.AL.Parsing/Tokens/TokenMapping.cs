@@ -25,7 +25,7 @@
 
 // ReSharper disable MethodTooLong
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tokens
+namespace Org.Edgerunner.BC.AL.Language.Tokens
 {
    /// <summary>
    /// Class for generating AL token maps.

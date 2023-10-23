@@ -24,7 +24,7 @@
 #endregion
 
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tokens
+namespace Org.Edgerunner.BC.AL.Language.Tokens
 {
    public enum TokenType
    {

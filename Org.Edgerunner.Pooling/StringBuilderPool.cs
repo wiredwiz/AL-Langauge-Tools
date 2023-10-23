@@ -26,7 +26,7 @@
 using System.Text;
 using Microsoft.Extensions.ObjectPool;
 
-namespace Org.Edgerunner.BC.AL.Parsing.Pooling
+namespace Org.Edgerunner.Pooling
 {
    /// <summary>
    /// Class containing a static string builder pool for use in the lexer.

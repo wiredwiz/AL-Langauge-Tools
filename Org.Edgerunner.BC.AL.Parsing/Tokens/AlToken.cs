@@ -26,7 +26,7 @@
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tokens
+namespace Org.Edgerunner.BC.AL.Language.Tokens
 {
    /// <summary>
    /// Class that represents an AL language Token.

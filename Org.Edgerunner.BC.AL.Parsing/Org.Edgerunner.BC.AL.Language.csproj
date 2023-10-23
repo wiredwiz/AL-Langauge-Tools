@@ -7,9 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Org.Edgerunner.BC.Objects\Org.Edgerunner.BC.AL.Objects.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Buffers\Org.Edgerunner.Buffers.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Lexer\Org.Edgerunner.Lexers.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Pooling\Org.Edgerunner.Pooling.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Parsers\" />
   </ItemGroup>
 
 </Project>

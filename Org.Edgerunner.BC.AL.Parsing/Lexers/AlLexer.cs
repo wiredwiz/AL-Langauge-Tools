@@ -25,11 +25,11 @@
 
 #endregion
 
-using Org.Edgerunner.BC.AL.Parsing.Tokens;
+using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Parsing.Lexers
+namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
    public class AlLexer : ILexer
    {

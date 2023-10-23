@@ -25,7 +25,7 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tokens
+namespace Org.Edgerunner.BC.AL.Language.Tokens
 {
    /// <summary>
    /// Enumeration representing AL token classes for identifier tokens.

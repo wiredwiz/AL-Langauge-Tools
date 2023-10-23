@@ -23,11 +23,12 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Parsing.Tokens;
+using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
-using Org.Edgerunner.BC.AL.Parsing.Pooling;
+using Org.Edgerunner.Common.Extensions;
+using Org.Edgerunner.Pooling;
 
-namespace Org.Edgerunner.BC.AL.Parsing.Lexers
+namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
    public static class LiteralTokenizer
    {

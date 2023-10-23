@@ -27,6 +27,26 @@ namespace Org.Edgerunner.BC.AL.Objects.Tables
 {
    public class Key
    {
-      
+      public string Name { get; set; }
+
+      public List<string> Fields { get; set; }
+
+      public bool Clustered { get; set; }
+
+      public bool Enabled { get; set; }
+
+      public bool Unique { get; set; }
+      public override string ToString()
+      {
+         var result = $"key({Name}; {string.Join(", ", Fields)})\r\n{{";
+         if (Clustered || Enabled || Unique)
+         {
+            if (Enabled) result +=   $"    Enabled=true";
+            if (Clustered) result += $"    Clustered=true";
+            if (Unique) result +=    $"    Unique=true";
+         }
+         return result + "}";
+      }
+
    }
 }

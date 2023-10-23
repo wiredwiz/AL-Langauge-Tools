@@ -23,7 +23,7 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Parsing
+namespace Org.Edgerunner.BC.AL.Language
 {
    public enum ReservedWords
    {
