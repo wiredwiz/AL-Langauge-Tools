@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "Codeunit.cs">
+// <copyright company = "Edgerunner.org" file = "ParserError.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,10 +23,20 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Objects.Code
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+
+namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   public class Codeunit : AlObjectBase
+   /// <summary>
+   /// Class that represents a parser error.
+   /// Implements the <see cref="Org.Edgerunner.Language.Lexers.LanguageError{AlToken}" />
+   /// </summary>
+   /// <seealso cref="Org.Edgerunner.Language.Lexers.LanguageError{AlToken}" />
+   public class ParserError : LanguageError<AlToken>
    {
-      public Codeunit(string name, int id) : base(name, id) {}
+      public ParserError(AlToken startToken, AlToken endToken, string message)
+         : base(startToken, endToken, message, "Parser")
+      {}
    }
 }

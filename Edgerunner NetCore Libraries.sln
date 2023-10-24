@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.Common", "Or
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Org.Edgerunner.Language.Parsers", "Org.Edgerunner.Language.Parsers\Org.Edgerunner.Language.Parsers.csproj", "{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AL Parser Tests", "AL Parser Tests\AL Parser Tests.csproj", "{45C68159-DBCE-48BB-B024-B26DCACF9430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4712E0F3-E5C4-4ACF-9B57-1DC12D4F0147}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C68159-DBCE-48BB-B024-B26DCACF9430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C68159-DBCE-48BB-B024-B26DCACF9430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C68159-DBCE-48BB-B024-B26DCACF9430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C68159-DBCE-48BB-B024-B26DCACF9430}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "Codeunit.cs">
+// <copyright company = "Edgerunner.org" file = "IParserContext.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,10 +23,12 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Objects.Code
+namespace Org.Edgerunner.Language.Parsers
 {
-   public class Codeunit : AlObjectBase
+   public interface IParserContext
    {
-      public Codeunit(string name, int id) : base(name, id) {}
+      List<int> ActiveTokens { get; }
+
+
    }
 }

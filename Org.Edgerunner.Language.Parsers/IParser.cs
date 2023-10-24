@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ILexer.cs">
+// <copyright company = "Edgerunner.org" file = "IParser.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,38 +23,15 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.Buffers;
+using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.Language.Lexers
+namespace Org.Edgerunner.Language.Parsers
 {
-   /// <summary>
-   /// Interface representing a language lexer.
-   /// </summary>
-   public interface ILexer<T>
+   public interface IParser<T, out TO>
    where T : IToken
    {
       /// <summary>
-      /// Gets the current token map.
-      /// </summary>
-      /// <returns>An array of <see cref="int"/>.</returns>
-      int[] GetTokenMap();
-
-      /// <summary>
-      /// Reads a token from the current position in a buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read.</param>
-      /// <returns>A new <see cref="T"/> or null if at end of buffer.</returns>
-      T? ReadTokenFromBuffer(ITextBuffer buffer);
-
-      /// <summary>
-      /// Reads all tokens from the current position in a buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read.</param>
-      /// <returns>A <see cref="List{T}"/> containing the tokens.</returns>
-      List<T> ReadTokensFromBuffer(ITextBuffer buffer);
-
-      /// <summary>
-      /// Adds a listener to be notified of lexer errors.
+      /// Adds a listener to be notified of parser errors.
       /// </summary>
       /// <param name="listener">The listener.</param>
       void AddErrorListener(IErrorListener<T> listener);
@@ -69,5 +46,12 @@ namespace Org.Edgerunner.Language.Lexers
       /// </summary>
       /// <param name="listener">The listener.</param>
       void RemoveErrorListener(IErrorListener<T> listener);
+
+      /// <summary>
+      /// Parses tokens from the stream into an object of some kind.
+      /// </summary>
+      /// <param name="tokens">The tokens.</param>
+      /// <returns>O.</returns>
+      TO? ParseSource(TokenStream<T> tokens);
    }
 }

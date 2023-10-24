@@ -25,8 +25,8 @@
 
 namespace Org.Edgerunner.BC.AL.Objects.Tables
 {
-   public class Table
+   public class Table : AlObjectBase
    {
-      
+      public Table(string name, int id) : base(name, id) {}
    }
 }

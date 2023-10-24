@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "Codeunit.cs">
+// <copyright company = "Edgerunner.org" file = "LexerError.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,10 +23,30 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Objects.Code
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Buffers;
+using Org.Edgerunner.Language.Lexers;
+using System.Text;
+
+namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
-   public class Codeunit : AlObjectBase
+   /// <summary>
+   /// Class that represents a lexer error.
+   /// Implements the <see cref="Org.Edgerunner.Language.Lexers.LanguageError{AlToken}" />
+   /// </summary>
+   /// <seealso cref="Org.Edgerunner.Language.Lexers.LanguageError{AlToken}" />
+   public class LexerError : LanguageError<AlToken>
    {
-      public Codeunit(string name, int id) : base(name, id) {}
+      public LexerError(AlToken startToken, AlToken endToken, string message)
+         : base(startToken, endToken, message, "Lexer")
+      {}
+
+      public static ErrorToken PackageError(AlLexer lexer, string tokenText, BufferPoint start, BufferPoint end, string message)
+      {
+         var token = new ErrorToken(tokenText, start, end, message);
+         var error = new LexerError(token, token, message);
+         foreach (var listener in lexer.Listeners) listener.AnnounceError(error);
+         return token;
+      }
    }
 }

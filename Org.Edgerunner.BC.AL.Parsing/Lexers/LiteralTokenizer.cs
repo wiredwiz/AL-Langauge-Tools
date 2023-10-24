@@ -32,12 +32,13 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
    public static class LiteralTokenizer
    {
-            /// <summary>
+      /// <summary>
       /// Reads a StringToken from a buffer.
       /// </summary>
       /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="LiteralToken"/> or <see cref="ErrorToken"/>.</returns>
-      public static AlToken? ReadStringLiteralTokenFromBuffer(ITextBuffer buffer)
+      /// <param name="lexer">The AL lexer.</param>
+      /// <returns>A new <see cref="LiteralToken" /> or <see cref="ErrorToken" />.</returns>
+      public static AlToken? ReadStringLiteralTokenFromBuffer(ITextBuffer buffer, AlLexer lexer)
       {
          // no valid token so we return a null
          if (buffer.AtEndOfBuffer()) return null;
@@ -55,13 +56,16 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
             if (buffer.AtEndOfBuffer())
             {
                // we have reached end of buffer, thus our string is invalid, we return an error token instead
-               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "String reached end of file without termination");
+               return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(-1),
+                                              "String reached end of file without termination");
             }
 
             // check for invalid line breaks in the string
             if (tk == '\n' || tk == '\r')
             {
                return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "Strings cannot contain line breaks or carriage returns");
+               return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(-1),
+                                              "String reached end of file without termination");
             }
 
             // append the currently read token and check for string termination character
@@ -87,8 +91,10 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       /// Reads a numeric based LiteralToken from a buffer.
       /// </summary>
       /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="LiteralToken"/> or <see cref="ErrorToken"/>.</returns>
-      public static AlToken? ReadNumericBasedLiteralFromBuffer(ITextBuffer buffer)
+      /// <param name="lexer">The AL lexer.</param>
+      /// <returns>A new <see cref="LiteralToken" /> or <see cref="ErrorToken" />.</returns>
+      // ReSharper disable once MethodTooLong
+      public static AlToken? ReadNumericBasedLiteralFromBuffer(ITextBuffer buffer, AlLexer lexer)
       {
          // no valid token so we return a null
          if (buffer.AtEndOfBuffer()) return null;
@@ -110,7 +116,8 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
             if (buffer.GetNextChar().IsNumber())
                text.Append(ReadIntegerFromBuffer(buffer));
             else
-               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "Decimal fraction is missing");
+               return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(-1),
+                                              "Decimal fraction is missing");
          }
          // check for time
          else if (buffer.Current is 'T' or 't')
@@ -140,39 +147,6 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       }
 
       /// <summary>
-      /// Reads a SymbolToken from a buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="LiteralToken"/>.</returns>
-      public static AlToken? ReadNumberLiteralTokenFromBuffer(ITextBuffer buffer)
-      {
-         // no valid token so we return a null
-         if (buffer.AtEndOfBuffer()) return null;
-
-         // begin our token reading process
-         var text = StringBuilderPool.Current.Get();
-         var hasDecimal = false;
-         var start = buffer.GetBufferPoint();
-
-         // read the integral portion
-         text.Append(ReadIntegerFromBuffer(buffer));
-
-         // check for decimal
-         if (buffer.Current == '.')
-         {
-            text.Append(buffer.Current);
-            hasDecimal = true;
-            // read the fractional number if it exists
-            if (buffer.GetNextChar().IsNumber())
-               text.Append(ReadIntegerFromBuffer(buffer));
-            else
-               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "Decimal fraction is missing");
-         }
-         
-         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), hasDecimal ? LiteralType.Decimal : LiteralType.Integer);
-      }
-
-      /// <summary>
       /// Reads an integer from buffer.
       /// </summary>
       /// <param name="buffer">The buffer.</param>
@@ -184,90 +158,6 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          while (buffer.GetNextChar().IsNumber()) text.Append(buffer.Current);
 
          return text.ToString();
-      }
-
-      /// <summary>
-      /// Reads the date literal from buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="LiteralToken"/> or <see cref="ErrorToken"/>.</returns>
-      public static AlToken? ReadDateLiteralFromBuffer(ITextBuffer buffer)
-      {
-         // no valid token so we return a null
-         if (buffer.AtEndOfBuffer()) return null;
-
-         // begin our token reading process
-         var text = StringBuilderPool.Current.Get();
-         var start = buffer.GetBufferPoint();
-
-         // read the integral portion of the date
-         text.Append(ReadIntegerFromBuffer(buffer));
-
-         // check for date qualifier
-         if (!(buffer.Current is 'D' or 'd'))
-            return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid date literal");
-
-         text.Append(buffer.Current);
-         var result = new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.Date);
-         buffer.GetNextChar();
-         return result;
-      }
-
-      /// <summary>
-      /// Reads the date time literal from buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="LiteralToken"/> or <see cref="ErrorToken"/>.</returns>
-      public static AlToken? ReadTimeLiteralFromBuffer(ITextBuffer buffer)
-      {
-         // no valid token so we return a null
-         if (buffer.AtEndOfBuffer()) return null;
-
-         // begin our token reading process
-         var text = StringBuilderPool.Current.Get();
-         var start = buffer.GetBufferPoint();
-
-         // read the integral portion of the date
-         text.Append(ReadIntegerFromBuffer(buffer));
-
-         // check for date qualifier
-         if (!(buffer.Current is 'T' or 't'))
-            return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid time literal");
-         text.Append(buffer.Current);
-
-         var result = new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.Time);
-         buffer.GetNextChar();
-         return result;
-      }
-
-      /// <summary>
-      /// Reads the datetime literal from buffer.
-      /// </summary>
-      /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="LiteralToken"/> or <see cref="ErrorToken"/>.</returns>
-      public static AlToken? ReadDateTimeLiteralFromBuffer(ITextBuffer buffer)
-      {
-         // no valid token so we return a null
-         if (buffer.AtEndOfBuffer()) return null;
-
-         // begin our token reading process
-         var text = StringBuilderPool.Current.Get();
-         var start = buffer.GetBufferPoint();
-
-         // read the integral portion of the date
-         text.Append(ReadIntegerFromBuffer(buffer));
-
-         // check for datetime qualifier
-         if (!(buffer.Current is 'D' or 'd'))
-            return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid datetime literal");
-         text.Append(buffer.Current);
-         if (!(buffer.PeekChar() is 'T' or 't'))
-            return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid datetime literal");
-         text.Append(buffer.GetNextChar());
-
-         var result = new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(), LiteralType.DateTime);
-         buffer.GetNextChar();
-         return result;
       }
 
       /// <summary>

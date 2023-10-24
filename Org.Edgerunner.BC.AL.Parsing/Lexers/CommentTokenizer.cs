@@ -26,6 +26,7 @@
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Pooling;
+using System.Xml.Linq;
 
 namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
@@ -38,8 +39,9 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       /// Reads a single line CommentToken from a buffer.
       /// </summary>
       /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="CommentToken"/>.</returns>
-      public static AlToken? ReadSingleLineCommentTokenFromBuffer(ITextBuffer buffer)
+      /// <param name="lexer">The AL lexer.</param>
+      /// <returns>A new <see cref="CommentToken" />.</returns>
+      public static AlToken? ReadSingleLineCommentTokenFromBuffer(ITextBuffer buffer, AlLexer lexer)
       {
          // no valid token so we return a null
          if (buffer.AtEndOfBuffer()) return null;
@@ -48,6 +50,12 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          var text = StringBuilderPool.Current.Get();
          var start = buffer.GetBufferPoint();
 
+         buffer.GetNextChar();
+         text.Append(buffer.Current);
+         if (buffer.Current != '/')
+            return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(),
+                                           "Invalid single line comment start");
+         
          do
          {
             text.Append(buffer.Current);
@@ -60,8 +68,9 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       /// Reads a multi-line CommentToken from a buffer.
       /// </summary>
       /// <param name="buffer">The buffer to read from.</param>
-      /// <returns>A new <see cref="CommentToken"/>.</returns>
-      public static AlToken? ReadMultiLineCommentTokenFromBuffer(ITextBuffer buffer)
+      /// <param name="lexer">The AL lexer.</param>
+      /// <returns>A new <see cref="CommentToken" />.</returns>
+      public static AlToken? ReadMultiLineCommentTokenFromBuffer(ITextBuffer buffer, AlLexer lexer)
       {
          // no valid token so we return a null
          if (buffer.AtEndOfBuffer()) return null;
@@ -72,7 +81,8 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
 
          text.Append(buffer.Current);
          if (buffer.GetNextChar() != '*')
-            return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid multi-line comment start");
+            return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(),
+                                           "Invalid multi-line comment start");
 
          text.Append(buffer.Current);
          while (true)
@@ -98,7 +108,8 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
                break;
          }
 
-         return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Multi-line comment not terminated correctly");
+         return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(),
+                                        "Multi-line comment not terminated correctly");
       }
 
       /// <summary>
@@ -106,7 +117,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       /// </summary>
       /// <param name="buffer">The buffer to read from.</param>
       /// <returns>A new <see cref="CommentToken"/>.</returns>
-      public static AlToken? ReadXmlCommentTokenFromBuffer(ITextBuffer buffer)
+      public static AlToken? ReadXmlCommentTokenFromBuffer(ITextBuffer buffer, AlLexer lexer)
       {
          // no valid token so we return a null
          if (buffer.AtEndOfBuffer()) return null;
@@ -117,7 +128,8 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
 
          text.Append(buffer.Current);
          if (buffer.GetNextChar() != '/' || buffer.PeekChar() != '/')
-            return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(), "Invalid xml comment start");
+            return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(),
+                                           "Invalid xml comment start");
 
          do
          {

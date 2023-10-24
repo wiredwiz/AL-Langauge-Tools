@@ -39,7 +39,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       /// </summary>
       /// <param name="buffer">The buffer to read from.</param>
       /// <returns>A new <see cref="IdentifierToken"/>.</returns>
-      public static AlToken? ReadIdentifierTokenFromBuffer(ITextBuffer buffer)
+      public static AlToken? ReadIdentifierTokenFromBuffer(ITextBuffer buffer, AlLexer lexer)
       {
          // no valid token so we return a null
          if (buffer.AtEndOfBuffer()) return null;
@@ -61,8 +61,9 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
                text.Append(buffer.Current);
             
             if (buffer.Current != '"')
-               return new ErrorToken(text.ToString(), start, buffer.GetBufferPoint(-1), "Quoted identifier not terminated correctly");
-            
+               return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(),
+                                              "Quoted identifier not terminated correctly");
+
             text.Append(buffer.Current);
             buffer.GetNextChar();
          }

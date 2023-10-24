@@ -1,12 +1,12 @@
 using System.Text;
 using FluentAssertions;
-using Org.Edgerunner.BC.AL.Language.Lexers;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Buffers.Input;
+
 // ReSharper disable ExceptionNotDocumented
 
-namespace Org.Edgerunner.BC.AL.Parsing.Tests
+namespace Org.Edgerunner.BC.AL.Language.Lexers.Tests
 {
    public class LexerTests
    {

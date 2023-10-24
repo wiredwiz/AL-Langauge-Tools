@@ -39,11 +39,13 @@ namespace Org.Edgerunner.Language.Lexers
       /// <param name="startToken">The token that starts the error.</param>
       /// <param name="endToken">The token that ends the error.</param>
       /// <param name="message">The message.</param>
-      public LanguageError(T startToken, T endToken, string message)
+      /// <param name="source">The error source.</param>
+      public LanguageError(T startToken, T endToken, string message, string source)
       {
          StartToken = startToken;
          EndToken = endToken;
          Message = message;
+         Source = source;
       }
 
       /// <summary>
@@ -63,5 +65,11 @@ namespace Org.Edgerunner.Language.Lexers
       /// </summary>
       /// <value>The error message.</value>
       public string Message { get; set; }
+
+      /// <summary>
+      /// Gets or sets the error source.
+      /// </summary>
+      /// <value>The source.</value>
+      public string Source { get; set; }
    }
 }
