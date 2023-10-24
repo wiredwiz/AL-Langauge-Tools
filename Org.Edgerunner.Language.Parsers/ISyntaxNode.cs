@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "IParserContext.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "ISyntaxNode.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,12 +23,31 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.Language.Lexers;
+
 namespace Org.Edgerunner.Language.Parsers
 {
-   public interface IParserContext
+   /// <summary>
+   /// Interface that defines a syntax node.
+   /// </summary>
+   public interface ISyntaxNode
    {
-      List<int> ActiveTokens { get; }
+      /// <summary>
+      /// Gets or sets the token position for the token at the start of the syntax node.
+      /// </summary>
+      /// <value>The starting token position.</value>
+      int Start { get; set; }
 
+      /// <summary>
+      /// Gets or sets the token position for the token at the end of the syntax node.
+      /// </summary>
+      /// <value>The ending token position.</value>
+      int End { get; set; }
 
+      /// <summary>
+      /// Gets the text that represents this node.
+      /// </summary>
+      /// <returns>A <see cref="string"/> containing the text.</returns>
+      string GetText();
    }
 }

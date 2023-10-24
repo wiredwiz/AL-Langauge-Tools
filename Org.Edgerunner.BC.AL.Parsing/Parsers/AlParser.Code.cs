@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlParserCode.cs">
+// <copyright company = "Edgerunner.org" file = "AlParser.Code.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,60 +23,66 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Expressions;
+using Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Code;
+using Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Common;
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.BC.AL.Objects;
 using Org.Edgerunner.BC.AL.Objects.Code;
-using Org.Edgerunner.BC.AL.Objects.Code.TypeDeclarations;
-using Org.Edgerunner.BC.AL.Objects.Tables;
 using Org.Edgerunner.Language.Lexers;
-using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   public partial class AlParser : IParser<AlToken, AlObjectBase>
+   public partial class AlParser
    {
-      public BasicVariableTypeDeclaration? ParseVariableType(TokenStream<AlToken> tokens)
+      /// <summary>
+      /// Parses an AL length declaration.
+      /// </summary>
+      /// <param name="tokens">The tokens to read.</param>
+      /// <returns>A new <see cref="AlParserExpression"/>.</returns>
+      public AlParserExpression? ParseLengthDeclaration(TokenStream<AlToken> tokens)
       {
-         var token = tokens.NextToken();
-         if (token == null)
+         var token = tokens.Current;
+         if (!TokenValidates(token, TokenType.Symbol, "[", $"Expected '[', instead encountered: {token.Value}"))
             return null;
+
+         token = tokens.NextToken();
+         var start = tokens.Position;
+         if (!TokenValidates(token, LiteralType.Integer, $"Expected valid integer, instead encountered: {token.Value}"))
+            return null;
+
+         token = tokens.NextToken();
+         if (!TokenValidates(token, TokenType.Symbol, "]", $"Expected ']', but instead encountered: {token.Value}"))
+            return null;
+
+         return new IntegerExpression(tokens, start);
+      }
+
+      public AlParserExpression? ParseVariableType(TokenStream<AlToken> tokens)
+      {
+         var token = tokens.Current;
 
          if (token.TokenType != (int)TokenType.Identifier || Enum.TryParse(typeof(VariableType), token.Value, true, out var varType))
          {
-            GenerateParserError(token, token, $"Expected a valid AL data type but instead encountered: {token.Value}");
+            GenerateParserError(token, token, $"Expected a valid AL data type, but instead encountered: {token.Value}");
             return null;
          }
 
+         var start = tokens.Position;
+         VariableTypeExpression result;
+         
          switch (varType)
          {
             case VariableType.Code:
             case VariableType.Text:
             {
-               var length = ParseVariableLengthDeclaration(tokens);
-               return new LengthVariableTypeDeclaration((VariableType)varType, length);
+               var length = ParseLengthDeclaration(tokens);
+               result = new VariableTypeExpression(tokens, start, tokens.Position);
+               result.Children.Add(length);
+               break;
             }
             default:
                return null;
          }
-
-         return null;
-      }
-
-      public int ParseVariableLengthDeclaration(TokenStream<AlToken> tokens)
-      {
-         var token = tokens.NextToken();
-         if (!TokenValidates(token, TokenType.Symbol, "[", $"Expected '[', instead encountered: {token.Value}"))
-            return 0;
-
-         token = tokens.NextToken();
-         if (!TokenValidates(token, LiteralType.Integer, $"Expected valid integer, instead encountered: {token.Value}"))
-            return 0;
-
-         var result = int.Parse(token.Value);
-
-         token = tokens.NextToken();
-         if (!TokenValidates(token, TokenType.Symbol, "]", $"Expected ']', but instead encountered: {token.Value}"))
-            return 0;
 
          return result;
       }

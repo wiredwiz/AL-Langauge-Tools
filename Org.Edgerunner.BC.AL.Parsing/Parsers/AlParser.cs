@@ -104,6 +104,28 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Tokens the validates.
       /// </summary>
       /// <param name="token">The token.</param>
+      /// <param name="type">The type.</param>
+      /// <param name="errorMessage">The error message to generate if validation fails.</param>
+      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      // ReSharper disable once FlagArgument
+      protected virtual bool TokenValidates(AlToken? token, TokenType type, string errorMessage)
+      {
+         if (token == null)
+            return false;
+
+         if (token.TokenType != (int)type)
+         {
+            GenerateParserError(token, token, errorMessage);
+            return false;
+         }
+
+         return true;
+      }
+
+      /// <summary>
+      /// Tokens the validates.
+      /// </summary>
+      /// <param name="token">The token.</param>
       /// <param name="type">The literal value type.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>

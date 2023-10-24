@@ -60,8 +60,8 @@ namespace Org.Edgerunner.Language.Lexers
          get => _Position;
          set
          {
-            if (Position < 0 || Position > Stream.Count)
-               throw new ArgumentOutOfRangeException(nameof(Position), "Position must be a non-negative number less than or equal to the size");
+            if (Position < 0 || Position > Stream.Count - 1)
+               throw new ArgumentOutOfRangeException(nameof(Position), "Position must be a non-negative number less than or equal to the size minus 1");
 
             _Position = value;
          }
@@ -77,32 +77,56 @@ namespace Org.Edgerunner.Language.Lexers
       /// Gets the current token.
       /// </summary>
       /// <value>The current token.</value>
-      public virtual T Current => Stream[_Position - 1];
+      public virtual T Current => Stream[_Position];
+
+      /// <summary>
+      /// Gets the token at the specified position within the stream.
+      /// </summary>
+      /// <param name="position">The position.</param>
+      /// <returns>A token of type T.</returns>
+      /// <exception cref="System.ArgumentOutOfRangeException">position - Invalid token position within the stream</exception>
+      public T GetTokenAt(int position)
+      {
+         if (position < 0 || position >= Size)
+            throw new ArgumentOutOfRangeException(nameof(position), "Invalid token position within the stream");
+
+         return Stream[position];
+      }
 
       /// <summary>
       /// Moves the stream position forward by one and returns the token at that position.
       /// </summary>
       /// <returns>A <see cref="T"/> instance.</returns>
-      /// <remarks>If the stream position is already at the end, then it returns null.</remarks>
-      public virtual T? NextToken()
+      /// <exception cref="InvalidOperationException">Attempted to advance past the end of the stream.</exception>
+      public virtual T NextToken()
       {
          if (EndOfStream())
-            return default(T);
+            throw new InvalidOperationException("Cannot advance past the end of the stream");
 
-         return Stream[_Position++];
+         return Stream[++_Position];
       }
 
       /// <summary>
       /// Moves the stream position backward by one and returns the token at that position.
       /// </summary>
       /// <returns>A <see cref="T"/> instance.</returns>
-      /// <remarks>If the stream position is already at the beginning, then it returns null.</remarks>
-      public virtual T? PreviousToken()
+      /// <exception cref="InvalidOperationException">Attempted to rewind past the start of the stream.</exception>
+      public virtual T PreviousToken()
       {
          if (BeginningOfStream())
-            return default(T);
+            throw new InvalidOperationException("Cannot rewind past the start of the stream");
 
          return Stream[--_Position];
+      }
+
+      /// <summary>
+      /// Gets the position of of the specified token in the stream.
+      /// </summary>
+      /// <param name="token">The token to find.</param>
+      /// <returns>An integer that represents the position.</returns>
+      public int GetPositionOf(T token)
+      {
+         return Stream.IndexOf(token);
       }
 
       /// <summary>
