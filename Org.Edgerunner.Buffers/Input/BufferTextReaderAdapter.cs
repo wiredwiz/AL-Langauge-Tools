@@ -29,10 +29,8 @@ using System.Text;
 
 namespace Org.Edgerunner.Buffers.Input
 {
-    using System.IO;
-
-    /// <summary>
-   ///    TODO: Describe this class here.
+   /// <summary>
+   ///    Class that represents a <see cref="TextReader"/> for reading from a <see cref="TextBuffer"/>.
    /// </summary>
    public class BufferTextReaderAdapter : TextReader
    {
@@ -52,7 +50,7 @@ namespace Org.Edgerunner.Buffers.Input
       #endregion
 
       /// <summary>
-      /// Overrides the corresponding method from the System.IO.TextReader base type.
+      /// Reads the next character without changing the state of the reader or the character source. Returns the next available character without actually reading it from the reader.
       /// </summary>
       /// <returns>An integer representing the next character to be read, or -1 if no more characters are available or the reader does not support seeking.</returns>
       /// <exception cref="BufferException">Unable to access current line number in buffer for some reason or buffer is missing end of file marker.</exception>
@@ -69,7 +67,7 @@ namespace Org.Edgerunner.Buffers.Input
       }
 
       /// <summary>
-      /// Overrides the corresponding method from the System.IO.TextReader base type.
+      /// Reads a specified maximum number of characters from the current reader and writes the data to a buffer, beginning at the specified index.
       /// </summary>
       /// <param name="buffer">When this method returns, contains the specified character array with the values between <paramref name="index" /> and (<paramref name="index" /> + <paramref name="count" /> - 1) replaced by the characters read from the current source.</param>
       /// <param name="index">The position in <paramref name="buffer" /> at which to begin writing.</param>
@@ -91,7 +89,7 @@ namespace Org.Edgerunner.Buffers.Input
       }
 
       /// <summary>
-      /// Overrides the corresponding method from the System.IO.TextReader base type.
+      /// Reads the next character from the text reader and advances the character position by one character.
       /// </summary>
       /// <returns>The next character from the text reader, or -1 if no more characters are available. The default implementation returns -1.</returns>
       /// <exception cref="BufferException">Unable to access current line number in buffer for some reason or buffer is missing end of file marker.</exception>
@@ -104,7 +102,7 @@ namespace Org.Edgerunner.Buffers.Input
       }
 
       /// <summary>
-      /// Overrides the corresponding method from the System.IO.TextReader base type.
+      /// Reads a specified maximum number of characters from the current text reader and writes the data to a buffer, beginning at the specified index.
       /// </summary>
       /// <param name="buffer">When this method returns, this parameter contains the specified character array with the values between <paramref name="index" /> and (<paramref name="index" /> + <paramref name="count" /> -1) replaced by the characters read from the current source.</param>
       /// <param name="index">The position in <paramref name="buffer" /> at which to begin writing.</param>
@@ -113,20 +111,11 @@ namespace Org.Edgerunner.Buffers.Input
       /// <exception cref="BufferException">Unable to access current line number in buffer for some reason or buffer is missing end of file marker.</exception>
       public override int ReadBlock(char[] buffer, int index, int count)
       {
-         var value = 0;
-         for (var i = 0; i < count; i++)
-         {
-            if (_Buffer.AtEndOfBuffer())
-               break;
-            buffer[index + i] = _Buffer.GetNextChar();
-            value++;
-         }
-
-         return value;
+         return Read(buffer, index, count);
       }
 
       /// <summary>
-      /// Overrides the corresponding method from the System.IO.TextReader base type.
+      /// Reads a line of characters from the text reader and returns the data as a string.
       /// </summary>
       /// <returns>The next line from the reader, or <see langword="null" /> if all characters have been read.</returns>
       /// <exception cref="BufferException">Unable to access current line number in buffer for some reason or buffer is missing end of file marker.</exception>
@@ -141,7 +130,7 @@ namespace Org.Edgerunner.Buffers.Input
       }
 
       /// <summary>
-      /// Overrides the corresponding method from the System.IO.TextReader base type.
+      /// Reads all characters from the current position to the end of the text reader and returns them as one string.
       /// </summary>
       /// <returns>A string that contains all characters from the current position to the end of the text reader.</returns>
       /// <exception cref="BufferException">Unable to access current line number in buffer for some reason or buffer is missing end of file marker.</exception>

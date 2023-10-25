@@ -36,7 +36,20 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions
    /// <seealso cref="Org.Edgerunner.Language.Parsers.ParserExpression{AlToken}" />
    public class AlParserExpression : ParserExpression<AlToken>
    {
-      public AlParserExpression(TokenStream<AlToken> tokenStream, int start, int end) : base(tokenStream, start, end) {}
-      public AlParserExpression(TokenStream<AlToken> tokenStream, int start) : base(tokenStream, start) {}
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AlParserExpression"/> class.
+      /// </summary>
+      /// <param name="tokenStream">The token stream.</param>
+      /// <param name="start">The start token.</param>
+      /// <param name="end">The end token.</param>
+      public AlParserExpression(TokenStream<AlToken> tokenStream, AlToken start, AlToken end) : base(tokenStream, start, end) {}
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AlParserExpression"/> class.
+      /// </summary>
+      /// <param name="tokenStream">The token stream.</param>
+      /// <param name="token">The start/end token.</param>
+      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
+      public AlParserExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
    }
 }

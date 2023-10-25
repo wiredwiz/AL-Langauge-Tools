@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "VariableTypeExpression.cs">
+// <copyright company = "Edgerunner.org" file = "LengthExpression.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -29,26 +29,26 @@ using Org.Edgerunner.Language.Lexers;
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Code
 {
    /// <summary>
-   /// Class representing a variable type expression.
+   /// Class that represents a length expression.
    /// Implements the <see cref="Org.Edgerunner.BC.AL.Language.Parsers.Expressions.AlParserExpression" />
    /// </summary>
    /// <seealso cref="Org.Edgerunner.BC.AL.Language.Parsers.Expressions.AlParserExpression" />
-   public class VariableTypeExpression : AlParserExpression
+   public class LengthExpression : AlParserExpression
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="VariableTypeExpression" /> class.
+      /// Initializes a new instance of the <see cref="LengthExpression"/> class.
       /// </summary>
       /// <param name="tokenStream">The token stream.</param>
       /// <param name="start">The start token.</param>
       /// <param name="end">The end token.</param>
-      public VariableTypeExpression(TokenStream<AlToken> tokenStream, AlToken start, AlToken end) : base(tokenStream, start, end) {}
+      public LengthExpression(TokenStream<AlToken> tokenStream, AlToken start, AlToken end) : base(tokenStream, start, end) {}
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="VariableTypeExpression" /> class.
+      /// Initializes a new instance of the <see cref="LengthExpression"/> class.
       /// </summary>
       /// <param name="tokenStream">The token stream.</param>
       /// <param name="token">The start/end token.</param>
       /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public VariableTypeExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
+      public LengthExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
    }
 }

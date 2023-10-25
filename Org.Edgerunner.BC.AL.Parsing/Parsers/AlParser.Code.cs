@@ -29,6 +29,8 @@ using Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Common;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.BC.AL.Objects.Code;
 using Org.Edgerunner.Language.Lexers;
+using System.Drawing;
+using System.Security.Authentication.ExtendedProtection;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
@@ -38,23 +40,51 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Parses an AL length declaration.
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
-      /// <returns>A new <see cref="AlParserExpression"/>.</returns>
-      public AlParserExpression? ParseLengthDeclaration(TokenStream<AlToken> tokens)
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      public bool ParseLengthDeclaration(TokenStream<AlToken> tokens, ref AlParserContext context)
       {
          var token = tokens.Current;
-         if (!TokenValidates(token, TokenType.Symbol, "[", $"Expected '[', instead encountered: {token.Value}"))
-            return null;
+         var currentExpression = context.Expression;
+         var expression = new LengthExpression(tokens, token);
+         var message = string.Format(Resources.ExpectedOpenSqBracket, token.Value);
+         if (!TokenValidates(token, context, TokenType.Symbol, "[", message))
+            context.State = 1;
+         else
+            tokens.NextToken();
 
-         token = tokens.NextToken();
-         var start = tokens.Position;
-         if (!TokenValidates(token, LiteralType.Integer, $"Expected valid integer, instead encountered: {token.Value}"))
-            return null;
+         if (!ParseIntegerExpression(tokens, ref context))
+            context.State = 1;
+         else
+            tokens.NextToken();
 
-         token = tokens.NextToken();
-         if (!TokenValidates(token, TokenType.Symbol, "]", $"Expected ']', but instead encountered: {token.Value}"))
-            return null;
+         message = string.Format(Resources.ExpectedCloseSqBracket, token.Value);
+         if (!TokenValidates(token, context, TokenType.Symbol, "]", message))
+            context.State = 1;
+         else
+            tokens.NextToken();
 
-         return new IntegerExpression(tokens, start);
+         if (context.State == 1)
+         {
+            if (context.Expression != null)
+            {
+               context.Expression.Parent = currentExpression;
+               currentExpression!.Children.Add(context.Expression);
+            }
+            else
+            {
+               var error = new ErrorExpression()
+            }
+         }
+
+         var parsed = context.State != 1;
+         context.State = 0;
+         if (!parsed && context.Expression != null)
+         {
+
+         }
+
+         return parsed;
       }
 
       public AlParserExpression? ParseVariableType(TokenStream<AlToken> tokens)
@@ -67,17 +97,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             return null;
          }
 
-         var start = tokens.Position;
-         VariableTypeExpression result;
+         var start = tokens.Current;
+         VariableTypeExpression result = null;
          
          switch (varType)
          {
             case VariableType.Code:
             case VariableType.Text:
             {
-               var length = ParseLengthDeclaration(tokens);
-               result = new VariableTypeExpression(tokens, start, tokens.Position);
-               result.Children.Add(length);
+               // TODO: Fix the logic for refactored code
+               //var length = ParseLengthDeclaration(tokens);
+               //result = new VariableTypeExpression(tokens, start, tokens.Current);
+               //result.Children.Add(length);
                break;
             }
             default:

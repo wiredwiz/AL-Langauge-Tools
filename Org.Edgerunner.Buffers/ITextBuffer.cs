@@ -1,4 +1,5 @@
 ﻿#region MIT License
+
 // <copyright company = "Edgerunner.org" file = "ITextBuffer.cs">
 // Copyright(c)  2023
 // </copyright>
@@ -21,15 +22,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
 namespace Org.Edgerunner.Buffers
 {
    /// <summary>
    /// Interface that defines a buffer of text lines.
-   /// Extends the <see cref="Org.Edgerunner.Buffers.ICharacterBuffer" />
-   /// Extends the <see cref="Org.Edgerunner.Buffers.IPositionable" />
-   /// Extends the <see cref="Org.Edgerunner.Buffers.IPointAccessible" />
+   /// Extends the <see cref="Org.Edgerunner.Buffers.ICharacterBuffer" />.
+   /// Extends the <see cref="Org.Edgerunner.Buffers.IPositionable" />.
+   /// Extends the <see cref="Org.Edgerunner.Buffers.IPointAccessible" />.
    /// </summary>
    /// <seealso cref="Org.Edgerunner.Buffers.ICharacterBuffer" />
    /// <seealso cref="Org.Edgerunner.Buffers.IPositionable" />

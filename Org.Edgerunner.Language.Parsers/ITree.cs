@@ -31,15 +31,21 @@ namespace Org.Edgerunner.Language.Parsers
    public interface ITree
    {
       /// <summary>
-      /// Gets or sets the parent tree.
+      /// Gets or sets the parent tree node.
       /// </summary>
       /// <value>An <see cref="ITree"/>.</value>
       ITree? Parent { get; set; }
 
       /// <summary>
-      /// Gets the children trees.
+      /// Gets the children nodes.
       /// </summary>
-      /// <value>A list of <see cref="ITree"/>.</value>
+      /// <value>A list of <see cref="ITree"/> nodes.</value>
       IList<ITree> Children { get; }
+
+      /// <summary>
+      /// Adds the node to the children of this instance and links it to this instance as the parent.
+      /// </summary>
+      /// <param name="node">The node.</param>
+      void AddChildNode(ITree node);
    }
 }

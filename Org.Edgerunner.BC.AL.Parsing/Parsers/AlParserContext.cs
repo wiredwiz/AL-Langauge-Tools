@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "StringExpression.cs">
+// <copyright company = "Edgerunner.org" file = "AlParserContext.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -24,19 +24,35 @@
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
+using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Common
+namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   public class StringExpression : AlParserExpression
+   /// <summary>
+   /// Class representing an AL language parser context.
+   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken}" />
+   /// </summary>
+   /// <seealso cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken}" />
+   public class AlParserContext : ParserContext<AlToken>
    {
-
       /// <summary>
-      /// Initializes a new instance of the <see cref="StringExpression" /> class.
+      /// Initializes a new instance of the <see cref="AlParserContext"/> class.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="token">The start/end token.</param>
-      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public StringExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
+      public AlParserContext() 
+      {
+      }
+
+      public override int State
+      {
+         get => base.State;
+
+         set
+         {
+            if (value == 1)
+               HasErrors = true;
+
+            base.State = value;
+         }
+      }
    }
 }

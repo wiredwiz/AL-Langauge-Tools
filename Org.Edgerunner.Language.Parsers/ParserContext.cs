@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TableFieldParser.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "ParserState.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,23 +23,32 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.BC.AL.Objects.Tables;
 using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers
+namespace Org.Edgerunner.Language.Parsers
 {
-   public static class TableFieldParser
+   /// <summary>
+   /// Class representing the current parser context.
+   /// </summary>
+   public class ParserContext<T>
+   where T : IToken
    {
-      public static Field ParseField(TokenStream<AlToken> stream)
-      {
-         AlToken token = stream.NextToken();
-         if (token is not SymbolToken { Value: "(" })
-         {
+      /// <summary>
+      /// Gets or sets the parser state.
+      /// </summary>
+      /// <value>The state.</value>
+      public virtual int State { get; set; }
 
-         }
+      /// <summary>
+      /// Gets a value indicating whether this instance has errors.
+      /// </summary>
+      /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
+      public virtual bool HasErrors { get; protected set; } = false;
 
-         return null;
-      }
+      /// <summary>
+      /// Gets or sets the current expression.
+      /// </summary>
+      /// <value>The current expression.</value>
+      public virtual ParserExpression<T>? Expression { get; set; }
    }
 }

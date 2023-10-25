@@ -31,10 +31,11 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Common
    public class IntegerExpression : AlParserExpression
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="IntegerExpression"/> class.
+      /// Initializes a new instance of the <see cref="IntegerExpression" /> class.
       /// </summary>
       /// <param name="tokenStream">The token stream.</param>
-      /// <param name="start">The start.</param>
-      public IntegerExpression(TokenStream<AlToken> tokenStream, int start) : base(tokenStream, start) {}
+      /// <param name="token">The start/end token.</param>
+      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
+      public IntegerExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
    }
 }

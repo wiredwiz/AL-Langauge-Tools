@@ -336,7 +336,7 @@ namespace Org.Edgerunner.Buffers.Input
             var lineNumber = 0;
             int absoluteLength = 0;
             bool found = false;
-            string line;
+            string? line;
 
             while (!found)
             {

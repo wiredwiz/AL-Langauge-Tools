@@ -27,8 +27,6 @@
 
 namespace Org.Edgerunner.Buffers
 {
-    using System;
-
    /// <summary>
    /// Represents errors that occur during buffer operations.
    /// </summary>
@@ -38,7 +36,7 @@ namespace Org.Edgerunner.Buffers
 
       /// <summary>
       ///    Initializes a new instance of the <see cref="BufferException" /> class.
-      ///    Parameterless (default) constructor
+      ///    Parameterless (default) constructor.
       /// </summary>
       public BufferException()
       {
@@ -46,7 +44,7 @@ namespace Org.Edgerunner.Buffers
 
       /// <summary>
       /// Initializes a new instance of the <see cref="BufferException" /> class.
-      /// Constructor for an exception with text message
+      /// Constructor for an exception with text message.
       /// </summary>
       /// <param name="message">The message that describes the error.</param>
       public BufferException(string message)
@@ -56,7 +54,7 @@ namespace Org.Edgerunner.Buffers
 
       /// <summary>
       /// Initializes a new instance of the <see cref="BufferException" /> class.
-      /// Constructor for an exception with text message and inner exception
+      /// Constructor for an exception with text message and inner exception.
       /// </summary>
       /// <param name="message">The message.</param>
       /// <param name="e">The e.</param>

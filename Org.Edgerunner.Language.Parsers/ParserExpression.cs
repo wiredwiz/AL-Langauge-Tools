@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Text;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Pooling;
 
@@ -32,22 +31,22 @@ namespace Org.Edgerunner.Language.Parsers
    /// <summary>
    /// Class that represents a parser expression.
    /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ITree" />.
-   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ISyntaxNode" />.
+   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{T}" />.
    /// </summary>
    /// <typeparam name="T">A type of <see cref="IToken"/></typeparam>
    /// <seealso cref="Org.Edgerunner.Language.Parsers.ITree" />
-   /// <seealso cref="Org.Edgerunner.Language.Parsers.ISyntaxNode" />
+   /// <seealso cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{T}" />
    /// <seealso cref="IToken"/>
-   public class ParserExpression<T> : ITree, ISyntaxNode
+   public class ParserExpression<T> : ITree, ISyntaxNode<T>
    where T : IToken
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="ParserExpression{T}" /> class.
       /// </summary>
       /// <param name="tokenStream">The token stream.</param>
-      /// <param name="start">The start token position.</param>
-      /// <param name="end">The end token position.</param>
-      public ParserExpression(TokenStream<T> tokenStream, int start, int end)
+      /// <param name="start">The start token.</param>
+      /// <param name="end">The end token.</param>
+      public ParserExpression(TokenStream<T> tokenStream, T start, T end)
       {
          TokenStream = tokenStream;
          Start = start;
@@ -58,41 +57,56 @@ namespace Org.Edgerunner.Language.Parsers
       /// Initializes a new instance of the <see cref="ParserExpression{T}" /> class.
       /// </summary>
       /// <param name="tokenStream">The token stream.</param>
-      /// <param name="start">The start token position.</param>
+      /// <param name="token">The start/end token.</param>
       /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public ParserExpression(TokenStream<T> tokenStream, int start)
+      public ParserExpression(TokenStream<T> tokenStream, T token)
       {
          TokenStream = tokenStream;
-         Start = start;
-         End = start;
+         Start = token;
+         End = token;
       }
 
       protected TokenStream<T> TokenStream;
 
       /// <inheritdoc />
-      public ITree? Parent { get; set; }
+      public virtual ITree? Parent { get; set; }
 
       /// <inheritdoc />
-      public IList<ITree> Children { get; } = new List<ITree>();
+      public virtual IList<ITree> Children { get; } = new List<ITree>();
 
       /// <inheritdoc />
-      public int Start { get; set; }
+      public void AddChildNode(ITree node)
+      {
+         node.Parent = this;
+         Children.Add(node);
+      }
 
       /// <inheritdoc />
-      public int End { get; set; }
+      public T Start { get; set; }
 
       /// <inheritdoc />
-      public string GetText()
+      public T End { get; set; }
+
+      /// <inheritdoc />
+      public virtual string GetText()
       {
          var text = StringBuilderPool.Current.Get();
+         var start = TokenStream.GetPositionOf(Start);
+         var end = TokenStream.GetPositionOf(End);
          if (!Children.Any())
          {
-            for (int i = Start; i <= End; i++) text.Append(TokenStream.GetTokenAt(i).Value);
+            for (int i = start; i <= end; i++) text.Append(TokenStream.GetTokenAt(i).Value);
             return text.ToString();
          }
 
-         foreach (var child in Children) text.Append(((ISyntaxNode)child).GetText());
+         foreach (var child in Children) text.Append(((ISyntaxNode<T>)child).GetText());
          return text.ToString();
+      }
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return GetText();
       }
    }
 }

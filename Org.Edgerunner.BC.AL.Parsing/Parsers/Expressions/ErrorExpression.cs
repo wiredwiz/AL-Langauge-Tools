@@ -36,18 +36,39 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions
    public class ErrorExpression : AlParserExpression
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ErrorExpression"/> class.
+      /// Initializes a new instance of the <see cref="ErrorExpression" /> class.
       /// </summary>
       /// <param name="tokenStream">The token stream.</param>
+      /// <param name="text">The error text.</param>
       /// <param name="start">The start.</param>
       /// <param name="end">The end.</param>
-      public ErrorExpression(TokenStream<AlToken> tokenStream, int start, int end) : base(tokenStream, start, end) {}
+      public ErrorExpression(TokenStream<AlToken> tokenStream, string text, AlToken start, AlToken end) :
+         base(tokenStream, start, end)
+      {
+         ErrorText = text;
+      }
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ErrorExpression"/> class.
       /// </summary>
       /// <param name="tokenStream">The token stream.</param>
-      /// <param name="start">The start.</param>
-      public ErrorExpression(TokenStream<AlToken> tokenStream, int start) : base(tokenStream, start) {}
+      /// <param name="text">The error text.</param>
+      /// <param name="token">The start.</param>
+      public ErrorExpression(TokenStream<AlToken> tokenStream, string text, AlToken token) : base(tokenStream, token)
+      {
+         ErrorText = text;
+      }
+
+
+      /// <summary>
+      /// The error text.
+      /// </summary>
+      protected string ErrorText;
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return ErrorText;
+      }
    }
 }

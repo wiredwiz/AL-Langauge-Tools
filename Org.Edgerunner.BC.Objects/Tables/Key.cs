@@ -27,6 +27,17 @@ namespace Org.Edgerunner.BC.AL.Objects.Tables
 {
    public class Key
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="Key"/> class.
+      /// </summary>
+      /// <param name="name">The key name.</param>
+      /// <param name="fields">The key fields.</param>
+      public Key(string name, IEnumerable<string> fields)
+      {
+         Name = name;
+         Fields = fields.ToList();
+      }
+
       public string Name { get; set; }
 
       public List<string> Fields { get; set; }

@@ -36,32 +36,40 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Parses an integer expression from the stream.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
-      /// <returns>A new <see cref="IntegerExpression"/>.</returns>
-      public AlParserExpression? ParseIntegerExpression(TokenStream<AlToken> tokens)
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      public bool ParseIntegerExpression(TokenStream<AlToken> tokens, ref AlParserContext context)
       {
          var token = tokens.Current;
-         if (!TokenValidates(token, LiteralType.Integer, $"Expected valid integer, instead encountered: {token.Value}"))
-            return null;
+         var message = $"Expected valid integer, instead encountered: {token.Value}";
+         var tokenValidates = TokenValidates(token, context, LiteralType.Integer, message);
+         if (!tokenValidates)
+         {
+            context.Expression = context.State == 0
+               ? new ErrorExpression(tokens, message, token)
+               : null;
+         }
+         else
+            context.Expression = new IntegerExpression(tokens, token);
 
-         var position = tokens.Position;
-         tokens.NextToken();
-         return new IntegerExpression(tokens, position);
+         return tokenValidates;
       }
 
       /// <summary>
       /// Parses a string expression from the stream.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
-      /// <returns>A new <see cref="StringExpression"/>.</returns>
-      public AlParserExpression? ParseStringExpression(TokenStream<AlToken> tokens)
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      public bool ParseStringExpression(TokenStream<AlToken> tokens, ref AlParserContext context)
       {
          var token = tokens.Current;
-         if (!TokenValidates(token, LiteralType.String, $"Expected valid string, instead encountered: {token.Value}"))
-            return null;
-
-         var position = tokens.Position;
+         var message = $"Expected valid string, instead encountered: {token.Value}";
+         var tokenValidates = TokenValidates(token, context, LiteralType.String, message);
          tokens.NextToken();
-         return new StringExpression(tokens, position);
+
+         context.Expression = tokenValidates ? new StringExpression(tokens, token) : new ErrorExpression(tokens, message, token);
+         return tokenValidates;
       }
 
       /// <summary>
@@ -69,32 +77,34 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="value">The expected value of the token.</param>
-      /// <returns>A new <see cref="IdentifierExpression" />.</returns>
-      public AlParserExpression? ParseIdentifierExpression(TokenStream<AlToken> tokens, string value)
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      public bool ParseIdentifierExpression(TokenStream<AlToken> tokens, string value, ref AlParserContext context)
       {
          var token = tokens.Current;
-         if (!TokenValidates(token, TokenType.Identifier, value, $"Expected identifier with value '{value}', instead encountered: {token.Value}"))
-            return null;
-
-         var position = tokens.Position;
+         var message = $"Expected identifier with value '{value}', instead encountered: {token.Value}";
+         var tokenValidates = TokenValidates(token, context, TokenType.Identifier, value, message);
          tokens.NextToken();
-         return new IdentifierExpression(tokens, position);
+
+         context.Expression = tokenValidates ? new IdentifierExpression(tokens, token) : new ErrorExpression(tokens, message, token);
+         return tokenValidates;
       }
 
       /// <summary>
       /// Parses a string expression from the stream.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
-      /// <returns>A new <see cref="IdentifierExpression" />.</returns>
-      public AlParserExpression? ParseIdentifierExpression(TokenStream<AlToken> tokens)
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      public bool ParseIdentifierExpression(TokenStream<AlToken> tokens, ref AlParserContext context)
       {
          var token = tokens.Current;
-         if (!TokenValidates(token, TokenType.Identifier, $"Expected valid identifier, instead encountered: {token.Value}"))
-            return null;
-
-         var position = tokens.Position;
+         var message = $"Expected valid identifier, instead encountered: {token.Value}";
+         var tokenValidates = TokenValidates(token, context, TokenType.Identifier, message);
          tokens.NextToken();
-         return new IdentifierExpression(tokens, position);
+
+         context.Expression = tokenValidates ? new IdentifierExpression(tokens, token) : new ErrorExpression(tokens, message, token);
+         return tokenValidates;
       }
    }
 }

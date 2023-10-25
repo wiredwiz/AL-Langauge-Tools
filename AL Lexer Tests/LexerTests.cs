@@ -314,7 +314,6 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers.Tests
 
          // and then reading a series of tokens
          var tokens = lexer.ReadTokensFromBuffer(buffer);
-         AlToken token;
 
          // Results in the expected tokens
          tokens.Count.Should().Be(38);

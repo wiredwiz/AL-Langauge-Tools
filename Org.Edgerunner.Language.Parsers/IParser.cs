@@ -31,6 +31,12 @@ namespace Org.Edgerunner.Language.Parsers
    where T : IToken
    {
       /// <summary>
+      /// Gets a value indicating whether this instance has errors after the last parse attempt.
+      /// </summary>
+      /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
+      bool HasErrors { get; }
+
+      /// <summary>
       /// Adds a listener to be notified of parser errors.
       /// </summary>
       /// <param name="listener">The listener.</param>

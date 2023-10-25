@@ -29,13 +29,25 @@ using Org.Edgerunner.BC.AL.Objects.Code;
 using Org.Edgerunner.BC.AL.Objects.Tables;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
+using System.Drawing;
+using Org.Edgerunner.BC.AL.Language.Parsers.Expressions;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
    public partial class AlParser : IParser<AlToken, AlObjectBase>
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AlParser"/> class.
+      /// </summary>
+      public AlParser()
+      {
+         HasErrors = false;
+      }
 
       protected internal readonly List<IErrorListener<AlToken>> Listeners = new List<IErrorListener<AlToken>>();
+
+      /// <inheritdoc />
+      public bool HasErrors { get; private set; }
 
       /// <inheritdoc />
       public void AddErrorListener(IErrorListener<AlToken> listener)
@@ -62,6 +74,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <returns>A new <seealso cref="AlObjectBase"/>.</returns>
       public AlObjectBase? ParseSource(TokenStream<AlToken> tokens)
       {
+         HasErrors = false;
          var token = tokens.NextToken();
          if (token == null)
             return null;
@@ -81,19 +94,20 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Tokens the validates.
       /// </summary>
       /// <param name="token">The token.</param>
+      /// <param name="context">The current AL parser context.</param>
       /// <param name="type">The type.</param>
       /// <param name="value">The value.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
       // ReSharper disable once FlagArgument
-      protected virtual bool TokenValidates(AlToken? token, TokenType type, string value, string errorMessage)
+      protected virtual bool TokenValidates(AlToken? token, AlParserContext context, TokenType type, string value, string errorMessage)
       {
          if (token == null)
             return false;
 
          if (token.TokenType != (int)type || token.Value != value)
          {
-            GenerateParserError(token, token, errorMessage);
+            if (context.State == 0) GenerateParserError(token, token, errorMessage);
             return false;
          }
 
@@ -104,18 +118,19 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Tokens the validates.
       /// </summary>
       /// <param name="token">The token.</param>
+      /// <param name="context">The current AL parser context.</param>
       /// <param name="type">The type.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
       // ReSharper disable once FlagArgument
-      protected virtual bool TokenValidates(AlToken? token, TokenType type, string errorMessage)
+      protected virtual bool TokenValidates(AlToken? token, AlParserContext context, TokenType type, string errorMessage)
       {
          if (token == null)
             return false;
 
          if (token.TokenType != (int)type)
          {
-            GenerateParserError(token, token, errorMessage);
+            if (context.State == 0) GenerateParserError(token, token, errorMessage);
             return false;
          }
 
@@ -126,26 +141,27 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Tokens the validates.
       /// </summary>
       /// <param name="token">The token.</param>
+      /// <param name="context">The current AL parser context.</param>
       /// <param name="type">The literal value type.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
       /// <remarks>Assumes a token type of Literal in this case</remarks>
       // ReSharper disable once FlagArgument
-      protected virtual bool TokenValidates(AlToken? token, LiteralType type, string errorMessage)
+      protected virtual bool TokenValidates(AlToken? token, AlParserContext context, LiteralType type, string errorMessage)
       {
          if (token == null)
             return false;
 
          if (token is not LiteralToken literal)
          {
-            GenerateParserError(token, token, errorMessage);
+            if (context.State == 0) GenerateParserError(token, token, errorMessage);
             return false;
          }
 
          // ReSharper disable once ComplexConditionExpression
          if (literal.TokenType != (int)TokenType.Literal || literal.LiteralType != type)
          {
-            GenerateParserError(token, token, errorMessage);
+            if (context.State == 0) GenerateParserError(token, token, errorMessage);
             return false;
          }
 
@@ -160,8 +176,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="message">The message to display in the error.</param>
       protected virtual void GenerateParserError(AlToken startToken, AlToken endToken, string message)
       {
-         var error = new ParserError(startToken, startToken, message);
+         HasErrors = true;
+         var error = new ParserError(startToken, endToken, message);
          foreach (var listener in Listeners) listener.AnnounceError(error);
+      }
+
+      protected virtual void AppendErrorNode(TokenStream<AlToken> tokens, AlParserExpression parent, string message, AlToken start, AlToken end)
+      {
+         var node = new ErrorExpression(tokens, message, start, end)
+                    {
+                       Parent = parent
+                    };
+         parent.Children.Add(node);
       }
    }
 }
