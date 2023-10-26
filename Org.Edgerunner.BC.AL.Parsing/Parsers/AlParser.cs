@@ -91,16 +91,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       }
 
       /// <summary>
-      /// Tokens the validates.
+      /// Validates that the <see cref="AlToken"/> matches the expected type and value.
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
-      /// <param name="type">The type.</param>
-      /// <param name="value">The value.</param>
+      /// <param name="type">The type to match.</param>
+      /// <param name="value">The value to match.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <seealso cref="AlToken"/>
       // ReSharper disable once FlagArgument
-      protected virtual bool TokenValidates(AlToken? token, AlParserContext context, TokenType type, string value, string errorMessage)
+      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, TokenType type, string value, string errorMessage)
       {
          if (token == null)
             return false;
@@ -113,17 +114,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
          return true;
       }
-
+      
       /// <summary>
-      /// Tokens the validates.
+      /// Validates that the <see cref="AlToken"/> matches the expected type.
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
-      /// <param name="type">The type.</param>
-      /// <param name="errorMessage">The error message to generate if validation fails.</param>
+      /// <param name="type">The type to match.</param>
+      /// <param name="errorMessage">The error message to use if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <seealso cref="AlToken"/>
       // ReSharper disable once FlagArgument
-      protected virtual bool TokenValidates(AlToken? token, AlParserContext context, TokenType type, string errorMessage)
+      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, TokenType type, string errorMessage)
       {
          if (token == null)
             return false;
@@ -136,18 +138,19 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
          return true;
       }
-
+      
       /// <summary>
-      /// Tokens the validates.
+      /// Validates that the <see cref="AlToken"/> is a literal token of the expected literal type.
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
-      /// <param name="type">The literal value type.</param>
-      /// <param name="errorMessage">The error message to generate if validation fails.</param>
+      /// <param name="type">The token literal type to match.</param>
+      /// <param name="errorMessage">The error message to use if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
       /// <remarks>Assumes a token type of Literal in this case</remarks>
+      /// <seealso cref="AlToken"/>
       // ReSharper disable once FlagArgument
-      protected virtual bool TokenValidates(AlToken? token, AlParserContext context, LiteralType type, string errorMessage)
+      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, LiteralType type, string errorMessage)
       {
          if (token == null)
             return false;
@@ -166,6 +169,69 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          }
 
          return true;
+      }
+      
+      /// <summary>
+      /// Validates that the current <see cref="AlToken"/> matches the expected type and value.
+      /// If the token does not match, an error parser expression is added to the tree.
+      /// </summary>
+      /// <param name="tokens">The token stream to validate from.</param>
+      /// <param name="context">The current AL parser context.</param>
+      /// <param name="type">The type to match.</param>
+      /// <param name="value">The value to match.</param>
+      /// <param name="errorMessage">The error message to use if validation fails.</param>
+      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <seealso cref="AlToken"/>
+      // ReSharper disable once FlagArgument
+      protected virtual bool ValidateTokenWithError(TokenStream<AlToken> tokens, AlParserContext context, TokenType type, string value, string errorMessage)
+      {
+         var result = ValidateToken(tokens.Current, context, type, value, errorMessage);
+         if (!result)
+            context.Expression!.AddChildNode(new ErrorExpression(tokens, errorMessage, tokens.Current));
+
+         return result;
+      }
+
+      /// <summary>
+      /// Validates that the current <see cref="AlToken"/> matches the expected type.
+      /// If the token does not match, an error parser expression is added to the tree.
+      /// </summary>
+      /// <param name="tokens">The token stream to validate from.</param>
+      /// <param name="context">The current AL parser context.</param>
+      /// <param name="type">The type to match.</param>
+      /// <param name="errorMessage">The error message to use if validation fails.</param>
+      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <seealso cref="AlToken"/>
+      // ReSharper disable once FlagArgument
+      protected virtual bool ValidateTokenWithError(TokenStream<AlToken> tokens, AlParserContext context, TokenType type, string errorMessage)
+      {
+         var token = tokens.Current;
+         var result = ValidateToken(token, context, type, errorMessage);
+         if (!result)
+            context.Expression!.AddChildNode(new ErrorExpression(tokens, errorMessage, token));
+
+         return result;
+      }
+
+      /// <summary>
+      /// Validates that the <see cref="AlToken"/> is a literal token of the expected literal type.
+      /// </summary>
+      /// <param name="tokens">The token stream to validate from.</param>
+      /// <param name="context">The current AL parser context.</param>
+      /// <param name="type">The token literal type to match.</param>
+      /// <param name="errorMessage">The error message to use if validation fails.</param>
+      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <remarks>Assumes a token type of Literal in this case</remarks>
+      /// <seealso cref="AlToken"/>
+      // ReSharper disable once FlagArgument
+      protected virtual bool ValidateTokenWithError(TokenStream<AlToken> tokens, AlParserContext context, LiteralType type, string errorMessage)
+      {
+         var token = tokens.Current;
+         var result = ValidateToken(token, context, type, errorMessage);
+         if (!result)
+            context.Expression!.AddChildNode(new ErrorExpression(tokens, errorMessage, token));
+
+         return result;
       }
 
       /// <summary>

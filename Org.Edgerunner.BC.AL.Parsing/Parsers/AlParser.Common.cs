@@ -42,15 +42,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = $"Expected valid integer, instead encountered: {token.Value}";
-         var tokenValidates = TokenValidates(token, context, LiteralType.Integer, message);
-         if (!tokenValidates)
+         var tokenValidates = ValidateTokenWithError(tokens, context, LiteralType.Integer, message);
+         if (tokenValidates)
          {
-            context.Expression = context.State == 0
-               ? new ErrorExpression(tokens, message, token)
-               : null;
+            var expression = new IntegerExpression(tokens, token);
+            if (context.Expression != null)
+               context.Expression.AddChildNode(expression);
+            else
+               context.Expression = expression;
          }
-         else
-            context.Expression = new IntegerExpression(tokens, token);
 
          return tokenValidates;
       }
@@ -65,7 +65,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = $"Expected valid string, instead encountered: {token.Value}";
-         var tokenValidates = TokenValidates(token, context, LiteralType.String, message);
+         var tokenValidates = ValidateToken(token, context, LiteralType.String, message);
          tokens.NextToken();
 
          context.Expression = tokenValidates ? new StringExpression(tokens, token) : new ErrorExpression(tokens, message, token);
@@ -83,7 +83,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = $"Expected identifier with value '{value}', instead encountered: {token.Value}";
-         var tokenValidates = TokenValidates(token, context, TokenType.Identifier, value, message);
+         var tokenValidates = ValidateToken(token, context, TokenType.Identifier, value, message);
          tokens.NextToken();
 
          context.Expression = tokenValidates ? new IdentifierExpression(tokens, token) : new ErrorExpression(tokens, message, token);
@@ -100,7 +100,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = $"Expected valid identifier, instead encountered: {token.Value}";
-         var tokenValidates = TokenValidates(token, context, TokenType.Identifier, message);
+         var tokenValidates = ValidateToken(token, context, TokenType.Identifier, message);
          tokens.NextToken();
 
          context.Expression = tokenValidates ? new IdentifierExpression(tokens, token) : new ErrorExpression(tokens, message, token);

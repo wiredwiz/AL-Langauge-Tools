@@ -31,6 +31,7 @@ using Org.Edgerunner.BC.AL.Objects.Code;
 using Org.Edgerunner.Language.Lexers;
 using System.Drawing;
 using System.Security.Authentication.ExtendedProtection;
+using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
@@ -45,10 +46,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseLengthDeclaration(TokenStream<AlToken> tokens, ref AlParserContext context)
       {
          var token = tokens.Current;
-         var currentExpression = context.Expression;
-         var expression = new LengthExpression(tokens, token);
+         var newExpression = new LengthExpression(tokens, token);
+         if (context.Expression != null) context.Expression.AddChildNode(newExpression);
+         context.Expression = newExpression;
+
          var message = string.Format(Resources.ExpectedOpenSqBracket, token.Value);
-         if (!TokenValidates(token, context, TokenType.Symbol, "[", message))
+         if (!ValidateTokenWithError(tokens, context, TokenType.Symbol, "[", message))
             context.State = 1;
          else
             tokens.NextToken();
@@ -58,31 +61,19 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          else
             tokens.NextToken();
 
+         var last = tokens.Current;
          message = string.Format(Resources.ExpectedCloseSqBracket, token.Value);
-         if (!TokenValidates(token, context, TokenType.Symbol, "]", message))
+         if (!ValidateTokenWithError(tokens, context, TokenType.Symbol, "]", message))
             context.State = 1;
          else
             tokens.NextToken();
 
-         if (context.State == 1)
-         {
-            if (context.Expression != null)
-            {
-               context.Expression.Parent = currentExpression;
-               currentExpression!.Children.Add(context.Expression);
-            }
-            else
-            {
-               var error = new ErrorExpression()
-            }
-         }
+         context.Expression!.End = last;
 
          var parsed = context.State != 1;
          context.State = 0;
-         if (!parsed && context.Expression != null)
-         {
-
-         }
+         if (context.Expression!.Parent != null)
+            context.Expression = (ParserExpression<AlToken>)context.Expression.Parent;
 
          return parsed;
       }
