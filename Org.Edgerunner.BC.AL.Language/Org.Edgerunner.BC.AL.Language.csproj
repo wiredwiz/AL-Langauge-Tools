@@ -10,7 +10,7 @@
     <ProjectReference Include="..\Org.Edgerunner.BC.Objects\Org.Edgerunner.BC.AL.Objects.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Buffers\Org.Edgerunner.Buffers.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Language.Parsers\Org.Edgerunner.Language.Parsers.csproj" />
-    <ProjectReference Include="..\Org.Edgerunner.Lexer\Org.Edgerunner.Language.Lexers.csproj" />
+    <ProjectReference Include="..\Org.Edgerunner.Language.Lexers\Org.Edgerunner.Language.Lexers.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Pooling\Org.Edgerunner.Pooling.csproj" />
   </ItemGroup>
 

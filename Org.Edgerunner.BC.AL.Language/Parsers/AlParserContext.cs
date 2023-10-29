@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Parsers;
 
@@ -30,10 +31,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
    /// <summary>
    /// Class representing an AL language parser context.
-   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken}" />
+   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken, AlSyntaxNodeType}" />
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken}" />
-   public class AlParserContext : ParserContext<AlToken>
+   /// <seealso cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken, AlSyntaxNodeType}" />
+   public class AlParserContext : ParserContext<AlToken, AlSyntaxNodeType>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlParserContext"/> class.

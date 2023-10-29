@@ -29,44 +29,43 @@ using Org.Edgerunner.Pooling;
 namespace Org.Edgerunner.Language.Parsers
 {
    /// <summary>
-   /// Class that represents a parser expression.
+   /// Class that represents a parser rule.
    /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ITree" />.
-   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{T}" />.
+   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{TToken, TType}" />.
    /// </summary>
-   /// <typeparam name="T">A type of <see cref="IToken"/></typeparam>
+   /// <typeparam name="TToken">A type of <see cref="IToken" /></typeparam>
+   /// <typeparam name="TType">The type of the parser rule.</typeparam>
    /// <seealso cref="Org.Edgerunner.Language.Parsers.ITree" />
-   /// <seealso cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{T}" />
-   /// <seealso cref="IToken"/>
-   public class ParserExpression<T> : ITree, ISyntaxNode<T>
-   where T : IToken
+   /// <seealso cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{TToken, TType}" />
+   /// <seealso cref="IToken" />
+   public class ParserRule<TToken, TType> : ITree, ISyntaxNode<TToken, TType>
+   where TToken : IToken
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ParserExpression{T}" /> class.
+      /// Initializes a new instance of the <see cref="ParserRule{TToken,TType}" /> class.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
+      /// <param name="type">The parser rule type.</param>
       /// <param name="start">The start token.</param>
       /// <param name="end">The end token.</param>
-      public ParserExpression(TokenStream<T> tokenStream, T start, T end)
+      public ParserRule(TType type, TToken start, TToken end)
       {
-         TokenStream = tokenStream;
+         Type = type;
          Start = start;
          End = end;
       }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="ParserExpression{T}" /> class.
+      /// Initializes a new instance of the <see cref="ParserRule{TToken,TType}" /> class.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="token">The start/end token.</param>
-      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public ParserExpression(TokenStream<T> tokenStream, T token)
+      /// <param name="type">The parser rule type.</param>
+      /// <param name="symbol">The start/end symbol token.</param>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
+      public ParserRule(TType type, TToken symbol)
       {
-         TokenStream = tokenStream;
-         Start = token;
-         End = token;
+         Type = type;
+         Start = symbol;
+         End = symbol;
       }
-
-      protected TokenStream<T> TokenStream;
 
       /// <inheritdoc />
       public virtual ITree? Parent { get; set; }
@@ -82,24 +81,19 @@ namespace Org.Edgerunner.Language.Parsers
       }
 
       /// <inheritdoc />
-      public T Start { get; set; }
+      public TToken Start { get; set; }
 
       /// <inheritdoc />
-      public T End { get; set; }
+      public TToken End { get; set; }
+
+      public TType Type { get; set; }
 
       /// <inheritdoc />
       public virtual string GetText()
       {
          var text = StringBuilderPool.Current.Get();
-         var start = TokenStream.GetPositionOf(Start);
-         var end = TokenStream.GetPositionOf(End);
-         if (!Children.Any())
-         {
-            for (int i = start; i <= end; i++) text.Append(TokenStream.GetTokenAt(i).Value);
-            return text.ToString();
-         }
 
-         foreach (var child in Children) text.Append(((ISyntaxNode<T>)child).GetText());
+         foreach (var child in Children) text.Append(((ISyntaxNode<TToken, TType>)child).GetText());
          return text.ToString();
       }
 

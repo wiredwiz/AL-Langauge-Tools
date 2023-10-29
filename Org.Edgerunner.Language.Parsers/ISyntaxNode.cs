@@ -30,21 +30,28 @@ namespace Org.Edgerunner.Language.Parsers
    /// <summary>
    /// Interface that defines a syntax node.
    /// </summary>
-   /// <typeparam name="T">A type of <see cref="IToken"/></typeparam>
-   public interface ISyntaxNode<T>
-   where T : IToken
+   /// <typeparam name="TToken">A type of <see cref="IToken" /></typeparam>
+   /// <typeparam name="TType">The type of the node.</typeparam>
+   public interface ISyntaxNode<TToken, TType>
+   where TToken : IToken
    {
       /// <summary>
       /// Gets or sets the token at the start of the syntax node.
       /// </summary>
       /// <value>The starting token.</value>
-      T Start { get; set; }
+      TToken Start { get; set; }
 
       /// <summary>
       /// Gets or sets the token at the end of the syntax node.
       /// </summary>
       /// <value>The ending token.</value>
-      T End { get; set; }
+      TToken End { get; set; }
+
+      /// <summary>
+      /// Gets or sets the node type.
+      /// </summary>
+      /// <value>The node type.</value>
+      TType Type { get; set; }
 
       /// <summary>
       /// Gets the text that represents this node.

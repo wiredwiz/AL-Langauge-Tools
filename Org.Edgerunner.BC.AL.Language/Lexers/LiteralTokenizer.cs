@@ -97,50 +97,50 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          if (buffer.AtEndOfBuffer()) return null;
 
          // begin our token reading process
-         var text = StringBuilderPool.Current.Get();
+         var text = string.Empty;
          var hasDecimal = false;
          var start = buffer.GetBufferPoint();
 
          // read the integral portion
-         text.Append(ReadIntegerFromBuffer(buffer));
+         text += ReadIntegerFromBuffer(buffer);
 
          // check for decimal
          if (buffer.Current == '.')
          {
-            text.Append(buffer.Current);
+            text += buffer.Current;
             hasDecimal = true;
             // read the fractional number if it exists
             if (buffer.GetNextChar().IsNumber())
-               text.Append(ReadIntegerFromBuffer(buffer));
+               text += ReadIntegerFromBuffer(buffer);
             else
-               return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(-1),
+               return LexerError.PackageError(lexer, text, start, buffer.GetBufferPoint(-1),
                                               "Decimal fraction is missing");
          }
          // check for time
          else if (buffer.Current is 'T' or 't')
          {
-            text.Append(buffer.Current);
+            text += buffer.Current;
             buffer.GetNextChar();
-            return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), LiteralType.Time);
+            return new LiteralToken(text, start, buffer.GetBufferPoint(-1), LiteralType.Time);
          }
          // check for date or datetime
          else if (buffer.Current is 'D' or 'd')
          {
-            text.Append(buffer.Current);
+            text += buffer.Current;
 
             // check for datetime
             if (buffer.GetNextChar() is 'T' or 't')
             {
-               text.Append(buffer.Current);
+               text += buffer.Current;
                buffer.GetNextChar();
-               return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), LiteralType.DateTime);
+               return new LiteralToken(text, start, buffer.GetBufferPoint(-1), LiteralType.DateTime);
             }
 
-            return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), LiteralType.Date);
+            return new LiteralToken(text, start, buffer.GetBufferPoint(-1), LiteralType.Date);
          }
          
          // return our boring normal number since it isn't a super cool decimal, date, time or datetime
-         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), hasDecimal ? LiteralType.Decimal : LiteralType.Integer);
+         return new LiteralToken(text, start, buffer.GetBufferPoint(-1), hasDecimal ? LiteralType.Decimal : LiteralType.Integer);
       }
 
       /// <summary>
@@ -150,11 +150,11 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       /// <returns>a <see cref="string"/> containing an integer number.</returns>
       private static string ReadIntegerFromBuffer(ITextBuffer buffer)
       {
-         var text = StringBuilderPool.Current.Get();
-         text.Append(buffer.Current);
-         while (buffer.GetNextChar().IsNumber()) text.Append(buffer.Current);
+         var text = string.Empty;
+         text += buffer.Current;
+         while (buffer.GetNextChar().IsNumber()) text += buffer.Current;
 
-         return text.ToString();
+         return text;
       }
 
       /// <summary>
@@ -168,7 +168,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          if (buffer.AtEndOfBuffer()) return null;
 
          // begin our token reading process
-         var text = StringBuilderPool.Current.Get();
+         var text = string.Empty;
          var start = buffer.GetBufferPoint();
          string booleanLiteral;
 
@@ -184,11 +184,11 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
             if (letter != buffer.Current.ToUpper())
                return null;
 
-            text.Append(buffer.Current);
+            text += buffer.Current;
             buffer.GetNextChar();
          }
 
-         return new LiteralToken(text.ToString(), start, buffer.GetBufferPoint(-1), LiteralType.Boolean);
+         return new LiteralToken(text, start, buffer.GetBufferPoint(-1), LiteralType.Boolean);
       }
    }
 }

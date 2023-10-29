@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "LengthExpression.cs">
+// <copyright company = "Edgerunner.org" file = "ErrorExpression.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -24,31 +24,36 @@
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Code
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
    /// <summary>
-   /// Class that represents a length expression.
-   /// Implements the <see cref="Org.Edgerunner.BC.AL.Language.Parsers.Expressions.AlParserExpression" />
+   /// Class that represents an error expression.
+   /// Implements the <see cref="AlParserRule" />
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.BC.AL.Language.Parsers.Expressions.AlParserExpression" />
-   public class LengthExpression : AlParserExpression
+   /// <seealso cref="AlParserRule" />
+   public class ErrorNode : TerminalNode
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="LengthExpression"/> class.
+      /// Initializes a new instance of the <see cref="ErrorNode"/> class.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="start">The start token.</param>
-      /// <param name="end">The end token.</param>
-      public LengthExpression(TokenStream<AlToken> tokenStream, AlToken start, AlToken end) : base(tokenStream, start, end) {}
+      /// <param name="text">The error text.</param>
+      /// <param name="token">The start.</param>
+      public ErrorNode(string text, AlToken token) : base(AlSyntaxNodeType.Error, token)
+      {
+         ErrorText = text;
+      }
+
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="LengthExpression"/> class.
+      /// The error text.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="token">The start/end token.</param>
-      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public LengthExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
+      protected string ErrorText;
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return ErrorText;
+      }
    }
 }

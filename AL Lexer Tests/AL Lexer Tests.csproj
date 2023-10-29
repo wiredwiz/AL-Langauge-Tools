@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Org.Ederunner.Common\Org.Edgerunner.Common.csproj" />
-    <ProjectReference Include="..\Org.Edgerunner.BC.AL.Parsing\Org.Edgerunner.BC.AL.Language.csproj" />
+    <ProjectReference Include="..\Org.Edgerunner.BC.AL.Language\Org.Edgerunner.BC.AL.Language.csproj" />
   </ItemGroup>
 
   <ItemGroup>

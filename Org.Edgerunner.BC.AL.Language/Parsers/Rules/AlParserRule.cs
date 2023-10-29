@@ -24,32 +24,31 @@
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
    /// <summary>
-   /// Class that represents an AL parser expression.
-   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ParserExpression{AlToken}" />
+   /// Class that represents an AL parser rule.
+   /// Implements the <see cref="ParserRule{TToken,TType}" />
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.Language.Parsers.ParserExpression{AlToken}" />
-   public class AlParserExpression : ParserExpression<AlToken>
+   /// <seealso cref="ParserRule{TToken,TType}" />
+   public class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="AlParserExpression"/> class.
+      /// Initializes a new instance of the <see cref="AlParserRule" /> class.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
+      /// <param name="type">The expression node type.</param>
       /// <param name="start">The start token.</param>
       /// <param name="end">The end token.</param>
-      public AlParserExpression(TokenStream<AlToken> tokenStream, AlToken start, AlToken end) : base(tokenStream, start, end) {}
+      public AlParserRule(AlSyntaxNodeType type, AlToken start, AlToken end) : base(type, start, end) {}
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="AlParserExpression"/> class.
+      /// Initializes a new instance of the <see cref="AlParserRule" /> class.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="token">The start/end token.</param>
-      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public AlParserExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
+      /// <param name="type">The expression node type.</param>
+      /// <param name="symbol">The start/end symbol token.</param>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
+      public AlParserRule(AlSyntaxNodeType type, AlToken symbol) : base(type, symbol) {}
    }
 }

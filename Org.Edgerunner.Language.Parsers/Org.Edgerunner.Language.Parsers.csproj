@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Org.Edgerunner.Lexer\Org.Edgerunner.Language.Lexers.csproj" />
+    <ProjectReference Include="..\Org.Edgerunner.Language.Lexers\Org.Edgerunner.Language.Lexers.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Pooling\Org.Edgerunner.Pooling.csproj" />
   </ItemGroup>
 

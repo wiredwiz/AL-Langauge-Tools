@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "StringExpression.cs">
-// Copyright(c) Thaddeus Ryker 2023
+// <copyright company = "Edgerunner.org" file = "AlSyntaxNodeType.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,20 +23,24 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Common
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
-   public class StringExpression : AlParserExpression
+   public enum AlSyntaxNodeType
    {
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="StringExpression" /> class.
-      /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="token">The start/end token.</param>
-      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public StringExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
+      Error,
+      Integer,
+      Decimal,
+      Symbol,
+      String,
+      Date,
+      Time,
+      DateTime,
+      Boolean,
+      Identifier,
+      LengthDeclaration,
+      VariableTypeDeclaration,
+      OptionValuesDeclaration,
+      ObjectReferenceDeclaration,
+      VariableDeclaration
    }
 }

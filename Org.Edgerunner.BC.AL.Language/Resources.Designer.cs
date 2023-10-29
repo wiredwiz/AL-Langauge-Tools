@@ -61,20 +61,20 @@ namespace Org.Edgerunner.BC.AL.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected &apos;]&apos;, but instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected an option value, instead encountered {0}.
         /// </summary>
-        internal static string ExpectedCloseSqBracket {
+        internal static string ExpectedOptionValue {
             get {
-                return ResourceManager.GetString("ExpectedCloseSqBracket", resourceCulture);
+                return ResourceManager.GetString("ExpectedOptionValue", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected &apos;[&apos;, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected {0}, instead encountered: {1}.
         /// </summary>
-        internal static string ExpectedOpenSqBracket {
+        internal static string ExpectedSymbol {
             get {
-                return ResourceManager.GetString("ExpectedOpenSqBracket", resourceCulture);
+                return ResourceManager.GetString("ExpectedSymbol", resourceCulture);
             }
         }
     }

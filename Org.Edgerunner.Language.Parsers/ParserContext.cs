@@ -30,8 +30,8 @@ namespace Org.Edgerunner.Language.Parsers
    /// <summary>
    /// Class representing the current parser context.
    /// </summary>
-   public class ParserContext<T>
-   where T : IToken
+   public class ParserContext<TToken, TType>
+   where TToken : IToken
    {
       /// <summary>
       /// Gets or sets the parser state.
@@ -46,9 +46,9 @@ namespace Org.Edgerunner.Language.Parsers
       public virtual bool HasErrors { get; protected set; } = false;
 
       /// <summary>
-      /// Gets or sets the current expression.
+      /// Gets or sets the current generated parser rule.
       /// </summary>
-      /// <value>The current expression.</value>
-      public virtual ParserExpression<T>? Expression { get; set; }
+      /// <value>The parser rule.</value>
+      public virtual ParserRule<TToken, TType>? CurrentRule { get; set; }
    }
 }

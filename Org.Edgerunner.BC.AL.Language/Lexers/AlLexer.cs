@@ -54,32 +54,37 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          switch (indicator)
          {
             case CharacterIndicator.Comment:
-            {
-               if (buffer.PeekChar() == '*')
-                  result = CommentTokenizer.ReadMultiLineCommentTokenFromBuffer(buffer, this);
-               if (buffer.PeekChar() == '/')
-                  result = buffer.PeekChar(2) == '/'
-                     ? CommentTokenizer.ReadXmlCommentTokenFromBuffer(buffer, this)
-                     : CommentTokenizer.ReadSingleLineCommentTokenFromBuffer(buffer, this);
+               {
+                  if (buffer.PeekChar() == '*')
+                     result = CommentTokenizer.ReadMultiLineCommentTokenFromBuffer(buffer, this);
+                  if (buffer.PeekChar() == '/')
+                     result = buffer.PeekChar(2) == '/'
+                        ? CommentTokenizer.ReadXmlCommentTokenFromBuffer(buffer, this)
+                        : CommentTokenizer.ReadSingleLineCommentTokenFromBuffer(buffer, this);
 
-               buffer.GetNextChar();
-               return result;
-            }
+                  buffer.GetNextChar();
+                  return result;
+               }
             case CharacterIndicator.Number:
-            {
-               return LiteralTokenizer.ReadNumericBasedLiteralFromBuffer(buffer, this);
-            }
+               {
+                  return LiteralTokenizer.ReadNumericBasedLiteralFromBuffer(buffer, this);
+               }
             case CharacterIndicator.Symbol:
                return SymbolTokenizer.ReadSymbolTokenFromBuffer(buffer);
             case CharacterIndicator.String:
                return LiteralTokenizer.ReadStringLiteralTokenFromBuffer(buffer, this);
             case CharacterIndicator.Identifier:
-            {
-               if (buffer.Current is 'T' or 't' or 'F' or 'f')
-                  result = LiteralTokenizer.ReadBooleanLiteralFromBuffer(buffer);
-
-               return result ?? IdentifierTokenizer.ReadIdentifierTokenFromBuffer(buffer, this);
-            }
+               {
+                  if (buffer.Current is 'T' or 't' or 'F' or 'f')
+                  {
+                     start = buffer.GetBufferPoint();
+                     result = LiteralTokenizer.ReadBooleanLiteralFromBuffer(buffer);
+                     if (result == null)
+                        buffer.SetBufferPoint(start);
+                  }
+                  
+                  return result ?? IdentifierTokenizer.ReadIdentifierTokenFromBuffer(buffer, this);
+               }
          }
          return LexerError.PackageError(this, buffer.Current.ToString(), start, buffer.GetBufferPoint(),
                                         "Invalid token character");
@@ -90,7 +95,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       {
          var tokens = new List<AlToken>();
          // loop and add tokens until we reach null/end of buffer
-         while (ReadTokenFromBuffer(buffer) is {} token) tokens.Add(token);
+         while (ReadTokenFromBuffer(buffer) is { } token) tokens.Add(token);
          return tokens;
       }
 
@@ -120,7 +125,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
       {
          if (_FileObjectMap[buffer.Current] == (int)CharacterIndicator.Whitespace)
 #pragma warning disable S108
-            while (_FileObjectMap[buffer.GetNextChar()] == (int)CharacterIndicator.Whitespace) {}
+            while (_FileObjectMap[buffer.GetNextChar()] == (int)CharacterIndicator.Whitespace) { }
 #pragma warning restore S108
       }
    }

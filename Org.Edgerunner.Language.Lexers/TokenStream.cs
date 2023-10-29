@@ -98,7 +98,7 @@ namespace Org.Edgerunner.Language.Lexers
       /// </summary>
       /// <returns>A <see cref="T"/> instance.</returns>
       /// <exception cref="InvalidOperationException">Attempted to advance past the end of the stream.</exception>
-      public virtual T NextToken()
+      public virtual T MoveNext()
       {
          if (EndOfStream())
             throw new InvalidOperationException("Cannot advance past the end of the stream");
@@ -111,7 +111,7 @@ namespace Org.Edgerunner.Language.Lexers
       /// </summary>
       /// <returns>A <see cref="T"/> instance.</returns>
       /// <exception cref="InvalidOperationException">Attempted to rewind past the start of the stream.</exception>
-      public virtual T PreviousToken()
+      public virtual T MovePrevious()
       {
          if (BeginningOfStream())
             throw new InvalidOperationException("Cannot rewind past the start of the stream");
@@ -120,11 +120,35 @@ namespace Org.Edgerunner.Language.Lexers
       }
 
       /// <summary>
+      /// Returns the next token in the stream.
+      /// </summary>
+      /// <returns>A instance of <see cref="T"/> or null if at the end of the stream.</returns>
+      public virtual T? Next()
+      {
+         if (Position >= Stream.Count)
+            return default;
+
+         return Stream[Position + 1];
+      }
+
+      /// <summary>
+      /// Returns the previous token in the stream.
+      /// </summary>
+      /// <returns>A instance of <see cref="T"/> or null if at the beginning of the stream.</returns>
+      public virtual T? Previous()
+      {
+         if (Position <= 0)
+            return default;
+
+         return Stream[Position - 1];
+      }
+
+      /// <summary>
       /// Gets the position of of the specified token in the stream.
       /// </summary>
       /// <param name="token">The token to find.</param>
       /// <returns>An integer that represents the position.</returns>
-      public int GetPositionOf(T token)
+      public virtual int GetPositionOf(T token)
       {
          return Stream.IndexOf(token);
       }

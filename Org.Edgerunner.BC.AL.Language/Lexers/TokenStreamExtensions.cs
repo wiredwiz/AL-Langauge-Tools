@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "VariableTypeExpression.cs">
+// <copyright company = "Edgerunner.org" file = "TokenStreamExtensions.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,32 +23,32 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Expressions.Code
+namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
    /// <summary>
-   /// Class representing a variable type expression.
-   /// Implements the <see cref="Org.Edgerunner.BC.AL.Language.Parsers.Expressions.AlParserExpression" />
+   /// Class containing TokenStream extensions methods. 
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.BC.AL.Language.Parsers.Expressions.AlParserExpression" />
-   public class VariableTypeExpression : AlParserExpression
+   /// <seealso cref="TokenStream{T}"/>
+   public static class TokenStreamExtensions
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="VariableTypeExpression" /> class.
+      /// Rewinds the stream back a set number of positions and returns null.
       /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="start">The start token.</param>
-      /// <param name="end">The end token.</param>
-      public VariableTypeExpression(TokenStream<AlToken> tokenStream, AlToken start, AlToken end) : base(tokenStream, start, end) {}
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="VariableTypeExpression" /> class.
-      /// </summary>
-      /// <param name="tokenStream">The token stream.</param>
-      /// <param name="token">The start/end token.</param>
-      /// <remarks>This overload assumes that the end position is the same as the start.</remarks>
-      public VariableTypeExpression(TokenStream<AlToken> tokenStream, AlToken token) : base(tokenStream, token) {}
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="steps">The number of steps to rewind.</param>
+      /// <returns>Null.</returns>
+      /// <exception cref="ArgumentOutOfRangeException">steps resulted in a negative stream position.</exception>
+      public static AlParserRule? Rewind(this TokenStream<AlToken> tokens, int steps = 1)
+      {
+         if (tokens.Position - steps < 0)
+            throw new ArgumentOutOfRangeException(nameof(steps),
+                                                  "The number of positions cannot rewind the stream past its starting position");
+         tokens.Position -= steps;
+         return null;
+      }
    }
 }

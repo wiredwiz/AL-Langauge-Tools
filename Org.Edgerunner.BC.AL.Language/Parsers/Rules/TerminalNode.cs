@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TokenStreamExtensions.cs">
-// Copyright(c) Thaddeus Ryker 2023
+// <copyright company = "Edgerunner.org" file = "TerminalNode.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,32 +23,25 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Expressions;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
-namespace Org.Edgerunner.BC.AL.Language.Lexers
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
-   /// <summary>
-   /// Class containing TokenStream extensions methods. 
-   /// </summary>
-   /// <seealso cref="TokenStream{T}"/>
-   public static class TokenStreamExtensions
+   public class TerminalNode : AlParserRule
    {
       /// <summary>
-      /// Rewinds the stream back a set number of positions and returns null.
+      /// Initializes a new instance of the <see cref="TerminalNode"/> class.
       /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="steps">The number of steps to rewind.</param>
-      /// <returns>Null.</returns>
-      /// <exception cref="ArgumentOutOfRangeException">steps resulted in a negative stream position.</exception>
-      public static AlParserExpression? Rewind(this TokenStream<AlToken> tokens, int steps = 1)
+      /// <param name="type">The expression node type.</param>
+      /// <param name="symbol">The start/end symbol token.</param>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
+      public TerminalNode(AlSyntaxNodeType type, Tokens.AlToken symbol) : base(type, symbol)
       {
-         if (tokens.Position - steps < 0)
-            throw new ArgumentOutOfRangeException(nameof(steps),
-                                                  "The number of positions cannot rewind the stream past its starting position");
-         tokens.Position -= steps;
-         return null;
       }
+
+      /// <inheritdoc />
+      public override string GetText()
+      {
+         return Start.Value;
+      }
+
    }
 }
