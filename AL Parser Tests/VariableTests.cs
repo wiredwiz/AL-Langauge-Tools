@@ -2,8 +2,10 @@ using Org.Edgerunner.BC.AL.Language.Lexers;
 using Org.Edgerunner.Buffers.Input;
 using System.Text;
 using FluentAssertions;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
+using Org.Edgerunner.Language.Parsers;
 
 // ReSharper disable ExceptionNotDocumented
 // ReSharper disable TooManyDeclarations
@@ -28,7 +30,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the text declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         parser.ParseVariableDeclaration(stream, context);
+         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         context.CurrentRule = root;
+         parser.ParseVariableDeclaration(stream, context, root);
+         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
@@ -57,7 +62,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the option declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         parser.ParseVariableDeclaration(stream, context);
+         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         context.CurrentRule = root;
+         parser.ParseVariableDeclaration(stream, context, root);
+         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
@@ -88,7 +96,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the record declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         parser.ParseVariableDeclaration(stream, context);
+         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         context.CurrentRule = root;
+         parser.ParseVariableDeclaration(stream, context, root);
+         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
@@ -121,7 +132,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the record declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         parser.ParseVariableDeclaration(stream, context);
+         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         context.CurrentRule = root;
+         parser.ParseVariableDeclaration(stream, context, root);
+         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
@@ -150,7 +164,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the option declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         parser.ParseVariableDeclaration(stream, context);
+         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         context.CurrentRule = root;
+         parser.ParseVariableDeclaration(stream, context, root);
+         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);

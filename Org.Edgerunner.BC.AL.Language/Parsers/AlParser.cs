@@ -25,15 +25,13 @@
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.BC.AL.Objects;
-using Org.Edgerunner.BC.AL.Objects.Code;
-using Org.Edgerunner.BC.AL.Objects.Tables;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   public partial class AlParser : IParser<AlToken, AlObjectBase>
+   public partial class AlParser : IParser<AlToken, AlParserRule>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlParser"/> class.
@@ -70,37 +68,27 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Parses tokens from the stream into a type of <seealso cref="AlObjectBase"/>.
       /// </summary>
       /// <param name="tokens">The tokens.</param>
-      /// <returns>A new <seealso cref="AlObjectBase"/>.</returns>
-      public AlObjectBase? ParseSource(TokenStream<AlToken> tokens)
+      /// <returns>A new <seealso cref="AlParserRule"/>.</returns>
+      public AlParserRule? ParseSource(TokenStream<AlToken> tokens)
       {
          HasErrors = false;
-         var token = tokens.MoveNext();
-         if (token == null)
-            return null;
-
-         switch (token.TokenType)
-         {
-            case (int)TokenType.Identifier when token.Value.ToLowerInvariant() == "table":
-               return new Table("test", 1);
-            case (int)TokenType.Identifier when token.Value.ToLowerInvariant() == "codeunit":
-               return new Codeunit("test", 1);
-            default:
-               return null;
-         }
+         return null;
       }
 
       /// <summary>
-      /// Validates that the <see cref="AlToken"/> matches the expected type and value.
+      /// Validates that the <see cref="AlToken" /> matches the expected type and value.
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="type">The type to match.</param>
       /// <param name="value">The value to match.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
-      /// <seealso cref="AlToken"/>
+      /// <seealso cref="AlToken" />
       // ReSharper disable once FlagArgument
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, TokenType type, string value, string errorMessage)
+      // ReSharper disable once TooManyArguments
+      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, TokenType type, string value, string errorMessage)
       {
          if (token == null)
             return false;
@@ -110,7 +98,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             if (context.State == 0)
             {
                GenerateParserError(token, token, errorMessage);
-               context.CurrentRule!.AddChildNode(new ErrorNode(errorMessage, token));
+               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -125,23 +113,25 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="type">The type to match.</param>
-      /// <param name="values">The allowable values.</param>
+      /// <param name="allowedValues">The allowable values.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
       /// <seealso cref="AlToken" />
       // ReSharper disable once FlagArgument
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, TokenType type, IEnumerable<string> values, string errorMessage)
+      // ReSharper disable once TooManyArguments
+      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, TokenType type, IEnumerable<string> allowedValues, string errorMessage)
       {
          if (token == null)
             return false;
 
-         if (token.TokenType != (int)type || values.Contains(token.Value))
+         if (token.TokenType != (int)type || allowedValues.Contains(token.Value))
          {
             if (context.State == 0)
             {
                GenerateParserError(token, token, errorMessage);
-               context.CurrentRule!.AddChildNode(new ErrorNode(errorMessage, token));
+               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -156,12 +146,13 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="type">The type to match.</param>
       /// <param name="errorMessage">The error message to use if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
       /// <seealso cref="AlToken"/>
       // ReSharper disable once FlagArgument
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, TokenType type, string errorMessage)
+      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, TokenType type, string errorMessage)
       {
          if (token == null)
             return false;
@@ -171,7 +162,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             if (context.State == 0)
             {
                GenerateParserError(token, token, errorMessage);
-               context.CurrentRule!.AddChildNode(new ErrorNode(errorMessage, token));
+               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -186,13 +177,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="type">The token literal type to match.</param>
       /// <param name="errorMessage">The error message to use if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
       /// <remarks>Assumes a token type of Literal in this case</remarks>
       /// <seealso cref="AlToken"/>
       // ReSharper disable once FlagArgument
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, LiteralType type, string errorMessage)
+      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, LiteralType type, string errorMessage)
       {
          if (token == null)
             return false;
@@ -202,7 +194,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             if (context.State == 0)
             {
                GenerateParserError(token, token, errorMessage);
-               context.CurrentRule!.AddChildNode(new ErrorNode(errorMessage, token));
+               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -214,7 +206,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             if (context.State == 0)
             {
                GenerateParserError(token, token, errorMessage);
-               context.CurrentRule!.AddChildNode(new ErrorNode(errorMessage, token));
+               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;

@@ -61,7 +61,7 @@ namespace Org.Edgerunner.BC.AL.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected an option value, instead encountered {0}.
+        ///   Looks up a localized string similar to Expected an option value, instead encountered: {0}.
         /// </summary>
         internal static string ExpectedOptionValue {
             get {
@@ -70,7 +70,7 @@ namespace Org.Edgerunner.BC.AL.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected {0}, instead encountered: {1}.
+        ///   Looks up a localized string similar to Expected symbol &apos;{0}&apos;, instead encountered: {1}.
         /// </summary>
         internal static string ExpectedSymbol {
             get {

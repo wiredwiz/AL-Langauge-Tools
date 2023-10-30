@@ -38,22 +38,22 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
       /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      public bool ParseLengthDeclaration(TokenStream<AlToken> tokens, AlParserContext context)
+      public bool ParseLengthDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
          var parsed = true;
-         var rule = new AlParserRule(AlSyntaxNodeType.LengthDeclaration, token);
-         if (context.CurrentRule != null) context.CurrentRule.AddChildNode(rule);
-         context.CurrentRule = rule;
+         var newRule = new AlParserRule(AlSyntaxNodeType.LengthDeclaration, token);
+         parentRule.AddChildNode(newRule);
 
          var message = string.Format(Resources.ExpectedSymbol, "'['", token.Value);
-         if (ValidateToken(token, context, TokenType.Symbol, "[", message))
+         if (ValidateToken(token, context, newRule, TokenType.Symbol, "[", message))
             tokens.MoveNext();
          else
             parsed = false;
 
-         if (ParseIntegerLiteral(tokens, context))
+         if (ParseIntegerLiteral(tokens, context, newRule))
             tokens.MoveNext();
          else
             parsed = false;
@@ -61,13 +61,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          token = tokens.Current;
          var last = token;
          message = string.Format(Resources.ExpectedSymbol, "']'", token.Value);
-         if (!ValidateToken(token, context, TokenType.Symbol, "]", message))
+         if (!ValidateToken(token, context, newRule, TokenType.Symbol, "]", message))
             parsed = false;
 
-         context.CurrentRule!.End = last;
-         
-         if (context.CurrentRule!.Parent != null)
-            context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
+         newRule.End = last;
 
          return parsed;
       }
@@ -77,32 +74,29 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
       /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      public bool ParseVariableObjectDeclaration(TokenStream<AlToken> tokens, AlParserContext context)
+      public bool ParseVariableObjectDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var rule = new AlParserRule(AlSyntaxNodeType.ObjectReferenceDeclaration, token);
-         if (context.CurrentRule != null) context.CurrentRule.AddChildNode(rule);
-         context.CurrentRule = rule;
+         var newRule = new AlParserRule(AlSyntaxNodeType.ObjectReferenceDeclaration, token);
+         parentRule.AddChildNode(newRule);
 
          var errorMessage = $"Expected an object number or name identifier, instead encountered ${token.Value}";
 
          // Look for an object integer number
          var parsed = token.TokenType == (int)TokenType.Literal && token is LiteralToken { LiteralType: LiteralType.Integer };
          if (parsed)
-            parsed = ParseIntegerLiteral(tokens, context);
+            parsed = ParseIntegerLiteral(tokens, context, newRule);
          else if (token.TokenType == (int)TokenType.Identifier)
             // if we didn't have a number, but instead an identifier, then we are still good
-            parsed = ParseIdentifierLiteral(tokens, context);
+            parsed = ParseIdentifierLiteral(tokens, context, newRule);
          else
          {
             GenerateParserError(token, token, errorMessage);
-            context.CurrentRule.AddChildNode(new ErrorNode(errorMessage, token));
+            newRule.AddChildNode(new ErrorNode(errorMessage, token));
             parsed = false;
          }
-
-         if (context.CurrentRule!.Parent != null)
-            context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
 
          return parsed;
       }
@@ -112,31 +106,28 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
       /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      public bool ParseArrayVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context)
+      public bool ParseArrayVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var rule = new AlParserRule(AlSyntaxNodeType.ArrayDeclaration, token);
-         if (context.CurrentRule != null) context.CurrentRule.AddChildNode(rule);
-         context.CurrentRule = rule;
+         var newRule = new AlParserRule(AlSyntaxNodeType.ArrayDeclaration, token);
+         parentRule.AddChildNode(newRule);
 
          // look for length declaration
-         var parsed = ParseLengthDeclaration(tokens, context);
+         var parsed = ParseLengthDeclaration(tokens, context, newRule);
          if (parsed)
             tokens.MoveNext();
 
          // Look for identifier
-         parsed = ParseIdentifierLiteral(tokens, context, "of");
+         parsed = ParseIdentifierLiteral(tokens, context, newRule, "of");
          if (parsed)
             tokens.MoveNext();
 
          // Now parse our array sub type declaration
-         parsed = ParseVariableType(tokens, context);
+         parsed = ParseVariableType(tokens, context, newRule);
          if (parsed)
             tokens.MoveNext();
-
-         if (context.CurrentRule!.Parent != null)
-            context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
 
          return parsed;
       }
@@ -146,17 +137,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
       /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      public bool ParseOptionValuesDeclaration(TokenStream<AlToken> tokens, AlParserContext context)
+      public bool ParseOptionValuesDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var parsed = true;
          var token = tokens.Current;
-         var rule = new AlParserRule(AlSyntaxNodeType.OptionValuesDeclaration, token);
-         if (context.CurrentRule != null) context.CurrentRule.AddChildNode(rule);
-         context.CurrentRule = rule;
+         var newRule = new AlParserRule(AlSyntaxNodeType.OptionValuesDeclaration, token);
+         parentRule.AddChildNode(newRule);
 
          var allowed = new[] { ",", ";" };
-         if (ParseIdentifierLiteral(tokens, context))
+         if (ParseIdentifierLiteral(tokens, context, newRule))
             tokens.MoveNext();
          else
             parsed = false;
@@ -169,16 +160,13 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             bool noMatch = false;
 
             // check if we have a semi-colon
-            var tokenValidates = ValidateToken(token, context, TokenType.Symbol, ",", message);
+            var tokenValidates = ValidateToken(token, context, newRule, TokenType.Symbol, ",", message);
             if (tokenValidates)
             {
                var node = new TerminalNode(AlSyntaxNodeType.Symbol, token);
-               if (context.CurrentRule != null)
-                  context.CurrentRule.AddChildNode(node);
-               else
-                  context.CurrentRule = node;
+               newRule.AddChildNode(node);
 
-               rule.End = token;
+               newRule.End = token;
                tokens.MoveNext();
                token = tokens.Current;
             }
@@ -186,16 +174,13 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                noMatch = true;
 
             // check if we have an identifier
-            tokenValidates = ValidateToken(token, context, TokenType.Identifier, string.Format(Resources.ExpectedOptionValue, token.Value));
+            tokenValidates = ValidateToken(token, context, newRule, TokenType.Identifier, string.Format(Resources.ExpectedOptionValue, token.Value));
             if (tokenValidates)
             {
                var node = new TerminalNode(AlSyntaxNodeType.Identifier, token);
-               if (context.CurrentRule != null)
-                  context.CurrentRule.AddChildNode(node);
-               else
-                  context.CurrentRule = node;
-
-               rule.End = token;
+               newRule.AddChildNode(node);
+               
+               newRule.End = token;
                tokens.MoveNext();
                token = tokens.Current;
                noMatch = false;
@@ -204,7 +189,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             // If we matched neither, move the token stream position forward and keep trying to match
             if (noMatch)
             {
-               rule.End = token;
+               newRule.End = token;
 
                // We have reached the end of the token stream, so we bail out
                if (tokens.Position == tokens.Size - 1)
@@ -219,18 +204,21 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             }
          }
 
-         if (context.CurrentRule!.Parent != null)
-            context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
-
          return parsed;
       }
 
-      public bool ParseVariableType(TokenStream<AlToken> tokens, AlParserContext context)
+      /// <summary>
+      /// Parses the variable type declaration.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
+      /// <returns>bool.</returns>
+      public bool ParseVariableType(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var rule = new AlParserRule(AlSyntaxNodeType.VariableTypeDeclaration, token);
-         if (context.CurrentRule != null) context.CurrentRule.AddChildNode(rule);
-         context.CurrentRule = rule;
+         var newRule = new AlParserRule(AlSyntaxNodeType.VariableTypeDeclaration, token);
+         parentRule.AddChildNode(newRule);
          string errorMessage;
          var parsed = true;
          var isArray = false;
@@ -245,9 +233,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          {
             errorMessage = $"Expected a valid AL data type, but instead encountered: {token.Value}";
             GenerateParserError(token, token, errorMessage);
-            context.CurrentRule!.AddChildNode(new ErrorNode(errorMessage, token));
-            if (context.CurrentRule!.Parent != null)
-               context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
+            newRule.AddChildNode(new ErrorNode(errorMessage, token));
+
             return false;
          }
 
@@ -256,8 +243,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          if (isArray)
          {
             // Parse an array declaration e.g. array[5] of text[20]
-            var result = ParseArrayVariableDeclaration(tokens, context);
-            rule.End = tokens.Current;
+            var result = ParseArrayVariableDeclaration(tokens, context, newRule);
+            newRule.End = tokens.Current;
             if (result)
                tokens.MoveNext();
             else
@@ -385,8 +372,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                case VariableType.Text:
                {
                   // Parse a length declaration e.g. [20]
-                  var result = ParseLengthDeclaration(tokens, context);
-                  rule.End = tokens.Current;
+                  var result = ParseLengthDeclaration(tokens, context, newRule);
+                  newRule.End = tokens.Current;
                   if (result)
                      tokens.MoveNext();
                   else
@@ -401,8 +388,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                case VariableType.Report:
                {
                   // Parse an object declaration e.g. 20 or "Customer"
-                  var result = ParseVariableObjectDeclaration(tokens, context);
-                  rule.End = tokens.Current;
+                  var result = ParseVariableObjectDeclaration(tokens, context, newRule);
+                  newRule.End = tokens.Current;
                   if (!result)
                      parsed = false;
                   break;
@@ -410,8 +397,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                case VariableType.Option:
                {
                   // parse an option value declaration e.g. foo,bar,bah
-                  var result = ParseOptionValuesDeclaration(tokens, context);
-                  rule.End = tokens.Current;
+                  var result = ParseOptionValuesDeclaration(tokens, context, newRule);
+                  newRule.End = tokens.Current;
                   if (!result)
                      parsed = false;
                   break;
@@ -433,47 +420,45 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                   break;
                }
                default:
-                  if (context.CurrentRule!.Parent != null)
-                     context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
                   return false;
             }
-
-         if (context.CurrentRule!.Parent != null)
-            context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
 
          return parsed;
       }
 
-      public bool ParseVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context)
+      /// <summary>
+      /// Parses the variable declaration.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
+      /// <returns>bool.</returns>
+      public bool ParseVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var parsed = true;
-         var rule = new AlParserRule(AlSyntaxNodeType.VariableDeclaration, tokens.Current);
-         if (context.CurrentRule != null) context.CurrentRule.AddChildNode(rule);
-         context.CurrentRule = rule;
+         var newRule = new AlParserRule(AlSyntaxNodeType.VariableDeclaration, tokens.Current);
+         parentRule.AddChildNode(newRule);
 
-         if (ParseIdentifierLiteral(tokens, context))
+         if (ParseIdentifierLiteral(tokens, context, newRule))
             tokens.MoveNext();
          else
             parsed = false;
 
-         if (ParseSymbol(tokens, ":", context))
+         if (ParseSymbol(tokens, context, newRule, ":"))
             tokens.MoveNext();
          else
             parsed = false;
 
-         if (!ParseVariableType(tokens, context))
+         if (!ParseVariableType(tokens, context, newRule))
             parsed = false;
 
          if (tokens.Current.TokenType != (int)TokenType.Symbol || tokens.Current.Value != ";")
             ScanTillSymbolReached(tokens, new []{";", "}"});
 
-         context.CurrentRule.End = tokens.Current;
+         newRule.End = tokens.Current;
 
          var node = new TerminalNode(AlSyntaxNodeType.Symbol, tokens.Current);
-         context.CurrentRule.AddChildNode(node);
-
-         if (context.CurrentRule!.Parent != null)
-            context.CurrentRule = (AlParserRule)context.CurrentRule.Parent;
+         newRule.AddChildNode(node);
 
          return parsed;
       }

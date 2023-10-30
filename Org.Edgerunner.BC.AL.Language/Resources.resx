@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ExpectedSymbol" xml:space="preserve">
-    <value>Expected {0}, instead encountered: {1}</value>
+    <value>Expected symbol '{0}', instead encountered: {1}</value>
   </data>
   <data name="ExpectedOptionValue" xml:space="preserve">
-     <value>Expected an option value, instead encountered {0}</value>
+    <value>Expected an option value, instead encountered: {0}</value>
   </data>
 </root>

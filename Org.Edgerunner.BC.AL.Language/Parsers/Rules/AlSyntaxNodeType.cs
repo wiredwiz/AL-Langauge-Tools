@@ -28,6 +28,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
    public enum AlSyntaxNodeType
    {
       Error,
+      Root,
       Integer,
       Decimal,
       Symbol,
