@@ -4,5 +4,10 @@
    myOption: Option foo, bar,"buh buh";
    customer: record "customer";
    customer2: record 20;
+   myDate: Date;
+   myTime: Time;
+   myDatetime : Datetime;
+   doesParse: Boolean;
+   myArray: array[10,10] of text[20];
 begin
 end;

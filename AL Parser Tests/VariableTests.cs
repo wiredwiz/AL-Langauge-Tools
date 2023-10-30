@@ -100,5 +100,67 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          rule.End.EndingLine.Should().Be(endLine);
          rule.End.EndingColumn.Should().Be(endColumn);
       }
+
+      [Theory]
+      [InlineData(34, 7, 4, 7, 16)]
+      [InlineData(38, 8, 4, 8, 16)]
+      [InlineData(42, 9, 4, 9, 25)]
+      [InlineData(46, 10, 4, 10, 22)]
+      public void Simple_variable_type_parses_correctly(int streamPosition, int startLine, int startColumn, int endLine, int endColumn)
+      {
+         // loading a demo al file
+         var buffer = new TextBuffer("Variables.al", Encoding.Default.CodePage);
+         var lexer = new AlLexer();
+
+         // Then tokenizing the file into a token stream
+         var stream = new TokenStream<AlToken>(lexer.ReadTokensFromBuffer(buffer));
+
+         // And moving the token stream to the option variable declaration
+         stream.Position = streamPosition;
+
+         // And finally parsing the record declaration tokens
+         var context = new AlParserContext();
+         var parser = new AlParser();
+         parser.ParseVariableDeclaration(stream, context);
+
+         // results in the expected parse tree
+         context.State.Should().Be(0);
+         var rule = context.CurrentRule;
+         rule.Should().NotBeNull();
+         rule!.Parent.Should().BeNull();
+         rule.Start.StartingLine.Should().Be(startLine);
+         rule.Start.StartingColumn.Should().Be(startColumn);
+         rule.End.EndingLine.Should().Be(endLine);
+         rule.End.EndingColumn.Should().Be(endColumn);
+      }
+
+      [Fact]
+      public void Array_variable_parses_correctly()
+      {
+         // loading a demo al file
+         var buffer = new TextBuffer("Variables.al", Encoding.Default.CodePage);
+         var lexer = new AlLexer();
+
+         // Then tokenizing the file into a token stream
+         var stream = new TokenStream<AlToken>(lexer.ReadTokensFromBuffer(buffer));
+
+         // And moving the token stream to the option variable declaration
+         stream.Position = 50;
+
+         // And finally parsing the option declaration tokens
+         var context = new AlParserContext();
+         var parser = new AlParser();
+         parser.ParseVariableDeclaration(stream, context);
+
+         // results in the expected parse tree
+         context.State.Should().Be(0);
+         var rule = context.CurrentRule;
+         rule.Should().NotBeNull();
+         rule!.Parent.Should().BeNull();
+         rule.Start.StartingLine.Should().Be(11);
+         rule.Start.StartingColumn.Should().Be(4);
+         rule.End.EndingLine.Should().Be(11);
+         rule.End.EndingColumn.Should().Be(37);
+      }
    }
 }

@@ -240,6 +240,30 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       }
 
       /// <summary>
+      /// Parses an identifier expression from the stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="expectedValue">The expected identifier value.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      public bool ParseIdentifierLiteral(TokenStream<AlToken> tokens, AlParserContext context, string expectedValue)
+      {
+         var token = tokens.Current;
+         var message = $"Expected identifier '{expectedValue}', instead encountered: {token.Value}";
+         var tokenValidates = ValidateToken(token, context, TokenType.Identifier, expectedValue, message);
+         if (tokenValidates)
+         {
+            var expression = new TerminalNode(AlSyntaxNodeType.Identifier, token);
+            if (context.CurrentRule != null)
+               context.CurrentRule.AddChildNode(expression);
+            else
+               context.CurrentRule = expression;
+         }
+
+         return tokenValidates;
+      }
+
+      /// <summary>
       /// Parses a symbol from the stream that matches a specified value.
       /// </summary>
       /// <param name="tokens">The token stream.</param>

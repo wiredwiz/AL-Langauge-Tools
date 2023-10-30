@@ -180,7 +180,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          context.State = 0;
          return true;
       }
-      
+
       /// <summary>
       /// Validates that the <see cref="AlToken"/> is a literal token of the expected literal type.
       /// </summary>

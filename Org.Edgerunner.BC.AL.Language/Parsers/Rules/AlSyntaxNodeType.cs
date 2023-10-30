@@ -41,6 +41,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       VariableTypeDeclaration,
       OptionValuesDeclaration,
       ObjectReferenceDeclaration,
+      ArrayDeclaration,
+      ListDeclaration,
+      DictionaryDeclaration,
       VariableDeclaration
    }
 }
