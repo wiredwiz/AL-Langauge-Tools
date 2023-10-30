@@ -44,11 +44,5 @@ namespace Org.Edgerunner.Language.Parsers
       /// </summary>
       /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
       public virtual bool HasErrors { get; protected set; } = false;
-
-      /// <summary>
-      /// Gets or sets the current generated parser rule.
-      /// </summary>
-      /// <value>The parser rule.</value>
-      public virtual ParserRule<TToken, TType>? CurrentRule { get; set; }
    }
 }

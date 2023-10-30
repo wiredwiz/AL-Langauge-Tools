@@ -31,13 +31,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          var context = new AlParserContext();
          var parser = new AlParser();
          var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
-         context.CurrentRule = root;
          parser.ParseVariableDeclaration(stream, context, root);
          root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
-         var rule = context.CurrentRule;
+         var rule = root;
          rule.Should().NotBeNull();
          rule!.Parent.Should().BeNull();
          rule.Start.StartingLine.Should().Be(3);
@@ -63,13 +62,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          var context = new AlParserContext();
          var parser = new AlParser();
          var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
-         context.CurrentRule = root;
          parser.ParseVariableDeclaration(stream, context, root);
          root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
-         var rule = context.CurrentRule;
+         var rule = root ;
          rule.Should().NotBeNull();
          rule!.Parent.Should().BeNull();
          rule.Start.StartingLine.Should().Be(4);
@@ -97,13 +95,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          var context = new AlParserContext();
          var parser = new AlParser();
          var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
-         context.CurrentRule = root;
          parser.ParseVariableDeclaration(stream, context, root);
          root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
-         var rule = context.CurrentRule;
+         var rule = root;
          rule.Should().NotBeNull();
          rule!.Parent.Should().BeNull();
          rule.Start.StartingLine.Should().Be(startLine);
@@ -133,13 +130,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          var context = new AlParserContext();
          var parser = new AlParser();
          var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
-         context.CurrentRule = root;
          parser.ParseVariableDeclaration(stream, context, root);
          root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
-         var rule = context.CurrentRule;
+         var rule = root;
          rule.Should().NotBeNull();
          rule!.Parent.Should().BeNull();
          rule.Start.StartingLine.Should().Be(startLine);
@@ -165,13 +161,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          var context = new AlParserContext();
          var parser = new AlParser();
          var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
-         context.CurrentRule = root;
          parser.ParseVariableDeclaration(stream, context, root);
          root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
-         var rule = context.CurrentRule;
+         var rule = root;
          rule.Should().NotBeNull();
          rule!.Parent.Should().BeNull();
          rule.Start.StartingLine.Should().Be(11);
