@@ -145,12 +145,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          parentRule.AddChildNode(newRule);
 
          var allowed = new[] { ",", ";" };
-         if (ParseIdentifierLiteral(tokens, context, newRule))
-            tokens.MoveNext();
-         else
-            parsed = false;
-
-         token = tokens.Current;
          var message = string.Format(Resources.ExpectedSymbol, "',' or ';'", token.Value);
          while (token.TokenType != (int)TokenType.Symbol || token.Value != ";")
          {
@@ -355,12 +349,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                case VariableType.WebServiceActionResultCode:
                {
                   // we have nothing extra to do, these variable types have no extra declaration
+                  ParseIdentifierLiteral(tokens, context, newRule);
+                  tokens.MoveNext();
                   break;
                }
                case VariableType.Code:
                case VariableType.Text:
                {
                   // Parse a length declaration e.g. [20]
+                  ParseIdentifierLiteral(tokens, context, newRule);
+                  tokens.MoveNext();
                   var result = ParseLengthDeclaration(tokens, context, newRule);
                   if (result)
                      tokens.MoveNext();
@@ -375,6 +373,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                case VariableType.Query:
                case VariableType.Report:
                {
+                  ParseIdentifierLiteral(tokens, context, newRule);
+                  tokens.MoveNext();
+
                   // Parse an object declaration e.g. 20 or "Customer"
                   var result = ParseVariableObjectDeclaration(tokens, context, newRule);
                   if (!result)
@@ -383,6 +384,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                }
                case VariableType.Option:
                {
+                  ParseIdentifierLiteral(tokens, context, newRule);
+                  tokens.MoveNext();
+
                   // parse an option value declaration e.g. foo,bar,bah
                   var result = ParseOptionValuesDeclaration(tokens, context, newRule);
                   if (!result)
