@@ -1,4 +1,4 @@
-﻿#region MIT License
+#region MIT License
 
 // <copyright company = "Edgerunner.org" file = "AlTerminalNode.cs">
 // Copyright(c)  2023

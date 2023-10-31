@@ -74,9 +74,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
       }
 
       [Theory]
-      [InlineData(24, 5, 4, 5, 31)]
-      [InlineData(29, 6, 4, 6, 24)]
-      public void Record_variable_parses_correctly(int streamPosition, int startLine, int startColumn, int endLine, int endColumn)
+      [InlineData(24, 5, 4, 5, 31, "customer: record \"customer\";")]
+      [InlineData(29, 6, 4, 6, 24, "customer2: record 20;")]
+      public void Record_variable_parses_correctly(int streamPosition, int startLine, int startColumn, int endLine, int endColumn, string value)
       {
          // loading a demo al file
          var buffer = new TextBuffer("Variables.al", Encoding.Default.CodePage);
@@ -103,13 +103,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          rule.Start.StartingColumn.Should().Be(startColumn);
          rule.End!.EndingLine.Should().Be(endLine);
          rule.End.EndingColumn.Should().Be(endColumn);
+         rule.GetText().Should().Be(value);
       }
 
       [Theory]
-      [InlineData(34, 7, 4, 7, 16, "myDate:Date;")]
-      [InlineData(38, 8, 4, 8, 16, "myTime:Time;")]
-      [InlineData(42, 9, 4, 9, 25, "myDatetime:Datetime;")]
-      [InlineData(46, 10, 4, 10, 22, "doesParse:Boolean;")]
+      [InlineData(34, 7, 4, 7, 16, "myDate: Date;")]
+      [InlineData(38, 8, 4, 8, 16, "myTime: Time;")]
+      [InlineData(42, 9, 4, 9, 25, "myDatetime: Datetime;")]
+      [InlineData(46, 10, 4, 10, 22, "doesParse: Boolean;")]
       public void Simple_variable_type_parses_correctly(int streamPosition, int startLine, int startColumn, int endLine, int endColumn, string value)
       {
          // loading a demo al file

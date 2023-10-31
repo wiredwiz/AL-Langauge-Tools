@@ -92,10 +92,19 @@ namespace Org.Edgerunner.Language.Parsers
       /// <inheritdoc />
       public virtual string GetText()
       {
-         var text = StringBuilderPool.Current.Get();
-
-         foreach (var child in Children) text.Append(((ISyntaxNode<TToken, TType>)child).GetText());
-         return text.ToString();
+         switch (Children.Count)
+         {
+            case 0:
+               return string.Empty;
+            case 1:
+               return ((ISyntaxNode<TToken, TType>)Children[0]).GetText();
+            default:
+            {
+               var text = StringBuilderPool.Current.Get();
+               foreach (var child in Children) text.Append(((ISyntaxNode<TToken, TType>)child).GetText());
+               return text.ToString();
+            }
+         }
       }
 
       /// <inheritdoc />
