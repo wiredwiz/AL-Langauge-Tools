@@ -61,6 +61,60 @@ namespace Org.Edgerunner.BC.AL.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expected true or false, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedBoolean {
+            get {
+                return ResourceManager.GetString("ExpectedBoolean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected valid date, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedDate {
+            get {
+                return ResourceManager.GetString("ExpectedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected valid datetime, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedDatetime {
+            get {
+                return ResourceManager.GetString("ExpectedDatetime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected valid decimal, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedDecimal {
+            get {
+                return ResourceManager.GetString("ExpectedDecimal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected valid identifier, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedIdentifier {
+            get {
+                return ResourceManager.GetString("ExpectedIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected valid integer, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedInteger {
+            get {
+                return ResourceManager.GetString("ExpectedInteger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected an option value, instead encountered: {0}.
         /// </summary>
         internal static string ExpectedOptionValue {
@@ -70,11 +124,47 @@ namespace Org.Edgerunner.BC.AL.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expected identifier &apos;{0}&apos;, instead encountered: {1}.
+        /// </summary>
+        internal static string ExpectedSpecificIdentifier {
+            get {
+                return ResourceManager.GetString("ExpectedSpecificIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected valid string, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedString {
+            get {
+                return ResourceManager.GetString("ExpectedString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected symbol &apos;{0}&apos;, instead encountered: {1}.
         /// </summary>
         internal static string ExpectedSymbol {
             get {
                 return ResourceManager.GetString("ExpectedSymbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected a symbol from set [{0}], instead encountered: {1}.
+        /// </summary>
+        internal static string ExpectedSymbolFromSet {
+            get {
+                return ResourceManager.GetString("ExpectedSymbolFromSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected valid time, instead encountered: {0}.
+        /// </summary>
+        internal static string ExpectedTime {
+            get {
+                return ResourceManager.GetString("ExpectedTime", resourceCulture);
             }
         }
     }

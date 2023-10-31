@@ -31,7 +31,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
    public partial class AlParser
    {
-      public delegate bool ParserHandler(TokenStream<AlToken> tokens, AlParserRule rule, AlParserContext context);
+      public delegate bool ParserHandler(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule rule);
 
       /// <summary>
       /// Parses an integer literal expression from the stream.
@@ -43,9 +43,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseIntegerLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected valid integer, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedInteger, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, LiteralType.Integer, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Integer, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Integer, token));
 
          return tokenValidates;
       }
@@ -60,9 +60,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseDecimalLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected valid decimal, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedDecimal, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, LiteralType.Decimal, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Decimal, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Decimal, token));
 
          return tokenValidates;
       }
@@ -77,9 +77,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseDatetimeLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected valid datetime, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedDatetime, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, LiteralType.DateTime, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.DateTime, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.DateTime, token));
 
          return tokenValidates;
       }
@@ -94,9 +94,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseDateLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected valid date, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedDate, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, LiteralType.Date, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Date, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Date, token));
 
          return tokenValidates;
       }
@@ -111,9 +111,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseTimeLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected valid time, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedTime, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, LiteralType.Time, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Time, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Time, token));
 
          return tokenValidates;
       }
@@ -128,9 +128,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseBooleanLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected true or false, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedBoolean, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, LiteralType.Boolean, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Boolean, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Boolean, token));
 
          return tokenValidates;
       }
@@ -145,9 +145,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseStringLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected valid string, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedString, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, LiteralType.String, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.String, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.String, token));
 
          return tokenValidates;
       }
@@ -162,9 +162,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseIdentifierLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
-         var message = $"Expected valid identifier, instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedIdentifier, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, TokenType.Identifier, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Identifier, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Identifier, token));
 
          return tokenValidates;
       }
@@ -180,9 +180,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseIdentifierLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string expectedValue)
       {
          var token = tokens.Current;
-         var message = $"Expected identifier '{expectedValue}', instead encountered: {token.Value}";
+         var message = string.Format(Resources.ExpectedSpecificIdentifier, expectedValue, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, TokenType.Identifier, expectedValue, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Identifier, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Identifier, token));
 
          return tokenValidates;
       }
@@ -198,9 +198,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseSymbol(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string value)
       {
          var token = tokens.Current;
-         var message = string.Format(Resources.ExpectedSymbol, $"'{value}'", token.Value);
+         var message = string.Format(Resources.ExpectedSymbol, value, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, TokenType.Symbol, value, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Symbol, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Symbol, token));
 
          return tokenValidates;
       }
@@ -218,10 +218,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          var token = tokens.Current;
          var enumerable = values as string[] ?? values.ToArray();
          // ReSharper disable once ExceptionNotDocumented
-         string setText = string.Join(", ", enumerable.Select(i => $"'{i}'"));
-         var message = string.Format(Resources.ExpectedSymbol, setText, token.Value);
+         string setText = string.Join(", ", enumerable.Select(i => $"{i}"));
+         var message = string.Format(Resources.ExpectedSymbolFromSet, setText, token.Value);
          var tokenValidates = ValidateToken(token, context, parentRule, TokenType.Symbol, enumerable, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Symbol, token));
+         if (tokenValidates) parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Symbol, token));
 
          return tokenValidates;
       }
@@ -233,16 +233,40 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="delimiter">The delimiter symbol.</param>
+      /// <param name="terminators">The possible terminator symbols.</param>
       /// <param name="handler">The parser handler delegate.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      public bool ParseRepeatingDelimitedExpression(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string delimiter, ParserHandler handler)
+      // ReSharper disable once TooManyArguments
+      public bool ParseRepeatingDelimitedExpression(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string delimiter, string[] terminators, ParserHandler handler)
       {
          var token = tokens.Current;
-         var message = string.Format(Resources.ExpectedSymbol, delimiter, token.Value);
-         var tokenValidates = ValidateToken(token, context, parentRule, TokenType.Symbol, delimiter, message);
-         if (tokenValidates) parentRule.AddChildNode(new TerminalNode(AlSyntaxNodeType.Symbol, token));
+         bool success = true;
 
-         return tokenValidates;
+         if (token.TokenType == (int)TokenType.Symbol && terminators.Contains(token.Value))
+            return true;
+
+         while (token.TokenType != (int)TokenType.Symbol || !terminators.Contains(token.Value))
+         {
+            // Look for delimiter token
+            var message = string.Format(Resources.ExpectedSymbol, delimiter, token.Value);
+            var parses = ValidateToken(token, context, parentRule, TokenType.Symbol, delimiter, message);
+            success = success && parses;
+            if (parses)
+            {
+               parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Symbol, token));
+               token = tokens.MoveNext();
+            }
+
+            // Now parse the expression
+            parses = handler(tokens, context, parentRule);
+            success = success && parses;
+            if (parses) token = tokens.MoveNext();
+
+            // If both parsing attempts failed, we move ahead one to prevent infinite looping
+            if (!success) token = tokens.MoveNext();
+         }
+
+         return success;
       }
    }
 }

@@ -23,24 +23,40 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+using Org.Edgerunner.Language.Lexers;
+
+namespace Org.Edgerunner.Language.Parsers
 {
-   public class TerminalNode : AlParserRule
+   public class TerminalNode<TToken, TType> : ParserRule<TToken, TType>
+   where TToken : IToken
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="TerminalNode"/> class.
+      /// Initializes a new instance of the <see cref="TerminalNode{TToken, TType}" /> class.
       /// </summary>
-      /// <param name="type">The expression node type.</param>
-      /// <param name="symbol">The start/end symbol token.</param>
+      /// <param name="type">The terminal node type.</param>
+      /// <param name="token">The token that this terminal node corresponds to.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public TerminalNode(AlSyntaxNodeType type, Tokens.AlToken symbol) : base(type, symbol)
+      public TerminalNode(TType type, TToken token) : base(type)
       {
+         Token = token;
       }
 
+      /// <summary>
+      /// Gets the terminal token.
+      /// </summary>
+      /// <value>The terminal token.</value>
+      public virtual TToken Token { get; }
+
+      /// <inheritdoc />
+      public override TToken Start => Token;
+
+      /// <inheritdoc />
+      public override TToken End => Token;
+      
       /// <inheritdoc />
       public override string GetText()
       {
-         return Start.Value;
+         return Token.Value;
       }
 
    }

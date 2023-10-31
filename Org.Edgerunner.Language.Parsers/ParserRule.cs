@@ -45,28 +45,11 @@ namespace Org.Edgerunner.Language.Parsers
       /// Initializes a new instance of the <see cref="ParserRule{TToken,TType}" /> class.
       /// </summary>
       /// <param name="type">The parser rule type.</param>
-      /// <param name="start">The start token.</param>
-      /// <param name="end">The end token.</param>
-      public ParserRule(TType type, TToken start, TToken end)
+      public ParserRule(TType type)
       {
          Type = type;
-         Start = start;
-         End = end;
       }
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="ParserRule{TToken,TType}" /> class.
-      /// </summary>
-      /// <param name="type">The parser rule type.</param>
-      /// <param name="symbol">The start/end symbol token.</param>
-      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public ParserRule(TType type, TToken symbol)
-      {
-         Type = type;
-         Start = symbol;
-         End = symbol;
-      }
-
+      
       /// <inheritdoc />
       public virtual ITree? Parent { get; set; }
 
@@ -81,12 +64,30 @@ namespace Org.Edgerunner.Language.Parsers
       }
 
       /// <inheritdoc />
-      public TToken Start { get; set; }
+      public virtual TToken? Start
+      {
+         get
+         {
+            if (Children.FirstOrDefault() is ISyntaxNode<TToken, TType> node)
+               return node.Start;
+
+            return default;
+         }
+      }
 
       /// <inheritdoc />
-      public TToken End { get; set; }
+      public virtual TToken? End
+      {
+         get
+         {
+            if (Children.LastOrDefault() is ISyntaxNode<TToken, TType> node)
+               return node.End;
 
-      public TType Type { get; set; }
+            return default;
+         }
+      }
+
+      public TType Type { get; }
 
       /// <inheritdoc />
       public virtual string GetText()

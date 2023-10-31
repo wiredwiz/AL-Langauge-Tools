@@ -32,7 +32,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
    /// Implements the <see cref="AlParserRule" />
    /// </summary>
    /// <seealso cref="AlParserRule" />
-   public class ErrorNode : TerminalNode
+   public class ErrorNode : AlTerminalNode
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="ErrorNode"/> class.

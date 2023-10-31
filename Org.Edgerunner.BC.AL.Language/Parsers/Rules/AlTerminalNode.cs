@@ -1,6 +1,7 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlParserExpression.cs">
-// Copyright(c) Thaddeus Ryker 2023
+
+// <copyright company = "Edgerunner.org" file = "AlTerminalNode.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -21,6 +22,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
@@ -28,18 +30,23 @@ using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
-   /// <summary>
-   /// Class that represents an AL parser rule.
-   /// Implements the <see cref="ParserRule{TToken,TType}" />
-   /// </summary>
-   /// <seealso cref="ParserRule{TToken,TType}" />
-   public class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>
+   public class AlTerminalNode : TerminalNode<AlToken, AlSyntaxNodeType>
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="AlParserRule" /> class.
+      /// Initializes a new instance of the <see cref="AlTerminalNode"/> class.
       /// </summary>
       /// <param name="type">The expression node type.</param>
+      /// <param name="symbol">The start/end symbol token.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public AlParserRule(AlSyntaxNodeType type) : base(type) {}
+      public AlTerminalNode(AlSyntaxNodeType type, AlToken symbol) : base(type, symbol)
+      {
+      }
+
+      /// <inheritdoc />
+      public override string GetText()
+      {
+         return Start.Value;
+      }
+
    }
 }

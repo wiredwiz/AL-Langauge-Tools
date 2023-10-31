@@ -5,7 +5,6 @@ using FluentAssertions;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
-using Org.Edgerunner.Language.Parsers;
 
 // ReSharper disable ExceptionNotDocumented
 // ReSharper disable TooManyDeclarations
@@ -30,18 +29,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the text declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         var root = new AlParserRule(AlSyntaxNodeType.Root);
          parser.ParseVariableDeclaration(stream, context, root);
-         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
-         rule!.Parent.Should().BeNull();
-         rule.Start.StartingLine.Should().Be(3);
+         rule.Parent.Should().BeNull();
+         rule.Start!.StartingLine.Should().Be(3);
          rule.Start.StartingColumn.Should().Be(4);
-         rule.End.EndingLine.Should().Be(3);
+         rule.End!.EndingLine.Should().Be(3);
          rule.End.EndingColumn.Should().Be(25);
       }
 
@@ -61,18 +59,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the option declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         var root = new AlParserRule(AlSyntaxNodeType.Root);
          parser.ParseVariableDeclaration(stream, context, root);
-         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
          var rule = root ;
          rule.Should().NotBeNull();
-         rule!.Parent.Should().BeNull();
-         rule.Start.StartingLine.Should().Be(4);
+         rule.Parent.Should().BeNull();
+         rule.Start!.StartingLine.Should().Be(4);
          rule.Start.StartingColumn.Should().Be(4);
-         rule.End.EndingLine.Should().Be(4);
+         rule.End!.EndingLine.Should().Be(4);
          rule.End.EndingColumn.Should().Be(39);
       }
 
@@ -94,27 +91,26 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the record declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         var root = new AlParserRule(AlSyntaxNodeType.Root);
          parser.ParseVariableDeclaration(stream, context, root);
-         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
-         rule!.Parent.Should().BeNull();
-         rule.Start.StartingLine.Should().Be(startLine);
+         rule.Parent.Should().BeNull();
+         rule.Start!.StartingLine.Should().Be(startLine);
          rule.Start.StartingColumn.Should().Be(startColumn);
-         rule.End.EndingLine.Should().Be(endLine);
+         rule.End!.EndingLine.Should().Be(endLine);
          rule.End.EndingColumn.Should().Be(endColumn);
       }
 
       [Theory]
-      [InlineData(34, 7, 4, 7, 16)]
-      [InlineData(38, 8, 4, 8, 16)]
-      [InlineData(42, 9, 4, 9, 25)]
-      [InlineData(46, 10, 4, 10, 22)]
-      public void Simple_variable_type_parses_correctly(int streamPosition, int startLine, int startColumn, int endLine, int endColumn)
+      [InlineData(34, 7, 4, 7, 16, "myDate:Date;")]
+      [InlineData(38, 8, 4, 8, 16, "myTime:Time;")]
+      [InlineData(42, 9, 4, 9, 25, "myDatetime:Datetime;")]
+      [InlineData(46, 10, 4, 10, 22, "doesParse:Boolean;")]
+      public void Simple_variable_type_parses_correctly(int streamPosition, int startLine, int startColumn, int endLine, int endColumn, string value)
       {
          // loading a demo al file
          var buffer = new TextBuffer("Variables.al", Encoding.Default.CodePage);
@@ -129,19 +125,19 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the record declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         var root = new AlParserRule(AlSyntaxNodeType.Root);
          parser.ParseVariableDeclaration(stream, context, root);
-         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
-         rule!.Parent.Should().BeNull();
-         rule.Start.StartingLine.Should().Be(startLine);
-         rule.Start.StartingColumn.Should().Be(startColumn);
-         rule.End.EndingLine.Should().Be(endLine);
+         rule.Parent.Should().BeNull();
+         rule.Start!.StartingLine.Should().Be(startLine);
+         rule.Start!.StartingColumn.Should().Be(startColumn);
+         rule.End!.EndingLine.Should().Be(endLine);
          rule.End.EndingColumn.Should().Be(endColumn);
+         rule.GetText().Should().Be(value);
       }
 
       [Fact]
@@ -160,18 +156,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          // And finally parsing the option declaration tokens
          var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root, stream.Current);
+         var root = new AlParserRule(AlSyntaxNodeType.Root);
          parser.ParseVariableDeclaration(stream, context, root);
-         root.End = ((ISyntaxNode<AlToken, AlSyntaxNodeType>)root.Children[0]).End;
 
          // results in the expected parse tree
          context.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
-         rule!.Parent.Should().BeNull();
-         rule.Start.StartingLine.Should().Be(11);
+         rule.Parent.Should().BeNull();
+         rule.Start!.StartingLine.Should().Be(11);
          rule.Start.StartingColumn.Should().Be(4);
-         rule.End.EndingLine.Should().Be(11);
+         rule.End!.EndingLine.Should().Be(11);
          rule.End.EndingColumn.Should().Be(37);
       }
    }
