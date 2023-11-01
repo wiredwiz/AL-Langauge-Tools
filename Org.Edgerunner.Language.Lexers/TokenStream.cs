@@ -168,7 +168,7 @@ namespace Org.Edgerunner.Language.Lexers
       /// <returns><c>true</c> if position is at the end, <c>false</c> otherwise.</returns>
       public virtual bool EndOfStream()
       {
-         return _Position >= Stream.Count;
+         return _Position >= Stream.Count - 1;
       }
 
       /// <summary>

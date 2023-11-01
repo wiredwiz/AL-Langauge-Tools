@@ -169,6 +169,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          rule.Start.StartingColumn.Should().Be(4);
          rule.End!.EndingLine.Should().Be(11);
          rule.End.EndingColumn.Should().Be(37);
+         rule.GetText().Should().Be("myArray: array 10 , 10 of text 20;");
       }
    }
 }

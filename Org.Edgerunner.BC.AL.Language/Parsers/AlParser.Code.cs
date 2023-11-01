@@ -68,6 +68,44 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       }
 
       /// <summary>
+      /// Parses an AL array dimensions declaration.
+      /// </summary>
+      /// <param name="tokens">The tokens to read.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      public bool ParseArrayDimensionsDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
+      {
+         var token = tokens.Current;
+         var parsed = true;
+         var newRule = new AlParserRule(AlSyntaxNodeType.LengthDeclaration);
+         parentRule.AddChildNode(newRule);
+
+         var message = string.Format(Resources.ExpectedSymbol, "'['", token.Value);
+         if (ValidateToken(token, context, newRule, TokenType.Symbol, "[", message))
+            tokens.MoveNext();
+         else
+            parsed = false;
+
+         if (ParseIntegerLiteral(tokens, context, newRule))
+         {
+            tokens.MoveNext();
+            if (!ParseRepeatingDelimitedExpression(tokens, context, newRule, ",", new[] { "]", ")", ";", "}" },
+                                                  ParseIntegerLiteral))
+               parsed = false;
+         }
+         else
+            parsed = false;
+
+         token = tokens.Current;
+         message = string.Format(Resources.ExpectedSymbol, "']'", token.Value);
+         if (!ValidateToken(token, context, newRule, TokenType.Symbol, "]", message))
+            parsed = false;
+
+         return parsed;
+      }
+
+      /// <summary>
       /// Parses an AL object declaration.
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
@@ -112,8 +150,11 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          var newRule = new AlParserRule(AlSyntaxNodeType.ArrayDeclaration);
          parentRule.AddChildNode(newRule);
 
+         ParseIdentifierLiteral(tokens, context, newRule);
+         tokens.MoveNext();
+
          // look for length declaration
-         var parsed = ParseLengthDeclaration(tokens, context, newRule);
+         var parsed = ParseArrayDimensionsDeclaration(tokens, context, newRule);
          if (parsed)
             tokens.MoveNext();
 
@@ -124,8 +165,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
          // Now parse our array sub type declaration
          parsed = ParseVariableType(tokens, context, newRule);
-         if (parsed)
-            tokens.MoveNext();
 
          return parsed;
       }
@@ -227,10 +266,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          if (isArray)
          {
             // Parse an array declaration e.g. array[5] of text[20]
-            var result = ParseArrayVariableDeclaration(tokens, context, newRule);
-            if (result)
-               tokens.MoveNext();
-            else
+            if (!ParseArrayVariableDeclaration(tokens, context, newRule))
                parsed = false;
          }
          else
