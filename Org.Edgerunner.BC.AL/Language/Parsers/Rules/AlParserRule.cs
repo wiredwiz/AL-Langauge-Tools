@@ -60,11 +60,11 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
                      var previous = Children[i-1] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
                      var child = Children[i] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
                      var fragment = child!.GetText();
-                     var previousfragment = previous!.GetText();
+                     var previousFragment = previous!.GetText();
 
                      // We add spacing for readability unless the text starts with a colon, period or semi-colon.
                      // In the case of those tokens we omit the extra space, also for readability.
-                     if (fragment.FirstOrDefault() is not ':' and not '.' and not ';' and not ')' and not ']' && previousfragment.FirstOrDefault() is not '(' and not '[')
+                     if (fragment.FirstOrDefault() is not ':' and not '.' and not ';' and not ')' and not ']' && previousFragment.FirstOrDefault() is not '(' and not '[')
                         text.Append(" ");
 
                      text.Append(fragment);
