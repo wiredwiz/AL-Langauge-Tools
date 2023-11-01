@@ -153,4 +153,10 @@
   <data name="ExpectedSymbolFromSet" xml:space="preserve">
     <value>Expected a symbol from set [{0}], instead encountered: {1}</value>
   </data>
+  <data name="EnteringParserRule" xml:space="preserve">
+     <value>Entering parser rule {0}</value>
+  </data>
+  <data name="ExitingParserRule" xml:space="preserve">
+     <value>Exiting parser rule {0}</value>
+  </data>
 </root>

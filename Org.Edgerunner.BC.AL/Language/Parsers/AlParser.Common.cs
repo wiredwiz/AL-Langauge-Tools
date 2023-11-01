@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Aspects;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
@@ -40,6 +41,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseIntegerLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -57,6 +59,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseDecimalLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -74,6 +77,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseDatetimeLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -91,6 +95,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseDateLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -108,6 +113,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseTimeLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -125,6 +131,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseBooleanLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -142,6 +149,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseStringLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -159,6 +167,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseIdentifierLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -177,6 +186,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="expectedValue">The expected identifier value.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseIdentifierLiteral(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string expectedValue)
       {
          var token = tokens.Current;
@@ -195,6 +205,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="value">The expected symbol value.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseSymbol(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string value)
       {
          var token = tokens.Current;
@@ -213,6 +224,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="values">The enumeration of allowed values.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseSymbol(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, IEnumerable<string> values)
       {
          var token = tokens.Current;

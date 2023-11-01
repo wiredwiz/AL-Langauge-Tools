@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Metalama.Framework" Version="2023.3.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Org.Ederunner.Common\Org.Edgerunner.Common.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Buffers\Org.Edgerunner.Buffers.csproj" />
     <ProjectReference Include="..\Org.Edgerunner.Language.Parsers\Org.Edgerunner.Language.Parsers.csproj" />

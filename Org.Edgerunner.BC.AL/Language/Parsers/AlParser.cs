@@ -47,6 +47,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool HasErrors { get; private set; }
 
       /// <inheritdoc />
+      public bool EnableTracing { get; set; } = false;
+
+      /// <inheritdoc />
       public void AddErrorListener(IErrorListener<AlToken> listener)
       {
          Listeners.Add(listener);

@@ -28,6 +28,7 @@ using Org.Edgerunner.BC.AL.Objects.Code;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.BC.AL.Language.Aspects;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
@@ -40,6 +41,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseLengthDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -74,11 +76,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseArrayDimensionsDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
          var parsed = true;
-         var newRule = new AlParserRule(AlSyntaxNodeType.LengthDeclaration);
+         var newRule = new AlParserRule(AlSyntaxNodeType.DimensionsDeclaration);
          parentRule.AddChildNode(newRule);
 
          var message = string.Format(Resources.ExpectedSymbol, "'['", token.Value);
@@ -112,6 +115,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseVariableObjectDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -144,6 +148,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseArrayVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -176,6 +181,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      [Trace]
       public bool ParseOptionValuesDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var parsed = true;
@@ -241,6 +247,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns>bool.</returns>
+      [Trace]
       public bool ParseVariableType(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var token = tokens.Current;
@@ -459,6 +466,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <returns>bool.</returns>
+      [Trace]
       public bool ParseVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var parsed = true;

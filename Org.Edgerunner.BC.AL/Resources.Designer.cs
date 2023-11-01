@@ -61,6 +61,24 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Entering parser rule {0}.
+        /// </summary>
+        internal static string EnteringParserRule {
+            get {
+                return ResourceManager.GetString("EnteringParserRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exiting parser rule {0}.
+        /// </summary>
+        internal static string ExitingParserRule {
+            get {
+                return ResourceManager.GetString("ExitingParserRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected true or false, instead encountered: {0}.
         /// </summary>
         internal static string ExpectedBoolean {

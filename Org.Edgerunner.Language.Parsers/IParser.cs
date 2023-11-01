@@ -37,6 +37,12 @@ namespace Org.Edgerunner.Language.Parsers
       bool HasErrors { get; }
 
       /// <summary>
+      /// Gets or sets a value indicating whether enable parser tracing.
+      /// </summary>
+      /// <value><c>true</c> if tracing is enabled; otherwise, <c>false</c>.</value>
+      bool EnableTracing { get; set; }
+
+      /// <summary>
       /// Adds a listener to be notified of parser errors.
       /// </summary>
       /// <param name="listener">The listener.</param>
