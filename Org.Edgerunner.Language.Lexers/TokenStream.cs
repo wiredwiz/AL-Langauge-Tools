@@ -107,6 +107,18 @@ namespace Org.Edgerunner.Language.Lexers
       }
 
       /// <summary>
+      /// Moves the stream position forward by one and returns the token at that position or null if at the end of the stream.
+      /// </summary>
+      /// <returns>A <see cref="T"/> instance or null.</returns>
+      public virtual T? TryMoveNext()
+      {
+         if (EndOfStream())
+            return default;
+
+         return Stream[++_Position];
+      }
+
+      /// <summary>
       /// Moves the stream position backward by one and returns the token at that position.
       /// </summary>
       /// <returns>A <see cref="T"/> instance.</returns>
@@ -115,6 +127,18 @@ namespace Org.Edgerunner.Language.Lexers
       {
          if (BeginningOfStream())
             throw new InvalidOperationException("Cannot rewind past the start of the stream");
+
+         return Stream[--_Position];
+      }
+
+      /// <summary>
+      /// Moves the stream position backward by one and returns the token at that position or null if at the beginning of the stream.
+      /// </summary>
+      /// <returns>A <see cref="T"/> instance or null.</returns>
+      public virtual T? TryMovePrevious()
+      {
+         if (BeginningOfStream())
+            return default;
 
          return Stream[--_Position];
       }
