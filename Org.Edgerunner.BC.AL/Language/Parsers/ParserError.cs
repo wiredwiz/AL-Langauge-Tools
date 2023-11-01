@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "LexerError.cs">
+// <copyright company = "Edgerunner.org" file = "ParserError.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -24,29 +24,19 @@
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Language.Lexers;
-using System.Text;
 
-namespace Org.Edgerunner.BC.AL.Language.Lexers
+namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
    /// <summary>
-   /// Class that represents a lexer error.
-   /// Implements the <see cref="Org.Edgerunner.Language.Lexers.LanguageError{AlToken}" />
+   /// Class that represents a parser error.
+   /// Implements the <see cref="LanguageError{AlToken}" />
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.Language.Lexers.LanguageError{AlToken}" />
-   public class LexerError : LanguageError<AlToken>
+   /// <seealso cref="LanguageError{AlToken}" />
+   public class ParserError : LanguageError<AlToken>
    {
-      public LexerError(AlToken startToken, AlToken endToken, string message)
-         : base(startToken, endToken, message, "Lexer")
-      {}
-
-      public static ErrorToken PackageError(AlLexer lexer, string tokenText, BufferPoint start, BufferPoint end, string message)
-      {
-         var token = new ErrorToken(tokenText, start, end, message);
-         var error = new LexerError(token, token, message);
-         foreach (var listener in lexer.Listeners) listener.AnnounceError(error);
-         return token;
-      }
+      public ParserError(AlToken startToken, AlToken endToken, string message)
+         : base(startToken, endToken, message, "Parser")
+      { }
    }
 }

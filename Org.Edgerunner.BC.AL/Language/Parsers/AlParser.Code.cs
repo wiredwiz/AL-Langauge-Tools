@@ -24,10 +24,10 @@
 #endregion
 
 using System.Security.Authentication.ExtendedProtection;
-using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.BC.AL.Objects.Code;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
+using Org.Edgerunner.BC.AL.Language.Tokens;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {

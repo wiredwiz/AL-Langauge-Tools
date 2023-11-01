@@ -138,7 +138,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
 
             return new LiteralToken(text, start, buffer.GetBufferPoint(-1), LiteralType.Date);
          }
-         
+
          // return our boring normal number since it isn't a super cool decimal, date, time or datetime
          return new LiteralToken(text, start, buffer.GetBufferPoint(-1), hasDecimal ? LiteralType.Decimal : LiteralType.Integer);
       }

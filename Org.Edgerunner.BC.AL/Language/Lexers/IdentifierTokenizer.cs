@@ -59,7 +59,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          {
             while (buffer.GetNextChar() is not '"' and not '\r' and not '\n' and not '\0')
                text.Append(buffer.Current);
-            
+
             if (buffer.Current != '"')
                return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(),
                                               "Quoted identifier not terminated correctly");

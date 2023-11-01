@@ -26,7 +26,6 @@
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
 using Org.Edgerunner.Pooling;
-using System.Xml.Linq;
 
 namespace Org.Edgerunner.BC.AL.Language.Lexers
 {
@@ -55,7 +54,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          if (buffer.Current != '/')
             return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(),
                                            "Invalid single line comment start");
-         
+
          do
          {
             text.Append(buffer.Current);

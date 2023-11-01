@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlSyntaxNodeType.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "ReservedWords.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,28 +23,29 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+
+namespace Org.Edgerunner.BC.AL.Language
 {
-   public enum AlSyntaxNodeType
+   public enum ReservedWords
    {
-      Error,
-      Root,
-      Integer,
-      Decimal,
-      Symbol,
-      String,
-      Date,
-      Time,
-      DateTime,
-      Boolean,
-      Identifier,
-      LengthDeclaration,
-      VariableTypeDeclaration,
-      OptionValuesDeclaration,
-      ObjectReferenceDeclaration,
-      ArrayDeclaration,
-      ListDeclaration,
-      DictionaryDeclaration,
-      VariableDeclaration
+      None = 0,
+      IF,
+      ELSE,
+      WHILE,
+      DO,
+      REPEAT,
+      UNTIL,
+      BEGIN,
+      END,
+      FOR,
+      CASE,
+      MOD,
+      NOT,
+      AND,
+      OR,
+      EXIT,
+      TRUE,
+      FALSE,
+      GUIALLOWED
    }
 }

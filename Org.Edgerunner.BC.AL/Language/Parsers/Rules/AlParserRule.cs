@@ -41,7 +41,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <param name="type">The expression node type.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public AlParserRule(AlSyntaxNodeType type) : base(type) {}
+      public AlParserRule(AlSyntaxNodeType type) : base(type) { }
 
       public override string GetText()
       {
@@ -52,23 +52,23 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             case 1:
                return ((ISyntaxNode<AlToken, AlSyntaxNodeType>)Children[0]).GetText();
             default:
-            {
-               var text = StringBuilderPool.Current.Get();
-               text.Append(((ISyntaxNode<AlToken, AlSyntaxNodeType>)Children[0]).GetText());
-               for (int i = 1; i < Children.Count; i++)
                {
-                  var child = Children[i] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
-                  var fragment = child!.GetText();
+                  var text = StringBuilderPool.Current.Get();
+                  text.Append(((ISyntaxNode<AlToken, AlSyntaxNodeType>)Children[0]).GetText());
+                  for (int i = 1; i < Children.Count; i++)
+                  {
+                     var child = Children[i] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
+                     var fragment = child!.GetText();
 
-                  // We add spacing for readability unless the text starts with a colon, period or semi-colon.
-                  // In the case of those tokens we omit the extra space, also for readability.
-                  if (fragment.First() is not ':' and not '.' and not ';')
-                     text.Append(" ");
-                  
-                  text.Append(fragment);
+                     // We add spacing for readability unless the text starts with a colon, period or semi-colon.
+                     // In the case of those tokens we omit the extra space, also for readability.
+                     if (fragment.First() is not ':' and not '.' and not ';')
+                        text.Append(" ");
+
+                     text.Append(fragment);
+                  }
+                  return text.ToString();
                }
-               return text.ToString();
-            }
          }
       }
    }

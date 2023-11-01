@@ -82,7 +82,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
                      if (result == null)
                         buffer.SetBufferPoint(start);
                   }
-                  
+
                   return result ?? IdentifierTokenizer.ReadIdentifierTokenFromBuffer(buffer, this);
                }
          }

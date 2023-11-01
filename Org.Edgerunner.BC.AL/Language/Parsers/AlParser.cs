@@ -23,11 +23,11 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.BC.AL.Objects;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
+using Org.Edgerunner.BC.AL.Language.Tokens;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {

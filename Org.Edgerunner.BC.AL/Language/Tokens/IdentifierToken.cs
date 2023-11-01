@@ -50,7 +50,7 @@ namespace Org.Edgerunner.BC.AL.Language.Tokens
 
       /// <inheritdoc/>
       public override int TokenType => (int)Tokens.TokenType.Identifier;
-      
+
       /// <summary>
       /// Gets a value indicating whether token is a reserved word.
       /// </summary>
