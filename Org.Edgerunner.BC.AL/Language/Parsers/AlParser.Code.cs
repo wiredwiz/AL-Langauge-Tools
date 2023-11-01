@@ -51,12 +51,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
          var message = string.Format(Resources.ExpectedSymbol, "'['", token.Value);
          if (ValidateToken(token, context, newRule, TokenType.Symbol, "[", message))
-            tokens.MoveNext();
+         {
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+         }
          else
             parsed = false;
 
          if (ParseIntegerLiteral(tokens, context, newRule))
-            tokens.MoveNext();
+         {
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+         }
          else
             parsed = false;
 
@@ -86,15 +92,19 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
          var message = string.Format(Resources.ExpectedSymbol, "'['", token.Value);
          if (ValidateToken(token, context, newRule, TokenType.Symbol, "[", message))
-            tokens.MoveNext();
+         {
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+         }
          else
             parsed = false;
 
          if (ParseIntegerLiteral(tokens, context, newRule))
          {
-            tokens.MoveNext();
-            if (!ParseRepeatingDelimitedExpression(tokens, context, newRule, ",", new[] { "]", ")", ";", "}" },
-                                                  ParseIntegerLiteral))
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+            
+            if (!ParseRepeatingDelimitedExpression(tokens, context, newRule, ",", "]", ParseIntegerLiteral))
                parsed = false;
          }
          else
@@ -156,17 +166,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          parentRule.AddChildNode(newRule);
 
          ParseIdentifierLiteral(tokens, context, newRule);
-         tokens.MoveNext();
-
+         if (!tokens.TryMoveNext(ref token))
+            return false;
+         
          // look for length declaration
          var parsed = ParseArrayDimensionsDeclaration(tokens, context, newRule);
-         if (parsed)
-            tokens.MoveNext();
+         if (parsed && !tokens.TryMoveNext(ref token)) return false;
 
          // Look for identifier
          parsed = ParseIdentifierLiteral(tokens, context, newRule, "of");
-         if (parsed)
-            tokens.MoveNext();
+         if (parsed && !tokens.TryMoveNext(ref token)) return false;
 
          // Now parse our array sub type declaration
          parsed = ParseVariableType(tokens, context, newRule);
@@ -191,7 +200,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
          var allowed = new[] { ",", ";" };
          var message = string.Format(Resources.ExpectedSymbol, "',' or ';'", token.Value);
-         while (token.TokenType != (int)TokenType.Symbol || token.Value != ";")
+         while (token!.TokenType != (int)TokenType.Symbol || token.Value != ";")
          {
             // read values
             bool noMatch = false;
@@ -203,8 +212,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                var node = new AlTerminalNode(AlSyntaxNodeType.Symbol, token);
                newRule.AddChildNode(node);
 
-               tokens.MoveNext();
-               token = tokens.Current;
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
             }
             else
                noMatch = true;
@@ -215,9 +224,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             {
                var node = new AlTerminalNode(AlSyntaxNodeType.Identifier, token);
                newRule.AddChildNode(node);
-               
-               tokens.MoveNext();
-               token = tokens.Current;
+
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
                noMatch = false;
             }
 
@@ -232,8 +241,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                if (tokens.Next()?.TokenType == (int)TokenType.Symbol && tokens.Next()?.Value == ";")
                   break;
 
-               tokens.MoveNext();
-               token = tokens.Current;
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
             }
          }
 
@@ -260,7 +269,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
          if (token.TokenType == (int)TokenType.Identifier && token.Value == "array")
             isArray = true;
-         else if (token.TokenType != (int)TokenType.Identifier || 
+         else if (token.TokenType != (int)TokenType.Identifier ||
                   !Enum.TryParse(typeof(VariableType), token.Value, true, out varType))
          {
             errorMessage = $"Expected a valid AL data type, but instead encountered: {token.Value}";
@@ -390,68 +399,75 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                case VariableType.TransactionType:
                case VariableType.Verbosity:
                case VariableType.WebServiceActionResultCode:
-               {
-                  // we have nothing extra to do, these variable types have no extra declaration
-                  ParseIdentifierLiteral(tokens, context, newRule);
-                  tokens.MoveNext();
-                  break;
-               }
+                  {
+                     // we have nothing extra to do, these variable types have no extra declaration
+                     ParseIdentifierLiteral(tokens, context, newRule);
+                     if (!tokens.TryMoveNext(ref token))
+                        return false;
+                     break;
+                  }
                case VariableType.Code:
                case VariableType.Text:
-               {
-                  // Parse a length declaration e.g. [20]
-                  ParseIdentifierLiteral(tokens, context, newRule);
-                  tokens.MoveNext();
-                  var result = ParseLengthDeclaration(tokens, context, newRule);
-                  if (result)
-                     tokens.MoveNext();
-                  else
-                     parsed = false;
-                  break;
-               }
+                  {
+                     // Parse a length declaration e.g. [20]
+                     ParseIdentifierLiteral(tokens, context, newRule);
+                     if (!tokens.TryMoveNext(ref token))
+                        return false;
+                     var result = ParseLengthDeclaration(tokens, context, newRule);
+                     if (result)
+                     {
+                        if (!tokens.TryMoveNext(ref token))
+                           return false;
+                     }
+                     else
+                        parsed = false;
+                     break;
+                  }
                case VariableType.Record:
                case VariableType.Codeunit:
                case VariableType.Enum:
                case VariableType.Page:
                case VariableType.Query:
                case VariableType.Report:
-               {
-                  ParseIdentifierLiteral(tokens, context, newRule);
-                  tokens.MoveNext();
+                  {
+                     ParseIdentifierLiteral(tokens, context, newRule);
+                     if (!tokens.TryMoveNext(ref token))
+                        return false;
 
-                  // Parse an object declaration e.g. 20 or "Customer"
-                  var result = ParseVariableObjectDeclaration(tokens, context, newRule);
-                  if (!result)
-                     parsed = false;
-                  break;
-               }
+                     // Parse an object declaration e.g. 20 or "Customer"
+                     var result = ParseVariableObjectDeclaration(tokens, context, newRule);
+                     if (!result)
+                        parsed = false;
+                     break;
+                  }
                case VariableType.Option:
-               {
-                  ParseIdentifierLiteral(tokens, context, newRule);
-                  tokens.MoveNext();
+                  {
+                     ParseIdentifierLiteral(tokens, context, newRule);
+                     if (!tokens.TryMoveNext(ref token))
+                        return false;
 
-                  // parse an option value declaration e.g. foo,bar,bah
-                  var result = ParseOptionValuesDeclaration(tokens, context, newRule);
-                  if (!result)
-                     parsed = false;
-                  break;
-               }
+                     // parse an option value declaration e.g. foo,bar,bah
+                     var result = ParseOptionValuesDeclaration(tokens, context, newRule);
+                     if (!result)
+                        parsed = false;
+                     break;
+                  }
                case VariableType.Dictionary:
-               {
-                  break;
-               }
+                  {
+                     break;
+                  }
                case VariableType.List:
-               {
-                  break;
-               }
+                  {
+                     break;
+                  }
                case VariableType.DotNet:
-               {
-                  break;
-               }
+                  {
+                     break;
+                  }
                case VariableType.Label:
-               {
-                  break;
-               }
+                  {
+                     break;
+                  }
                default:
                   return false;
             }
@@ -470,16 +486,23 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var parsed = true;
+         AlToken? token = null;
          var newRule = new AlParserRule(AlSyntaxNodeType.VariableDeclaration);
          parentRule.AddChildNode(newRule);
 
          if (ParseIdentifierLiteral(tokens, context, newRule))
-            tokens.MoveNext();
+         {
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+         }
          else
             parsed = false;
 
          if (ParseSymbol(tokens, context, newRule, ":"))
-            tokens.MoveNext();
+         {
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+         }
          else
             parsed = false;
 
@@ -487,7 +510,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             parsed = false;
 
          if (tokens.Current.TokenType != (int)TokenType.Symbol || tokens.Current.Value != ";")
-            ScanTillSymbolReached(tokens, new []{";", "}"});
+            ScanTillSymbolReached(tokens, new[] { ";", "}" });
 
          var node = new AlTerminalNode(AlSyntaxNodeType.Symbol, tokens.Current);
          newRule.AddChildNode(node);

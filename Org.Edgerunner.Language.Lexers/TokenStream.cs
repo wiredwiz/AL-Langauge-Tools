@@ -107,15 +107,17 @@ namespace Org.Edgerunner.Language.Lexers
       }
 
       /// <summary>
-      /// Moves the stream position forward by one and returns the token at that position or null if at the end of the stream.
+      /// Tries to move the stream position forward by one, fetch the token and returns a boolean value.
       /// </summary>
-      /// <returns>A <see cref="T"/> instance or null.</returns>
-      public virtual T? TryMoveNext()
+      /// <param name="token">The next token or null if at end of the stream.</param>
+      /// <returns>False if at end of stream; otherwise true.</returns>
+      public virtual bool TryMoveNext(ref T? token)
       {
          if (EndOfStream())
-            return default;
+            return false;
 
-         return Stream[++_Position];
+         token = Stream[++_Position];
+         return true;
       }
 
       /// <summary>
@@ -132,15 +134,17 @@ namespace Org.Edgerunner.Language.Lexers
       }
 
       /// <summary>
-      /// Moves the stream position backward by one and returns the token at that position or null if at the beginning of the stream.
+      /// Tries to move the stream position forward by one, fetch the token and returns a boolean value.
       /// </summary>
-      /// <returns>A <see cref="T"/> instance or null.</returns>
-      public virtual T? TryMovePrevious()
+      /// <param name="token">The next token or null if at end of the stream.</param>
+      /// <returns>False if at end of stream; otherwise true.</returns>
+      public virtual bool TryMovePrevious(ref T? token)
       {
          if (BeginningOfStream())
-            return default;
+            return false;
 
-         return Stream[--_Position];
+         token = Stream[--_Position];
+         return true;
       }
 
       /// <summary>

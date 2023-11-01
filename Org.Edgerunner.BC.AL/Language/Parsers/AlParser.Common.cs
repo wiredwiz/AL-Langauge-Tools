@@ -245,19 +245,20 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="delimiter">The delimiter symbol.</param>
-      /// <param name="terminators">The possible terminator symbols.</param>
+      /// <param name="terminator">The terminator symbol.</param>
       /// <param name="handler">The parser handler delegate.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      /// <exception cref="Exception">A delegate callback throws an exception.</exception>
       // ReSharper disable once TooManyArguments
-      public bool ParseRepeatingDelimitedExpression(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string delimiter, string[] terminators, ParserHandler handler)
+      public bool ParseRepeatingDelimitedExpression(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule, string delimiter, string terminator, ParserHandler handler)
       {
          var token = tokens.Current;
          bool success = true;
 
-         if (token.TokenType == (int)TokenType.Symbol && terminators.Contains(token.Value))
+         if (token.TokenType == (int)TokenType.Symbol && terminator == token.Value)
             return true;
 
-         while (token.TokenType != (int)TokenType.Symbol || !terminators.Contains(token.Value))
+         while (token!.TokenType != (int)TokenType.Symbol || terminator != token.Value)
          {
             // Look for delimiter token
             var message = string.Format(Resources.ExpectedSymbol, delimiter, token.Value);
@@ -266,16 +267,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             if (parses)
             {
                parentRule.AddChildNode(new AlTerminalNode(AlSyntaxNodeType.Symbol, token));
-               token = tokens.MoveNext();
+               if (!tokens.TryMoveNext(ref token)) return false;
             }
 
             // Now parse the expression
             parses = handler(tokens, context, parentRule);
             success = success && parses;
-            if (parses) token = tokens.MoveNext();
+            if (parses && !tokens.TryMoveNext(ref token)) return false;
 
             // If both parsing attempts failed, we move ahead one to prevent infinite looping
-            if (!success) token = tokens.MoveNext();
+            if (!success && !tokens.TryMoveNext(ref token)) return false;
          }
 
          return success;
