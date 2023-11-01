@@ -5,6 +5,8 @@ using FluentAssertions;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
+// ReSharper disable TooManyArguments
+// ReSharper disable UseObjectOrCollectionInitializer
 
 // ReSharper disable ExceptionNotDocumented
 // ReSharper disable TooManyDeclarations
