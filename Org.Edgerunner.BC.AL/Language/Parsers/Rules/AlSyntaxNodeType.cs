@@ -40,6 +40,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       Boolean,
       Identifier,
       LengthDeclaration,
+      DimensionsDeclaration,
       VariableTypeDeclaration,
       OptionValuesDeclaration,
       ObjectReferenceDeclaration,
