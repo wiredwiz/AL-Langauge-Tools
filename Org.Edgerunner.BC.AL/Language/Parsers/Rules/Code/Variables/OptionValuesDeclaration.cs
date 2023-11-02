@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ErrorExpression.cs">
+// <copyright company = "Edgerunner.org" file = "OptionValuesDeclaration.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,37 +23,10 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
-
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   /// <summary>
-   /// Class that represents an error expression.
-   /// Implements the <see cref="AlParserRule" />
-   /// </summary>
-   /// <seealso cref="AlParserRule" />
-   public class ErrorNode : AlTerminalNode
+   public class OptionValuesDeclaration
    {
-      /// <summary>
-      /// Initializes a new instance of the <see cref="ErrorNode"/> class.
-      /// </summary>
-      /// <param name="text">The error text.</param>
-      /// <param name="token">The start.</param>
-      public ErrorNode(string text, AlToken token) : base(AlSyntaxNodeType.Error, token)
-      {
-         ErrorText = text;
-      }
-
-
-      /// <summary>
-      /// The error text.
-      /// </summary>
-      protected string ErrorText;
-
-      /// <inheritdoc />
-      public override string ToString()
-      {
-         return ErrorText;
-      }
+      
    }
 }

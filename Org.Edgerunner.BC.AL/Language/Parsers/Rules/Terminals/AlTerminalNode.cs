@@ -1,6 +1,7 @@
-﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
-// Copyright(c) Thaddeus Ryker 2023
+#region MIT License
+
+// <copyright company = "Edgerunner.org" file = "AlTerminalNode.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -21,39 +22,36 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
-using System.Diagnostics;
-using Metalama.Framework.Aspects;
-using Org.Edgerunner.BC.AL.Language.Parsers;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Aspects
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class TraceAttribute : OverrideMethodAspect
+   /// <summary>
+   /// Class that represents an AL terminal syntax node.
+   /// Implements the <see cref="TerminalNode{AlToken, AlSyntaxNodeType}" />
+   /// </summary>
+   /// <seealso cref="TerminalNode{AlToken, AlSyntaxNodeType}" />
+   public abstract class AlTerminalNode : TerminalNode<AlToken, AlSyntaxNodeType>
    {
-      public override dynamic? OverrideMethod()
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AlTerminalNode" /> class.
+      /// </summary>
+      /// <param name="type">The node type.</param>
+      /// <param name="symbol">The start/end symbol token.</param>
+      /// <param name="name">The node name.</param>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
+      protected AlTerminalNode(AlSyntaxNodeType type, AlToken symbol, string name) : base(type, symbol, name)
       {
-         if (meta.This is not ParserRule<AlToken, AlSyntaxNodeType> rule)
-            return meta.Proceed();
+      }
 
-         if (meta.Target.Parameters.Count < 2 || meta.Target.Parameters[1].Value is not AlParser parser)
-            return meta.Proceed();
-
-         if (!parser.EnableTracing)
-            return meta.Proceed();
-
-         try
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Enter);
-            return meta.Proceed();
-         }
-         finally
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Exit);
-         }
+      /// <inheritdoc />
+      public override string GetText()
+      {
+         return Start.Value;
       }
    }
 }

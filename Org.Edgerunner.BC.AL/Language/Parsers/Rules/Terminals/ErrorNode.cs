@@ -1,7 +1,6 @@
-#region MIT License
-
-// <copyright company = "Edgerunner.org" file = "AlTerminalNode.cs">
-// Copyright(c)  2023
+﻿#region MIT License
+// <copyright company = "Edgerunner.org" file = "ErrorExpression.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -22,31 +21,40 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class AlTerminalNode : TerminalNode<AlToken, AlSyntaxNodeType>
+   /// <summary>
+   /// Class that represents an error expression.
+   /// Implements the <see cref="AlParserRule" />
+   /// </summary>
+   /// <seealso cref="AlParserRule" />
+   public class ErrorNode : AlTerminalNode
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="AlTerminalNode"/> class.
+      /// Initializes a new instance of the <see cref="ErrorNode"/> class.
       /// </summary>
-      /// <param name="type">The expression node type.</param>
-      /// <param name="symbol">The start/end symbol token.</param>
-      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public AlTerminalNode(AlSyntaxNodeType type, AlToken symbol) : base(type, symbol)
+      /// <param name="text">The error text.</param>
+      /// <param name="token">The start.</param>
+      public ErrorNode(string text, AlToken token) : base(AlSyntaxNodeType.Error, token, "Error")
       {
+         ErrorText = text;
       }
+
+      /// <summary>
+      /// The error text.
+      /// </summary>
+      protected string ErrorText;
 
       /// <inheritdoc />
-      public override string GetText()
+      public override string ToString()
       {
-         return Start.Value;
+         return ErrorText;
       }
-
    }
 }

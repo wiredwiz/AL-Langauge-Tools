@@ -486,7 +486,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public bool ParseVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
       {
          var parsed = true;
-         AlToken? token = null;
+         AlToken? token = tokens.Current;
          var newRule = new AlParserRule(AlSyntaxNodeType.VariableDeclaration);
          parentRule.AddChildNode(newRule);
 

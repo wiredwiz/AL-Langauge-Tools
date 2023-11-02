@@ -61,6 +61,15 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The handler type must be a typeof AlParserRule.
+        /// </summary>
+        internal static string BadHandlerType {
+            get {
+                return ResourceManager.GetString("BadHandlerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entering parser rule {0}.
         /// </summary>
         internal static string EnteringParserRule {

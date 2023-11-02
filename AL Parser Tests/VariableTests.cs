@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Org.Edgerunner.BC.AL.Language.Lexers;
 using Org.Edgerunner.Buffers.Input;
 using System.Text;

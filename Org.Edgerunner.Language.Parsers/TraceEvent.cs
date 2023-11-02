@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
+// <copyright company = "Edgerunner.org" file = "TraceEvent.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,37 +23,16 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Diagnostics;
-using Metalama.Framework.Aspects;
-using Org.Edgerunner.BC.AL.Language.Parsers;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
-
-namespace Org.Edgerunner.BC.AL.Language.Aspects
+namespace Org.Edgerunner.Language.Parsers
 {
-   public class TraceAttribute : OverrideMethodAspect
+   /// <summary>
+   /// Enumeration of parser tracing events.
+   /// </summary>
+   public enum TraceEvent
    {
-      public override dynamic? OverrideMethod()
-      {
-         if (meta.This is not ParserRule<AlToken, AlSyntaxNodeType> rule)
-            return meta.Proceed();
-
-         if (meta.Target.Parameters.Count < 2 || meta.Target.Parameters[1].Value is not AlParser parser)
-            return meta.Proceed();
-
-         if (!parser.EnableTracing)
-            return meta.Proceed();
-
-         try
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Enter);
-            return meta.Proceed();
-         }
-         finally
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Exit);
-         }
-      }
+      Enter,
+      Exit,
+      Consume,
+      Match
    }
 }

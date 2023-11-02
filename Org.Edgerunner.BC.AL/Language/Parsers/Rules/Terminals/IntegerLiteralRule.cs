@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
+// <copyright company = "Edgerunner.org" file = "IntegerLiteralRule.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,37 +23,35 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Diagnostics;
-using Metalama.Framework.Aspects;
-using Org.Edgerunner.BC.AL.Language.Parsers;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Aspects
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Literals
 {
-   public class TraceAttribute : OverrideMethodAspect
+   /// <summary>
+   /// Class that represents an integer literal parser rule.
+   /// Implements the <see cref="Terminals.AlTerminalNode" />
+   /// </summary>
+   /// <seealso cref="Terminals.AlTerminalNode" />
+   public class IntegerLiteralRule : AlTerminalNode
    {
-      public override dynamic? OverrideMethod()
+      public IntegerLiteralRule(AlToken symbol) : base(AlSyntaxNodeType.Integer, symbol, "Integer Literal") {}
+      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
       {
-         if (meta.This is not ParserRule<AlToken, AlSyntaxNodeType> rule)
-            return meta.Proceed();
-
-         if (meta.Target.Parameters.Count < 2 || meta.Target.Parameters[1].Value is not AlParser parser)
-            return meta.Proceed();
-
-         if (!parser.EnableTracing)
-            return meta.Proceed();
-
-         try
+         Enter(context);
+         var token = tokens.Current;
+         var message = string.Format(Resources.ExpectedInteger, token.Value);
+         var tokenValidates = Validator.ValidateToken(token, context, parentRule, LiteralType.Integer, message);
+         if (tokenValidates)
          {
-            parser.GenerateTraceEvent(rule, TraceEvent.Enter);
-            return meta.Proceed();
+            context.GenerateTraceEvent(token, TraceEvent.Consume);
+            parentRule.AddChildNode(this);
+            context.GenerateTraceEvent(this, TraceEvent.Match);
          }
-         finally
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Exit);
-         }
+
+         return Exit(context, tokenValidates);
       }
    }
 }

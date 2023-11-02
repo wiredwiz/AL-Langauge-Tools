@@ -159,4 +159,7 @@
   <data name="ExitingParserRule" xml:space="preserve">
      <value>Exiting parser rule {0}</value>
   </data>
+  <data name="BadHandlerType" xml:space="preserve">
+     <value>The handler type must be a typeof AlParserRule</value>
+  </data>
 </root>

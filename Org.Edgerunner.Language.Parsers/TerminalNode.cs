@@ -27,16 +27,24 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.Language.Parsers
 {
-   public class TerminalNode<TToken, TType> : ParserRule<TToken, TType>
+   /// <summary>
+   /// Class that represents a terminal syntax node.
+   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ParserRule{TToken, TType}" />
+   /// </summary>
+   /// <typeparam name="TToken">The type of the t token.</typeparam>
+   /// <typeparam name="TType">The type of the t type.</typeparam>
+   /// <seealso cref="Org.Edgerunner.Language.Parsers.ParserRule{TToken, TType}" />
+   public abstract class TerminalNode<TToken, TType> : ParserRule<TToken, TType>
    where TToken : IToken
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="TerminalNode{TToken, TType}" /> class.
       /// </summary>
-      /// <param name="type">The terminal node type.</param>
+      /// <param name="type">The node type.</param>
       /// <param name="token">The token that this terminal node corresponds to.</param>
+      /// <param name="name">The node name.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public TerminalNode(TType type, TToken token) : base(type)
+      public TerminalNode(TType type, TToken token, string name) : base(type, name)
       {
          Token = token;
       }
@@ -58,6 +66,5 @@ namespace Org.Edgerunner.Language.Parsers
       {
          return Token.Value;
       }
-
    }
 }
