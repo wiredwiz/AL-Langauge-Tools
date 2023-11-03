@@ -24,17 +24,22 @@
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
+using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Factories
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
 {
-   public interface IRuleFactory
+   /// <summary>
+   /// Interface that defines an AL parser rule generator.
+   /// </summary>
+   public interface IRuleGenerator
    {
       /// <summary>
-      /// Creates and returns a new AL parser rule.
+      /// Creates a new AL parser rule and attempts to parse the supplied stream with it.
       /// </summary>
-      /// <param name="token">The token to use.</param>
-      /// <returns>System.Int32.</returns>
-      AlParserRule NewParserRule(AlToken token);
+      /// <param name="tokens">The token stream to read from.</param>
+      /// <param name="context">The AL parser.</param>
+      /// <param name="parentRule">The parent AL parser rule.</param>
+      /// <returns>A new <see cref="AlParserRule" />.</returns>
+      bool Parses(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule);
    }
 }

@@ -4,6 +4,7 @@ using Org.Edgerunner.Buffers.Input;
 using System.Text;
 using FluentAssertions;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 // ReSharper disable TooManyArguments
@@ -30,13 +31,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          stream.Position = 8;
 
          // And finally parsing the text declaration tokens
-         var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root);
-         parser.ParseVariableDeclaration(stream, context, root);
+         var root = new RootRule();
+         new VariableDeclarationRule().Parse(stream, parser, root);
 
          // results in the expected parse tree
-         context.State.Should().Be(0);
+         parser.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
          rule.Parent.Should().BeNull();
@@ -60,13 +60,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          stream.Position = 15;
 
          // And finally parsing the option declaration tokens
-         var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root);
-         parser.ParseVariableDeclaration(stream, context, root);
+         var root = new RootRule();
+         new VariableDeclarationRule().Parse(stream, parser, root);
 
          // results in the expected parse tree
-         context.State.Should().Be(0);
+         parser.State.Should().Be(0);
          var rule = root ;
          rule.Should().NotBeNull();
          rule.Parent.Should().BeNull();
@@ -92,13 +91,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          stream.Position = streamPosition;
 
          // And finally parsing the record declaration tokens
-         var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root);
-         parser.ParseVariableDeclaration(stream, context, root);
+         var root = new RootRule();
+         new VariableDeclarationRule().Parse(stream, parser, root);
 
          // results in the expected parse tree
-         context.State.Should().Be(0);
+         parser.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
          rule.Parent.Should().BeNull();
@@ -127,13 +125,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          stream.Position = streamPosition;
 
          // And finally parsing the record declaration tokens
-         var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root);
-         parser.ParseVariableDeclaration(stream, context, root);
+         var root = new RootRule();
+         new VariableDeclarationRule().Parse(stream, parser, root);
 
          // results in the expected parse tree
-         context.State.Should().Be(0);
+         parser.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
          rule.Parent.Should().BeNull();
@@ -158,13 +155,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          stream.Position = 50;
 
          // And finally parsing the option declaration tokens
-         var context = new AlParserContext();
          var parser = new AlParser();
-         var root = new AlParserRule(AlSyntaxNodeType.Root);
-         parser.ParseVariableDeclaration(stream, context, root);
+         var root = new RootRule();
+         new VariableDeclarationRule().Parse(stream, parser, root);
 
          // results in the expected parse tree
-         context.State.Should().Be(0);
+         parser.State.Should().Be(0);
          var rule = root;
          rule.Should().NotBeNull();
          rule.Parent.Should().BeNull();

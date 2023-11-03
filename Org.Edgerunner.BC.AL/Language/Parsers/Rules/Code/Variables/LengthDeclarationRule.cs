@@ -34,33 +34,47 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
    {
       public LengthDeclarationRule() : base(AlSyntaxNodeType.LengthDeclaration, "Length Declaration Rule") {}
 
-      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent rule to link to.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
       {
-         Enter(context);
-         var token = tokens.Current;
-         var parsed = true;
-         parentRule.AddChildNode(this);
-         
-         if (new SymbolRule(token).Parse(tokens, context, this))
+         try
          {
-            if (!tokens.TryMoveNext(ref token))
-               return false;
-         }
-         else
-            parsed = false;
+            Enter(context);
+            var token = tokens.Current;
+            var parsed = true;
+            parentRule.AddChildNode(this);
 
-         if (new IntegerLiteralRule(token!).Parse(tokens, context, this))
+            if (new SymbolRule(token).Parse(tokens, context, this, "["))
+            {
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
+            }
+            else
+               parsed = false;
+
+            if (new IntegerLiteralRule(token!).Parse(tokens, context, this))
+            {
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
+            }
+            else
+               parsed = false;
+
+            if (!new SymbolRule(token!).Parse(tokens, context, this, "]"))
+               parsed = false;
+
+            return parsed;
+         }
+         finally
          {
-            if (!tokens.TryMoveNext(ref token))
-               return false;
+            Exit(context);
          }
-         else
-            parsed = false;
-
-         if (!new SymbolRule(token!).Parse(tokens, context, this))
-            parsed = false;
-
-         return Exit(context, parsed);
       }
    }
 }

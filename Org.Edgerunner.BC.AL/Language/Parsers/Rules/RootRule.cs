@@ -36,10 +36,5 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
       public RootRule() : base(AlSyntaxNodeType.Root, "Root Rule") {}
-
-      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
-      {
-         throw new NotImplementedException();
-      }
    }
 }

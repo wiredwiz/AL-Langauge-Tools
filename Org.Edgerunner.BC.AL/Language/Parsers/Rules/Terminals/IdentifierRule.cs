@@ -40,20 +40,27 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
       {
-         Enter(context);
-         var token = tokens.Current;
-         var message = string.Format(Resources.ExpectedIdentifier, token.Value);
-         var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Identifier, message);
-         if (tokenValidates)
+         try
          {
-            context.GenerateTraceEvent(token, TraceEvent.Consume);
-            parentRule.AddChildNode(this);
-            context.GenerateTraceEvent(this, TraceEvent.Match);
-         }
+            Enter(context);
+            var token = tokens.Current;
+            var message = string.Format(Resources.ExpectedIdentifier, token.Value);
+            var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Identifier, message);
+            if (tokenValidates)
+            {
+               context.GenerateTraceEvent(token, TraceEvent.Consume);
+               parentRule.AddChildNode(this);
+               context.GenerateTraceEvent(this, TraceEvent.Match);
+            }
 
-         return Exit(context, tokenValidates);
+            return tokenValidates;
+         }
+         finally
+         {
+            Exit(context);
+         }
       }
 
       /// <summary>
@@ -64,20 +71,27 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// <param name="parentRule">The parent rule to link to.</param>
       /// <param name="expectedValue">The expected identifier value to match against.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule, string expectedValue)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule, string expectedValue)
       {
-         Enter(context);
-         var token = tokens.Current;
-         var message = string.Format(Resources.ExpectedSpecificIdentifier, expectedValue, token.Value);
-         var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Identifier, expectedValue, message);
-         if (tokenValidates)
+         try
          {
-            context.GenerateTraceEvent(token, TraceEvent.Consume);
-            parentRule.AddChildNode(this);
-            context.GenerateTraceEvent(this, TraceEvent.Match);
-         }
+            Enter(context);
+            var token = tokens.Current;
+            var message = string.Format(Resources.ExpectedSpecificIdentifier, expectedValue, token.Value);
+            var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Identifier, expectedValue, message);
+            if (tokenValidates)
+            {
+               context.GenerateTraceEvent(token, TraceEvent.Consume);
+               parentRule.AddChildNode(this);
+               context.GenerateTraceEvent(this, TraceEvent.Match);
+            }
 
-         return Exit(context, tokenValidates);
+            return tokenValidates;
+         }
+         finally
+         {
+            Exit(context);
+         }
       }
    }
 }

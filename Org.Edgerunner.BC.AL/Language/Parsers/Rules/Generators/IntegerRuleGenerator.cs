@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "OptionValuesDeclaration.cs">
-// Copyright(c) Thaddeus Ryker 2023
+// <copyright company = "Edgerunner.org" file = "IntegerRuleGenerator.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,10 +23,23 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
 {
-   public class OptionValuesDeclaration
+   /// <summary>
+   /// Class that represents a generator for instances of integer literals.
+   /// Implements the <see cref="Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators.IRuleGenerator" />.
+   /// </summary>
+   /// <seealso cref="Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators.IRuleGenerator" />
+   /// <seealso cref="IntegerLiteralRule"/>
+   public class IntegerRuleGenerator : IRuleGenerator
    {
-      
+      public bool Parses(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      {
+         return new IntegerLiteralRule(tokens.Current).Parse(tokens, context, parentRule);
+      }
    }
 }

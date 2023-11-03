@@ -23,10 +23,60 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class VariableDeclarationRule
+   public class VariableDeclarationRule : AlParserRule
    {
-      
+      public VariableDeclarationRule() : base(AlSyntaxNodeType.VariableDeclaration, "Variable Declaration Rule") {}
+
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent rule to link to.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      {
+         try
+         {
+            Enter(context);
+            var token = tokens.Current;
+            parentRule.AddChildNode(this);
+
+            // read the variable name
+            new IdentifierRule(token).Parse(tokens, context, this);
+            Match(context);
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+
+            // check for colon separator
+            if (new SymbolRule(token!).Parse(tokens, context, this, ":"))
+            {
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
+            }
+
+            // read data type
+            var parsed = new VariableTypeDeclarationRule().Parse(tokens, context, this);
+
+            // now look for the statement terminator
+            if (new SymbolRule(token!).Parse(tokens, context, this, ";"))
+            {
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
+            }
+            
+            return parsed;
+         }
+         finally
+         {
+            Exit(context);
+         }
+      }
    }
 }

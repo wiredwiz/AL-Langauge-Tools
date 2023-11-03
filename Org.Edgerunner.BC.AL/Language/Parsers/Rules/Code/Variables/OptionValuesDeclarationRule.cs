@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "DatetimeLiteralRule.cs">
+// <copyright company = "Edgerunner.org" file = "OptionValuesDeclarationRule.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,20 +23,17 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
-using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   /// <summary>
-   /// Class that represents an datetime literal parser rule.
-   /// Implements the <see cref="Terminals.AlTerminalNode" />
-   /// </summary>
-   /// <seealso cref="Terminals.AlTerminalNode" />
-   public class DatetimeLiteralRule : AlTerminalNode
+   public class OptionValuesDeclarationRule : AlParserRule
    {
-      public DatetimeLiteralRule(AlToken symbol) : base(AlSyntaxNodeType.DateTime, symbol, "Datetime Literal") {}
+      public OptionValuesDeclarationRule() : base(AlSyntaxNodeType.OptionValuesDeclaration,
+                                                  "Option Values Declaration Rule") {}
 
       /// <summary>
       /// Parses this rule from the token stream.
@@ -51,16 +48,31 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
          {
             Enter(context);
             var token = tokens.Current;
-            var message = string.Format(Resources.ExpectedDatetime, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, parentRule, LiteralType.DateTime, message);
-            if (tokenValidates)
-            {
-               context.GenerateTraceEvent(token, TraceEvent.Consume);
-               parentRule.AddChildNode(this);
-               context.GenerateTraceEvent(this, TraceEvent.Match);
-            }
+            var parsed = true;
+            parentRule.AddChildNode(this);
 
-            return tokenValidates;
+            if (Validator.ValidateToken(
+                                        token, 
+                                        context, 
+                                        parentRule, 
+                                        TokenType.Identifier, 
+                                        string.Format(Resources.ExpectedOptionValue, token.Value)))
+            {
+               new IdentifierRule(token).Parse(tokens, context, this);
+               Match(context);
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
+
+               if (!ParseRepeatingDelimitedExpression(tokens, context, this, ",", ";", new OptionValueGenerator()))
+                  parsed = false;
+            }
+            else
+               parsed = false;
+
+            if (!new SymbolRule(token!).Parse(tokens, context, this, ";"))
+               parsed = false;
+
+            return parsed;
          }
          finally
          {

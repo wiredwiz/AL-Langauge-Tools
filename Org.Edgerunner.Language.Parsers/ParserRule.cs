@@ -112,17 +112,6 @@ namespace Org.Edgerunner.Language.Parsers
       }
 
       /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public abstract bool Parse(TokenStream<TToken> tokens,
-                                 IParser<TToken, TType> context,
-                                 ParserRule<TToken, TType> parentRule);
-
-      /// <summary>
       /// Generates a parser rule Enter event for this rule.
       /// </summary>
       /// <param name="parser">The parser.</param>
@@ -135,12 +124,10 @@ namespace Org.Edgerunner.Language.Parsers
       /// Generates a parser rule Exit event for this rule.
       /// </summary>
       /// <param name="parser">The parser.</param>
-      /// <param name="returnValue">The value to return.</param>
       /// <returns>The passed in value.</returns>
-      public virtual bool Exit(IParser<TToken, TType> parser, bool returnValue)
+      public virtual void Exit(IParser<TToken, TType> parser)
       {
          if (parser.EnableTracing) parser.GenerateTraceEvent(this, TraceEvent.Exit);
-         return returnValue;
       }
 
       /// <summary>

@@ -23,47 +23,61 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
-using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
    public class DimensionsDeclarationRule : AlParserRule
    {
       public DimensionsDeclarationRule() : base(AlSyntaxNodeType.DimensionsDeclaration, "Dimensions Declaration Rule") {}
-      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
+
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent rule to link to.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
       {
-         Enter(context);
-         var token = tokens.Current;
-         var parsed = true;
-         parentRule.AddChildNode(this);
-
-         if (new SymbolRule(token).Parse(tokens, context, this))
+         try
          {
-            if (!tokens.TryMoveNext(ref token))
-               return Exit(context, false);
-         }
-         else
-            parsed = false;
+            Enter(context);
+            var token = tokens.Current;
+            var parsed = true;
+            parentRule.AddChildNode(this);
 
-         if (new IntegerLiteralRule(token!).Parse(tokens, context, this))
-         {
-            if (!tokens.TryMoveNext(ref token))
-               return Exit(context, false);
-            
-            if (!ParseRepeatingDelimitedExpression(tokens, context, this, ",", "]", typeof(IntegerLiteralRule)))
+            if (new SymbolRule(token).Parse(tokens, context, this, "["))
+            {
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
+            }
+            else
                parsed = false;
+
+            if (new IntegerLiteralRule(token!).Parse(tokens, context, this))
+            {
+               if (!tokens.TryMoveNext(ref token))
+                  return false;
+
+               if (!ParseRepeatingDelimitedExpression(tokens, context, this, ",", "]", new IntegerRuleGenerator()))
+                  parsed = false;
+            }
+            else
+               parsed = false;
+
+            if (!new SymbolRule(token!).Parse(tokens, context, this, "]"))
+               parsed = false;
+
+            return parsed;
          }
-         else
-            parsed = false;
-
-         token = tokens.Current;
-         if (!new SymbolRule(token).Parse(tokens, context, this))
-            parsed = false;
-
-         return Exit(context, parsed);
+         finally
+         {
+            Exit(context);
+         }
       }
    }
 }

@@ -34,31 +34,45 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
    {
       public ObjectReferenceDeclarationRule() : base(AlSyntaxNodeType.ObjectReferenceDeclaration, "Object Reference Declaration Rule") {}
 
-      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent rule to link to.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
       {
-         Enter(context);
-         var token = tokens.Current;
-         parentRule.AddChildNode(this);
-
-         var errorMessage = $"Expected an object number or name identifier, instead encountered ${token.Value}";
-
-         // Look for an object integer number
-         var parsed = token.TokenType == (int)TokenType.Literal && token is LiteralToken { LiteralType: LiteralType.Integer };
-         if (parsed)
-            parsed = new IntegerLiteralRule(token).Parse(tokens, context, this);
-         else if (token.TokenType == (int)TokenType.Identifier)
-            // if we didn't have a number, but instead an identifier, then we are still good
-            parsed = new IdentifierRule(token).Parse(tokens, context, this);
-         else
+         try
          {
-            context.GenerateParserError(token, token, errorMessage);
-            AddChildNode(new ErrorNode(errorMessage, token));
-            parsed = false;
+            Enter(context);
+            var token = tokens.Current;
+            parentRule.AddChildNode(this);
+
+            var errorMessage = $"Expected an object number or name identifier, instead encountered ${token.Value}";
+
+            // Look for an object integer number
+            var parsed = token.TokenType == (int)TokenType.Literal && token is LiteralToken { LiteralType: LiteralType.Integer };
+            if (parsed)
+               parsed = new IntegerLiteralRule(token).Parse(tokens, context, this);
+            else if (token.TokenType == (int)TokenType.Identifier)
+               // if we didn't have a number, but instead an identifier, then we are still good
+               parsed = new IdentifierRule(token).Parse(tokens, context, this);
+            else
+            {
+               context.GenerateParserError(token, token, errorMessage);
+               AddChildNode(new ErrorNode(errorMessage, token));
+               parsed = false;
+            }
+
+            if (parsed) context.GenerateTraceEvent(this, TraceEvent.Match);
+
+            return parsed;
          }
-
-         if (parsed) context.GenerateTraceEvent(this, TraceEvent.Match);
-
-         return Exit(context, parsed);
+         finally
+         {
+            Exit(context);
+         }
       }
    }
 }

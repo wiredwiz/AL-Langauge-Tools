@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Aspects;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
@@ -35,50 +34,34 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       public SymbolRule(AlToken symbol) : base(AlSyntaxNodeType.Symbol, symbol, "Symbol Rule") {}
 
       /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
-      {
-         Enter(context);
-         var token = tokens.Current;
-         var message = string.Format(Resources.ExpectedSymbol, token.Value);
-         var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Symbol, message);
-         if (tokenValidates)
-         {
-            context.GenerateTraceEvent(token, TraceEvent.Consume);
-            parentRule.AddChildNode(this);
-            context.GenerateTraceEvent(this, TraceEvent.Match);
-         }
-
-         return Exit(context, tokenValidates);
-      }
-
-      /// <summary>
-      /// Parses this rule from the token stream.
+      /// Parses a symbol from the token stream.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
       /// <param name="parentRule">The parent rule to link to.</param>
       /// <param name="expectedValue">The expected identifier value to match against.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule, string expectedValue)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule, string expectedValue)
       {
-         Enter(context);
-         var token = tokens.Current;
-         var message = string.Format(Resources.ExpectedSymbol, expectedValue, token.Value);
-         var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Identifier, expectedValue, message);
-         if (tokenValidates)
+         try
          {
-            context.GenerateTraceEvent(token, TraceEvent.Consume);
-            parentRule.AddChildNode(this);
-            context.GenerateTraceEvent(this, TraceEvent.Match);
-         }
+            Enter(context);
+            var token = tokens.Current;
+            var message = string.Format(Resources.ExpectedSymbol, expectedValue, token.Value);
+            var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Symbol, expectedValue, message);
+            if (tokenValidates)
+            {
+               context.GenerateTraceEvent(token, TraceEvent.Consume);
+               parentRule.AddChildNode(this);
+               context.GenerateTraceEvent(this, TraceEvent.Match);
+            }
 
-         return Exit(context, tokenValidates);
+            return tokenValidates;
+         }
+         finally
+         {
+            Exit(context);
+         }
       }
 
       /// <summary>
@@ -86,27 +69,34 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
+      /// <param name="parentRule">The parent parser rule to link to.</param>
       /// <param name="values">The enumeration of allowed values.</param>
-      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
       // ReSharper disable once TooManyDeclarations
-      public bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule, IEnumerable<string> values)
+      public bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule, IEnumerable<string> values)
       {
-         Enter(context);
-         var token = tokens.Current;
-         var enumerable = values as string[] ?? values.ToArray();
-         // ReSharper disable once ExceptionNotDocumented
-         string setText = string.Join(", ", enumerable.Select(i => $"{i}"));
-         var message = string.Format(Resources.ExpectedSymbolFromSet, setText, token.Value);
-         var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Symbol, enumerable, message);
-         if (tokenValidates)
+         try
          {
-            context.GenerateTraceEvent(token, TraceEvent.Consume);
-            parentRule.AddChildNode(this);
-            context.GenerateTraceEvent(this, TraceEvent.Match);
-         }
+            Enter(context);
+            var token = tokens.Current;
+            var enumerable = values as string[] ?? values.ToArray();
+            // ReSharper disable once ExceptionNotDocumented
+            string setText = string.Join(", ", enumerable.Select(i => $"{i}"));
+            var message = string.Format(Resources.ExpectedSymbolFromSet, setText, token.Value);
+            var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Symbol, enumerable, message);
+            if (tokenValidates)
+            {
+               context.GenerateTraceEvent(token, TraceEvent.Consume);
+               parentRule.AddChildNode(this);
+               context.GenerateTraceEvent(this, TraceEvent.Match);
+            }
 
-         return Exit(context, tokenValidates);
+            return tokenValidates;
+         }
+         finally
+         {
+            Exit(context);
+         }
       }
    }
 }

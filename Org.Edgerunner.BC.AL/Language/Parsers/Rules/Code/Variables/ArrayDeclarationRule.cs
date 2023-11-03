@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "DatetimeLiteralRule.cs">
-// Copyright(c) Thaddeus Ryker 2023
+// <copyright company = "Edgerunner.org" file = "ArrayDeclarationRule.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,20 +23,15 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
-using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   /// <summary>
-   /// Class that represents an datetime literal parser rule.
-   /// Implements the <see cref="Terminals.AlTerminalNode" />
-   /// </summary>
-   /// <seealso cref="Terminals.AlTerminalNode" />
-   public class DatetimeLiteralRule : AlTerminalNode
+   public class ArrayDeclarationRule : AlParserRule
    {
-      public DatetimeLiteralRule(AlToken symbol) : base(AlSyntaxNodeType.DateTime, symbol, "Datetime Literal") {}
+      public ArrayDeclarationRule() : base(AlSyntaxNodeType.ArrayDeclaration, "Array Declaration Rule") {}
 
       /// <summary>
       /// Parses this rule from the token stream.
@@ -51,16 +46,25 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
          {
             Enter(context);
             var token = tokens.Current;
-            var message = string.Format(Resources.ExpectedDatetime, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, parentRule, LiteralType.DateTime, message);
-            if (tokenValidates)
-            {
-               context.GenerateTraceEvent(token, TraceEvent.Consume);
-               parentRule.AddChildNode(this);
-               context.GenerateTraceEvent(this, TraceEvent.Match);
-            }
+            parentRule.AddChildNode(this);
 
-            return tokenValidates;
+            new IdentifierRule(token).Parse(tokens, context, this);
+            Match(context);
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+
+            // look for dimensions declaration
+            var parsed = new DimensionsDeclarationRule().Parse(tokens, context, this);
+            if (parsed && !tokens.TryMoveNext(ref token)) return false;
+
+            // Look for identifier
+            parsed = new IdentifierRule(token!).Parse(tokens, context, this, "of");
+            if (parsed && !tokens.TryMoveNext(ref token)) return false;
+
+            // Now parse our array sub type declaration
+            parsed = new VariableTypeDeclarationRule().Parse(tokens, context, this);
+
+            return parsed;
          }
          finally
          {

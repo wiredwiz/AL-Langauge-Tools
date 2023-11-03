@@ -24,6 +24,7 @@
 #endregion
 
 using System.Runtime.Serialization;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
@@ -88,17 +89,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="delimiter">The delimiter symbol.</param>
       /// <param name="terminator">The terminator symbol.</param>
-      /// <param name="handlerType">The parser handler delegate.</param>
+      /// <param name="generator">The parser rule generator.</param>
       /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      /// <exception cref="ArgumentException">The handler type must be a typeof AlParserRule</exception>
       // ReSharper disable once TooManyArguments
-      protected virtual bool ParseRepeatingDelimitedExpression<T>(
+      protected virtual bool ParseRepeatingDelimitedExpression(
          TokenStream<AlToken> tokens, 
-         IParser<AlToken, AlSyntaxNodeType> context, 
-         ParserRule<AlToken, AlSyntaxNodeType> parentRule, 
+         AlParser context, 
+         AlParserRule parentRule, 
          string delimiter, 
          string terminator, 
-         T handlerType) where T : Type
+         IRuleGenerator generator)
       {
          var token = tokens.Current;
          bool success = true;
@@ -106,36 +106,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
          if (token.TokenType == (int)TokenType.Symbol && terminator == token.Value)
             return true;
 
-         if (!handlerType.IsAssignableTo(typeof(AlParserRule)))
-            throw new ArgumentException(Resources.BadHandlerType, nameof(handlerType));
-
          while (token!.TokenType != (int)TokenType.Symbol || terminator != token.Value)
          {
             // Look for delimiter token
-            var message = string.Format(Resources.ExpectedSymbol, delimiter, token.Value);
-            var validates = Validator.ValidateToken(token, context, parentRule, TokenType.Symbol, delimiter, message);
-            success = success && validates;
-            if (validates)
-            {
-               new SymbolRule(token).Parse(tokens, context, this);
-               if (!tokens.TryMoveNext(ref token)) return false;
-            }
+            var parses = new SymbolRule(token).Parse(tokens, context, this, delimiter);
+            success = success && parses;
+            if (parses && !tokens.TryMoveNext(ref token)) return false;
 
             // Now parse the expression
-            if (handlerType.IsAssignableTo(typeof(AlTerminalNode)))
-            {
-               // ReSharper disable once ExceptionNotDocumented
-               var handler = Activator.CreateInstance(handlerType, token) as AlTerminalNode;
-               validates = handler!.Parse(tokens, context, parentRule);
-            }
-            else
-            {
-               // ReSharper disable once ExceptionNotDocumented
-               var handler = Activator.CreateInstance(handlerType) as AlParserRule;
-               validates = handler!.Parse(tokens, context, parentRule);
-            }
-            success = success && validates;
-            if (validates && !tokens.TryMoveNext(ref token)) return false;
+            parses = generator.Parses(tokens, context, parentRule);
+            success = success && parses;
+            if (parses && !tokens.TryMoveNext(ref token)) return false;
 
             // If both parsing attempts failed, we move ahead one to prevent infinite looping
             if (!success)
