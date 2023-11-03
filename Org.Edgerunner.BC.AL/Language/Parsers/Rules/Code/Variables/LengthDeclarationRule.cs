@@ -23,10 +23,44 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+using Org.Edgerunner.Language.Parsers;
+
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class LengthDeclarationRule
+   public class LengthDeclarationRule : AlParserRule
    {
-      
+      public LengthDeclarationRule() : base(AlSyntaxNodeType.LengthDeclaration, "Length Declaration Rule") {}
+
+      public override bool Parse(TokenStream<AlToken> tokens, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule)
+      {
+         Enter(context);
+         var token = tokens.Current;
+         var parsed = true;
+         parentRule.AddChildNode(this);
+         
+         if (new SymbolRule(token).Parse(tokens, context, this))
+         {
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+         }
+         else
+            parsed = false;
+
+         if (new IntegerLiteralRule(token!).Parse(tokens, context, this))
+         {
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+         }
+         else
+            parsed = false;
+
+         if (!new SymbolRule(token!).Parse(tokens, context, this))
+            parsed = false;
+
+         return Exit(context, parsed);
+      }
    }
 }

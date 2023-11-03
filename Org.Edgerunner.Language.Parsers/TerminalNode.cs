@@ -44,7 +44,7 @@ namespace Org.Edgerunner.Language.Parsers
       /// <param name="token">The token that this terminal node corresponds to.</param>
       /// <param name="name">The node name.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public TerminalNode(TType type, TToken token, string name) : base(type, name)
+      protected TerminalNode(TType type, TToken token, string name) : base(type, name)
       {
          Token = token;
       }

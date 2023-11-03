@@ -35,7 +35,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
    /// Implements the <see cref="TerminalNode{AlToken, AlSyntaxNodeType}" />
    /// </summary>
    /// <seealso cref="TerminalNode{AlToken, AlSyntaxNodeType}" />
-   public abstract class AlTerminalNode : TerminalNode<AlToken, AlSyntaxNodeType>
+   public abstract class AlTerminalNode : AlParserRule
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlTerminalNode" /> class.
@@ -44,14 +44,27 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// <param name="symbol">The start/end symbol token.</param>
       /// <param name="name">The node name.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      protected AlTerminalNode(AlSyntaxNodeType type, AlToken symbol, string name) : base(type, symbol, name)
+      protected AlTerminalNode(AlSyntaxNodeType type, AlToken symbol, string name) : base(type, name)
       {
+         Token = symbol;
       }
 
+      /// <summary>
+      /// Gets the terminal token.
+      /// </summary>
+      /// <value>The terminal token.</value>
+      public virtual AlToken Token { get; }
+
+      /// <inheritdoc />
+      public override AlToken Start => Token;
+
+      /// <inheritdoc />
+      public override AlToken End => Token;
+      
       /// <inheritdoc />
       public override string GetText()
       {
-         return Start.Value;
+         return Token.Value;
       }
    }
 }

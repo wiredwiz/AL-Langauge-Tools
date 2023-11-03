@@ -23,12 +23,11 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Literals
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
    /// <summary>
    /// Class that represents an integer literal parser rule.
