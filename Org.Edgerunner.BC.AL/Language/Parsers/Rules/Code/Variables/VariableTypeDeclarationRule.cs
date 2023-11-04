@@ -188,8 +188,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
                      {
                         // we have nothing extra to do, these variable types have no extra declaration
                         new IdentifierRule(token).Parse(tokens, context, this);
-                        if (!tokens.TryMoveNext(ref token))
-                           return false;
                         break;
                      }
                   case VariableType.Code:
@@ -200,13 +198,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
                         if (!tokens.TryMoveNext(ref token))
                            return false;
 
-                        var result = new LengthDeclarationRule().Parse(tokens, context, this);
-                        if (result)
-                        {
-                           if (!tokens.TryMoveNext(ref token))
-                              return false;
-                        }
-                        else
+                        if (!new LengthDeclarationRule().Parse(tokens, context, this))
                            parsed = false;
                         break;
                      }

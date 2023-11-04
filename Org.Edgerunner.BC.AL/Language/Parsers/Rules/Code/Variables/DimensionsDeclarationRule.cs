@@ -65,6 +65,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 
                if (!ParseRepeatingDelimitedExpression(tokens, context, this, ",", "]", new IntegerRuleGenerator()))
                   parsed = false;
+               else if (!tokens.TryMoveNext(ref token))
+                  return false;
             }
             else
                parsed = false;

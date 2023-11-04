@@ -23,17 +23,15 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Objects;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using System.Data;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   public partial class AlParser : IParser<AlToken, AlSyntaxNodeType>
+   public class AlParser : IParser<AlToken, AlSyntaxNodeType>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlParser"/> class.

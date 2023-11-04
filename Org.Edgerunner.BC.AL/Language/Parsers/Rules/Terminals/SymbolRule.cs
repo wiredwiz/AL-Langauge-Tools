@@ -72,6 +72,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// <param name="parentRule">The parent parser rule to link to.</param>
       /// <param name="values">The enumeration of allowed values.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      /// <exception cref="OutOfMemoryException">The length of the resulting set text string overflows the maximum allowed length (<see cref="System.Int32.MaxValue">Int32.MaxValue</see>).</exception>
       // ReSharper disable once TooManyDeclarations
       public bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule, IEnumerable<string> values)
       {

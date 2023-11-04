@@ -23,10 +23,6 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-using Org.Edgerunner.Language.Parsers;
-
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
    public class RootRule : AlParserRule

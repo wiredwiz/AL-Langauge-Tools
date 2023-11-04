@@ -69,9 +69,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             else
                parsed = false;
 
-            if (!new SymbolRule(token!).Parse(tokens, context, this, ";"))
-               parsed = false;
-
             return parsed;
          }
          finally

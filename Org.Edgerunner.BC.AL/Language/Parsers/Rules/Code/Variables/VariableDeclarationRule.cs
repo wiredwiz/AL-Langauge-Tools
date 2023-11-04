@@ -63,6 +63,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 
             // read data type
             var parsed = new VariableTypeDeclarationRule().Parse(tokens, context, this);
+            if (parsed && !tokens.TryMoveNext(ref token)) return false;
 
             // now look for the statement terminator
             if (new SymbolRule(token!).Parse(tokens, context, this, ";"))
