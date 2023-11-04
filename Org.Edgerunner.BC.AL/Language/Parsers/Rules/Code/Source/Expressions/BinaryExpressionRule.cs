@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlSyntaxNodeType.cs">
+// <copyright company = "Edgerunner.org" file = "BinaryExpressionRule.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,31 +23,10 @@
 // THE SOFTWARE.
 #endregion
 
-
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public enum AlSyntaxNodeType
+   public class BinaryExpressionRule
    {
-      Error,
-      Root,
-      Integer,
-      Decimal,
-      Symbol,
-      String,
-      Date,
-      Time,
-      DateTime,
-      Boolean,
-      Identifier,
-      LabelDeclaration,
-      LengthDeclaration,
-      DimensionsDeclaration,
-      VariableTypeDeclaration,
-      OptionValuesDeclaration,
-      ObjectReferenceDeclaration,
-      ArrayDeclaration,
-      ListDeclaration,
-      DictionaryDeclaration,
-      VariableDeclaration
+      
    }
 }

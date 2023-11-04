@@ -29,6 +29,9 @@ namespace Org.Edgerunner.BC.AL.Language
    public enum ReservedWords
    {
       None = 0,
+      OF,
+      DOWNTO,
+      TO,
       IF,
       ELSE,
       WHILE,

@@ -170,5 +170,65 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Tests
          rule.End.EndingColumn.Should().Be(37);
          rule.GetText().Should().Be("myArray: array[10, 10] of text[20];");
       }
+
+      [Fact]
+      public void List_variable_parses_correctly()
+      {
+         // loading a demo al file
+         var buffer = new TextBuffer("Variables.al", Encoding.Default.CodePage);
+         var lexer = new AlLexer();
+
+         // Then tokenizing the file into a token stream
+         var stream = new TokenStream<AlToken>(lexer.ReadTokensFromBuffer(buffer));
+
+         // And moving the token stream to the option variable declaration
+         stream.Position = 64;
+
+         // And finally parsing the option declaration tokens
+         var parser = new AlParser();
+         var root = new RootRule();
+         new VariableDeclarationRule().Parse(stream, parser, root);
+
+         // results in the expected parse tree
+         parser.State.Should().Be(0);
+         var rule = root;
+         rule.Should().NotBeNull();
+         rule.Parent.Should().BeNull();
+         rule.Start!.StartingLine.Should().Be(12);
+         rule.Start.StartingColumn.Should().Be(4);
+         rule.End!.EndingLine.Should().Be(12);
+         rule.End.EndingColumn.Should().Be(30);
+         rule.GetText().Should().Be("myList: List of [text[10]];");
+      }
+
+      [Fact]
+      public void Dictionary_variable_parses_correctly()
+      {
+         // loading a demo al file
+         var buffer = new TextBuffer("Variables.al", Encoding.Default.CodePage);
+         var lexer = new AlLexer();
+
+         // Then tokenizing the file into a token stream
+         var stream = new TokenStream<AlToken>(lexer.ReadTokensFromBuffer(buffer));
+
+         // And moving the token stream to the option variable declaration
+         stream.Position = 75;
+
+         // And finally parsing the option declaration tokens
+         var parser = new AlParser();
+         var root = new RootRule();
+         new VariableDeclarationRule().Parse(stream, parser, root);
+
+         // results in the expected parse tree
+         parser.State.Should().Be(0);
+         var rule = root;
+         rule.Should().NotBeNull();
+         rule.Parent.Should().BeNull();
+         rule.Start!.StartingLine.Should().Be(13);
+         rule.Start.StartingColumn.Should().Be(4);
+         rule.End!.EndingLine.Should().Be(13);
+         rule.End.EndingColumn.Should().Be(58);
+         rule.GetText().Should().Be("myDictionary: dictionary of [code[20], List of [text]];");
+      }
    }
 }

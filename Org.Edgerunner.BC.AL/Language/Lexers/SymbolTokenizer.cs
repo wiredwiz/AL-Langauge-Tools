@@ -77,6 +77,8 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
                return BuildSymbolTokenFromBuffer(buffer, text, start, buffer.PeekChar() is '=' or ':');
             case '<':
                return BuildSymbolTokenFromBuffer(buffer, text, start, buffer.PeekChar() is '>' or '=');
+            case '.':
+               return BuildSymbolTokenFromBuffer(buffer, text, start, buffer.PeekChar() is '.');
             default:
                buffer.GetNextChar();
                return new SymbolToken(text, start, buffer.GetBufferPoint(-1));

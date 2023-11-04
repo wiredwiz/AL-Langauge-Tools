@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "VariableDeclarationRule.cs">
-// Copyright(c) Thaddeus Ryker 2023
+// <copyright company = "Edgerunner.org" file = "DictionaryDeclarationRule.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -26,12 +26,13 @@
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
+using Org.Edgerunner.Pooling;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class VariableDeclarationRule : AlParserRule
+   public class DictionaryDeclarationRule : AlParserRule
    {
-      public VariableDeclarationRule() : base(AlSyntaxNodeType.VariableDeclaration, "Variable Declaration Rule") {}
+      public DictionaryDeclarationRule() : base(AlSyntaxNodeType.DictionaryDeclaration, "Dictionary Declaration Rule") {}
 
       /// <summary>
       /// Parses this rule from the token stream.
@@ -47,34 +48,63 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             Enter(context);
             var token = tokens.Current;
             parentRule.AddChildNode(this);
-            var parsed = true;
 
-            // read the variable name
-            new IdentifierRule(token).Parse(tokens, context, this);
+            new IdentifierRule(token).Parse(tokens, context, this, "Dictionary");
             Match(context);
             if (!tokens.TryMoveNext(ref token))
                return false;
 
-            // check for colon separator
-            if (!ProcessRuleAndAdvance(new SymbolRule(token!).Parse(tokens, context, this, ":"), tokens,
-                                       ref token!, ref parsed))
-               return false;
-            
-            // read data type
-            if (!ProcessRuleAndAdvance(new VariableTypeDeclarationRule().Parse(tokens, context, this), tokens, 
-                                       ref token!, ref parsed))
+            var parsed = true;
+
+            // Look for identifier
+            if (!ProcessRuleAndAdvance(new IdentifierRule(token!).Parse(tokens, context, this, "of"), tokens, ref token!, ref parsed))
                return false;
 
-            // now look for the statement terminator
-            if (!new SymbolRule(token!).Parse(tokens, context, this, ";"))
+            // look for bracket
+            if (!ProcessRuleAndAdvance(new SymbolRule(token).Parse(tokens, context, this, "["), tokens, ref token, ref parsed))
+               return false;
+
+            // Now parse our dictionary key type declaration
+            if (!ProcessRuleAndAdvance(new VariableTypeDeclarationRule().Parse(tokens, context, this), tokens, ref token, ref parsed))
+               return false;
+
+            // look for comma
+            if (!ProcessRuleAndAdvance(new SymbolRule(token).Parse(tokens, context, this, ","), tokens, ref token, ref parsed))
+               return false;
+
+            // Now parse our dictionary value type declaration
+            if (!ProcessRuleAndAdvance(new VariableTypeDeclarationRule().Parse(tokens, context, this), tokens, ref token, ref parsed))
+               return false;
+
+            // look for bracket
+            if (!new SymbolRule(token).Parse(tokens, context, this, "]"))
                parsed = false;
-            
+
             return parsed;
          }
          finally
          {
             Exit(context);
          }
+      }
+
+      public override string GetText()
+      {
+         var builder = StringBuilderPool.Current.Get();
+         var prevText = ((AlParserRule)Children[0]).GetText();
+         builder.Append(prevText);
+         if (Children.Count > 1)
+            for (var index = 1; index < Children.Count; index++)
+            {
+               var child = Children[index];
+               var childText = ((AlParserRule)child).GetText();
+               if (childText is not ";" and not "," and not "]" && prevText is not "[")
+                  builder.Append(" ");
+               builder.Append(childText);
+               prevText = childText;
+            }
+
+         return builder.ToString();
       }
    }
 }

@@ -52,7 +52,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
          if (token == null)
             return false;
 
-         if (token.TokenType != (int)type || token.Value != value)
+         if (token.TokenType != (int)type || token.Value.ToLowerInvariant() != value.ToLowerInvariant())
          {
             if (context.State == 0)
             {
@@ -77,6 +77,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// <param name="allowedValues">The allowable values.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <remarks>The allowed values should always be all lowercase.</remarks>
       /// <seealso cref="AlToken" />
       // ReSharper disable once FlagArgument
       // ReSharper disable once TooManyArguments
@@ -85,7 +86,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
          if (token == null)
             return false;
 
-         if (token.TokenType != (int)type || allowedValues.Contains(token.Value))
+         if (token.TokenType != (int)type || allowedValues.Contains(token.Value.ToLowerInvariant()))
          {
             if (context.State == 0)
             {

@@ -9,5 +9,7 @@
    myDatetime : Datetime;
    doesParse: Boolean;
    myArray: array[10,10] of text[20];
+   myList: List of [text[10]];
+   myDictionary: dictionary of [code[20], List of [text]];
 begin
 end;

@@ -1,4 +1,5 @@
 ﻿#region MIT License
+
 // <copyright company = "Edgerunner.org" file = "VariableTypeDeclarationRule.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
@@ -21,6 +22,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
@@ -32,7 +34,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
    public class VariableTypeDeclarationRule : AlParserRule
    {
-      public VariableTypeDeclarationRule() : base(AlSyntaxNodeType.VariableTypeDeclaration, "Variable Type Declaration Rule") {}
+      public VariableTypeDeclarationRule() : base(AlSyntaxNodeType.VariableTypeDeclaration,
+                                                  "Variable Type Declaration Rule") {}
 
       /// <summary>
       /// Parses this rule from the token stream.
@@ -185,68 +188,50 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
                   case VariableType.TransactionType:
                   case VariableType.Verbosity:
                   case VariableType.WebServiceActionResultCode:
-                     {
-                        // we have nothing extra to do, these variable types have no extra declaration
-                        new IdentifierRule(token).Parse(tokens, context, this);
-                        break;
-                     }
-                  case VariableType.Code:
+                  {
+                     // we have nothing extra to do, these variable types have no extra declaration
+                     new IdentifierRule(token).Parse(tokens, context, this);
+                     break;
+                  }
                   case VariableType.Text:
-                     {
-                        // Parse a length declaration e.g. [20]
-                        new IdentifierRule(token).Parse(tokens, context, this);
-                        if (!tokens.TryMoveNext(ref token))
-                           return false;
-
-                        if (!new LengthDeclarationRule().Parse(tokens, context, this))
-                           parsed = false;
-                        break;
-                     }
+                  {
+                     return ParseTextVariable(tokens, context, token);
+                  }
+                  case VariableType.Code:
+                  {
+                     return ParseCodeVariable(tokens, context, token);
+                  }
                   case VariableType.Record:
                   case VariableType.Codeunit:
                   case VariableType.Enum:
                   case VariableType.Page:
                   case VariableType.Query:
                   case VariableType.Report:
-                     {
-                        new IdentifierRule(token).Parse(tokens, context, this);
-                        if (!tokens.TryMoveNext(ref token))
-                           return false;
-
-                        // Parse an object declaration e.g. 20 or "Customer"
-                        var result = new ObjectReferenceDeclarationRule().Parse(tokens, context, this);
-                        if (!result)
-                           parsed = false;
-                        break;
-                     }
+                  {
+                     return ParseObjectVariable(tokens, context, token);
+                  }
                   case VariableType.Option:
-                     {
-                        new IdentifierRule(token).Parse(tokens, context, this);
-                        if (!tokens.TryMoveNext(ref token))
-                           return false;
-
-                        // parse an option value declaration e.g. foo,bar,bah
-                        var result = new OptionValuesDeclarationRule().Parse(tokens, context, this);
-                        if (!result)
-                           parsed = false;
-                        break;
-                     }
+                  {
+                     return ParseOptionVariable(tokens, context, token);
+                  }
                   case VariableType.Dictionary:
-                     {
-                        break;
-                     }
+                  {
+                     parsed = new DictionaryDeclarationRule().Parse(tokens, context, this);
+                     break;
+                  }
                   case VariableType.List:
-                     {
-                        break;
-                     }
+                  {
+                     parsed = new ListDeclarationRule().Parse(tokens, context, this);
+                     break;
+                  }
                   case VariableType.DotNet:
-                     {
-                        break;
-                     }
+                  {
+                     break;
+                  }
                   case VariableType.Label:
-                     {
-                        break;
-                     }
+                  {
+                     break;
+                  }
                   default:
                      return false;
                }
@@ -257,6 +242,67 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
          {
             Exit(context);
          }
+      }
+
+      private bool ParseOptionVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
+      {
+         new IdentifierRule(token).Parse(tokens, context, this);
+         if (!tokens.TryMoveNext(ref token!))
+            return false;
+
+         // parse an option value declaration e.g. foo,bar,bah
+         var result = new OptionValuesDeclarationRule().Parse(tokens, context, this);
+         if (!result)
+            return false;
+
+         return true;
+      }
+
+      private bool ParseObjectVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
+      {
+         new IdentifierRule(token).Parse(tokens, context, this);
+         if (!tokens.TryMoveNext(ref token!))
+            return false;
+
+         // Parse an object declaration e.g. 20 or "Customer"
+         var result = new ObjectReferenceDeclarationRule().Parse(tokens, context, this);
+         if (!result)
+            return false;
+
+         return true;
+      }
+
+      private bool ParseTextVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
+      {
+         // Parse a text declaration e.g. text[20]
+         new IdentifierRule(token).Parse(tokens, context, this);
+
+         // parse the length declaration portion if it exists e.g. [20]
+         // text variables do not require a length declaration
+         if (tokens.Next()?.Value == "[")
+         {
+            if (!tokens.TryMoveNext(ref token!))
+               return false;
+
+            if (!new LengthDeclarationRule().Parse(tokens, context, this))
+               return false;
+         }
+
+         return true;
+      }
+
+      private bool ParseCodeVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
+      {
+         // Parse a code declaration e.g. code[20]
+         new IdentifierRule(token).Parse(tokens, context, this);
+         if (!tokens.TryMoveNext(ref token!))
+            return false;
+
+         // parse the length declaration portion e.g. [20]
+         if (!new LengthDeclarationRule().Parse(tokens, context, this))
+            return false;
+
+         return true;
       }
    }
 }

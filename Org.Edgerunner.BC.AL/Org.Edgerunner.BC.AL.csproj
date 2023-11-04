@@ -33,4 +33,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Language\Parsers\Rules\Code\Source\Statements\" />
+  </ItemGroup>
+
 </Project>

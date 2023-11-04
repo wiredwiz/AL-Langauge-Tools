@@ -49,21 +49,13 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             var parsed = true;
             parentRule.AddChildNode(this);
 
-            if (new SymbolRule(token).Parse(tokens, context, this, "["))
-            {
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
-            }
-            else
-               parsed = false;
+            if (!ProcessRuleAndAdvance(new SymbolRule(token).Parse(tokens, context, this, "["), tokens, ref token,
+                                       ref parsed))
+               return false;
 
-            if (new IntegerLiteralRule(token!).Parse(tokens, context, this))
-            {
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
-            }
-            else
-               parsed = false;
+            if (!ProcessRuleAndAdvance(new IntegerLiteralRule(token!).Parse(tokens, context, this), tokens, ref token,
+                                       ref parsed))
+               return false;
 
             if (!new SymbolRule(token!).Parse(tokens, context, this, "]"))
                parsed = false;
