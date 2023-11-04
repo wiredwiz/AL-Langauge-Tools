@@ -61,7 +61,16 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Entering parser rule {0}.
+        ///   Looks up a localized string similar to The handler type must be a typeof AlParserRule.
+        /// </summary>
+        internal static string BadHandlerType {
+            get {
+                return ResourceManager.GetString("BadHandlerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entering {0}.
         /// </summary>
         internal static string EnteringParserRule {
             get {
@@ -70,7 +79,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exiting parser rule {0}.
+        ///   Looks up a localized string similar to Exiting {0}.
         /// </summary>
         internal static string ExitingParserRule {
             get {
@@ -79,7 +88,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected true or false, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected &quot;true&quot; or &quot;false&quot;, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedBoolean {
             get {
@@ -88,7 +97,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected valid date, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected valid date, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedDate {
             get {
@@ -97,7 +106,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected valid datetime, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected valid datetime, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedDatetime {
             get {
@@ -106,7 +115,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected valid decimal, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected valid decimal, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedDecimal {
             get {
@@ -115,7 +124,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected valid identifier, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected valid identifier, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedIdentifier {
             get {
@@ -124,7 +133,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected valid integer, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected valid integer, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedInteger {
             get {
@@ -133,7 +142,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected an option value, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected an option value, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedOptionValue {
             get {
@@ -142,7 +151,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected identifier &apos;{0}&apos;, instead encountered: {1}.
+        ///   Looks up a localized string similar to Expected identifier &quot;{0}&quot;, instead encountered: &quot;{1}&quot;.
         /// </summary>
         internal static string ExpectedSpecificIdentifier {
             get {
@@ -151,7 +160,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected valid string, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected valid string, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedString {
             get {
@@ -160,7 +169,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected symbol &apos;{0}&apos;, instead encountered: {1}.
+        ///   Looks up a localized string similar to Expected symbol &quot;{0}&quot;, instead encountered: &quot;{1}&quot;.
         /// </summary>
         internal static string ExpectedSymbol {
             get {
@@ -169,7 +178,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected a symbol from set [{0}], instead encountered: {1}.
+        ///   Looks up a localized string similar to Expected a symbol from set [{0}], instead encountered: &quot;{1}&quot;.
         /// </summary>
         internal static string ExpectedSymbolFromSet {
             get {
@@ -178,7 +187,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected valid time, instead encountered: {0}.
+        ///   Looks up a localized string similar to Expected valid time, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedTime {
             get {

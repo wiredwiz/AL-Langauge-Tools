@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
+// <copyright company = "Edgerunner.org" file = "ErrorExpression.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,37 +23,36 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Diagnostics;
-using Metalama.Framework.Aspects;
-using Org.Edgerunner.BC.AL.Language.Parsers;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Aspects
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class TraceAttribute : OverrideMethodAspect
+   /// <summary>
+   /// Class that represents an error expression.
+   /// Implements the <see cref="AlParserRule" />
+   /// </summary>
+   /// <seealso cref="AlParserRule" />
+   public class ErrorNode : AlTerminalNode
    {
-      public override dynamic? OverrideMethod()
+      /// <summary>
+      /// Initializes a new instance of the <see cref="ErrorNode"/> class.
+      /// </summary>
+      /// <param name="text">The error text.</param>
+      /// <param name="token">The start.</param>
+      public ErrorNode(string text, AlToken token) : base(AlSyntaxNodeType.Error, token, "Error")
       {
-         if (meta.This is not ParserRule<AlToken, AlSyntaxNodeType> rule)
-            return meta.Proceed();
+         ErrorText = text;
+      }
 
-         if (meta.Target.Parameters.Count < 2 || meta.Target.Parameters[1].Value is not AlParser parser)
-            return meta.Proceed();
+      /// <summary>
+      /// The error text.
+      /// </summary>
+      protected string ErrorText;
 
-         if (!parser.EnableTracing)
-            return meta.Proceed();
-
-         try
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Enter);
-            return meta.Proceed();
-         }
-         finally
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Exit);
-         }
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return ErrorText;
       }
    }
 }

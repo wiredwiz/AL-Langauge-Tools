@@ -38,16 +38,18 @@ namespace Org.Edgerunner.Language.Parsers
    /// <seealso cref="Org.Edgerunner.Language.Parsers.ITree" />
    /// <seealso cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{TToken, TType}" />
    /// <seealso cref="IToken" />
-   public class ParserRule<TToken, TType> : ITree, ISyntaxNode<TToken, TType>
+   public abstract class ParserRule<TToken, TType> : ITree, ISyntaxNode<TToken, TType>
    where TToken : IToken
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="ParserRule{TToken,TType}" /> class.
       /// </summary>
       /// <param name="type">The parser rule type.</param>
-      public ParserRule(TType type)
+      /// <param name="name">The rule name.</param>
+      protected ParserRule(TType type, string name)
       {
          Type = type;
+         Name = name;
       }
       
       /// <inheritdoc />
@@ -55,6 +57,8 @@ namespace Org.Edgerunner.Language.Parsers
 
       /// <inheritdoc />
       public virtual IList<ITree> Children { get; } = new List<ITree>();
+
+      public string Name { get; }
 
       /// <inheritdoc />
       public void AddChildNode(ITree node)
@@ -105,6 +109,44 @@ namespace Org.Edgerunner.Language.Parsers
                return text.ToString();
             }
          }
+      }
+
+      /// <summary>
+      /// Generates a parser rule Enter event for this rule.
+      /// </summary>
+      /// <param name="parser">The parser.</param>
+      public virtual void Enter(IParser<TToken, TType> parser)
+      {
+         if (parser.EnableTracing) parser.GenerateTraceEvent(this, TraceEvent.Enter);
+      }
+
+      /// <summary>
+      /// Generates a parser rule Exit event for this rule.
+      /// </summary>
+      /// <param name="parser">The parser.</param>
+      /// <returns>The passed in value.</returns>
+      public virtual void Exit(IParser<TToken, TType> parser)
+      {
+         if (parser.EnableTracing) parser.GenerateTraceEvent(this, TraceEvent.Exit);
+      }
+
+      /// <summary>
+      /// Generates a parser rule Match event for this rule.
+      /// </summary>
+      /// <param name="parser">The parser.</param>
+      public virtual void Match(IParser<TToken, TType> parser)
+      {
+         if (parser.EnableTracing) parser.GenerateTraceEvent(this, TraceEvent.Match);
+      }
+
+      /// <summary>
+      /// Generates a parser rule Consume event for the specified token.
+      /// </summary>
+      /// <param name="parser">The parser.</param>
+      /// <param name="token">The consumed token.</param>
+      public virtual void Consume(IParser<TToken, TType> parser, TToken token)
+      {
+         if (parser.EnableTracing) parser.GenerateTraceEvent(token, TraceEvent.Consume);
       }
 
       /// <inheritdoc />

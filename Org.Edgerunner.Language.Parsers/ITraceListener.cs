@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
+// <copyright company = "Edgerunner.org" file = "ITraceListener.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,37 +23,29 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Diagnostics;
-using Metalama.Framework.Aspects;
-using Org.Edgerunner.BC.AL.Language.Parsers;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
+using System.Runtime.InteropServices.JavaScript;
+using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Aspects
+namespace Org.Edgerunner.Language.Parsers
 {
-   public class TraceAttribute : OverrideMethodAspect
+   /// <summary>
+   /// Interface that defines a parser trace event listener.
+   /// </summary>
+   public interface ITraceListener
    {
-      public override dynamic? OverrideMethod()
-      {
-         if (meta.This is not ParserRule<AlToken, AlSyntaxNodeType> rule)
-            return meta.Proceed();
+      /// <summary>
+      /// Announces the traced parser event to all listeners.
+      /// </summary>
+      /// <param name="rule">The parser rule.</param>
+      /// <param name="traceEvent">The parser event.</param>
+      void AnnounceTraceMessage<TToken, TType>(ParserRule<TToken, TType> rule, TraceEvent traceEvent) where TToken : IToken;
 
-         if (meta.Target.Parameters.Count < 2 || meta.Target.Parameters[1].Value is not AlParser parser)
-            return meta.Proceed();
-
-         if (!parser.EnableTracing)
-            return meta.Proceed();
-
-         try
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Enter);
-            return meta.Proceed();
-         }
-         finally
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Exit);
-         }
-      }
+      /// <summary>
+      /// Announces the traced parser event to all listeners.
+      /// </summary>
+      /// <typeparam name="TToken">The type of the token.</typeparam>
+      /// <param name="token">The token.</param>
+      /// <param name="traceEvent">The parser event.</param>
+      void AnnounceTraceMessage<TToken>(TToken token, TraceEvent traceEvent) where TToken : IToken;
    }
 }

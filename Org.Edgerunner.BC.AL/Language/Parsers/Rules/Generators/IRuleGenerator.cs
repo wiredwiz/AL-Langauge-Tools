@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlParserContext.cs">
-// Copyright(c) Thaddeus Ryker 2023
+// <copyright company = "Edgerunner.org" file = "IRuleFactory.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,37 +23,23 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
+using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
 {
    /// <summary>
-   /// Class representing an AL language parser context.
-   /// Implements the <see cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken, AlSyntaxNodeType}" />
+   /// Interface that defines an AL parser rule generator.
    /// </summary>
-   /// <seealso cref="Org.Edgerunner.Language.Parsers.ParserContext{AlToken, AlSyntaxNodeType}" />
-   public class AlParserContext : ParserContext<AlToken, AlSyntaxNodeType>
+   public interface IRuleGenerator
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="AlParserContext"/> class.
+      /// Creates a new AL parser rule and attempts to parse the supplied stream with it.
       /// </summary>
-      public AlParserContext() 
-      {
-      }
-
-      public override int State
-      {
-         get => base.State;
-
-         set
-         {
-            if (value == 1)
-               HasErrors = true;
-
-            base.State = value;
-         }
-      }
+      /// <param name="tokens">The token stream to read from.</param>
+      /// <param name="context">The AL parser.</param>
+      /// <param name="parentRule">The parent AL parser rule.</param>
+      /// <returns>A new <see cref="AlParserRule" />.</returns>
+      bool Parses(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule);
    }
 }

@@ -118,45 +118,48 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ExpectedSymbol" xml:space="preserve">
-    <value>Expected symbol '{0}', instead encountered: {1}</value>
+    <value>Expected symbol "{0}", instead encountered: "{1}"</value>
   </data>
   <data name="ExpectedOptionValue" xml:space="preserve">
-    <value>Expected an option value, instead encountered: {0}</value>
+    <value>Expected an option value, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedInteger" xml:space="preserve">
-    <value>Expected valid integer, instead encountered: {0}</value>
+    <value>Expected valid integer, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedDecimal" xml:space="preserve">
-    <value>Expected valid decimal, instead encountered: {0}</value>
+    <value>Expected valid decimal, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedDatetime" xml:space="preserve">
-    <value>Expected valid datetime, instead encountered: {0}</value>
+    <value>Expected valid datetime, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedDate" xml:space="preserve">
-    <value>Expected valid date, instead encountered: {0}</value>
+    <value>Expected valid date, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedTime" xml:space="preserve">
-    <value>Expected valid time, instead encountered: {0}</value>
+    <value>Expected valid time, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedBoolean" xml:space="preserve">
-    <value>Expected true or false, instead encountered: {0}</value>
+    <value>Expected "true" or "false", instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedString" xml:space="preserve">
-    <value>Expected valid string, instead encountered: {0}</value>
+    <value>Expected valid string, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedIdentifier" xml:space="preserve">
-    <value>Expected valid identifier, instead encountered: {0}</value>
+    <value>Expected valid identifier, instead encountered: "{0}"</value>
   </data>
   <data name="ExpectedSpecificIdentifier" xml:space="preserve">
-    <value>Expected identifier '{0}', instead encountered: {1}</value>
+    <value>Expected identifier "{0}", instead encountered: "{1}"</value>
   </data>
   <data name="ExpectedSymbolFromSet" xml:space="preserve">
-    <value>Expected a symbol from set [{0}], instead encountered: {1}</value>
+    <value>Expected a symbol from set [{0}], instead encountered: "{1}"</value>
   </data>
   <data name="EnteringParserRule" xml:space="preserve">
-     <value>Entering parser rule {0}</value>
+    <value>Entering {0}</value>
   </data>
   <data name="ExitingParserRule" xml:space="preserve">
-     <value>Exiting parser rule {0}</value>
+    <value>Exiting {0}</value>
+  </data>
+  <data name="BadHandlerType" xml:space="preserve">
+    <value>The handler type must be a typeof AlParserRule</value>
   </data>
 </root>

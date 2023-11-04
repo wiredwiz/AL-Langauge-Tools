@@ -27,14 +27,20 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.Language.Parsers
 {
-   public interface IParser<T, out TO>
-   where T : IToken
+   public interface IParser<TToken, TType>
+   where TToken : IToken
    {
       /// <summary>
       /// Gets a value indicating whether this instance has errors after the last parse attempt.
       /// </summary>
       /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
       bool HasErrors { get; }
+
+      /// <summary>
+      /// Gets or sets the parser state.
+      /// </summary>
+      /// <value>The state.</value>
+      int State { get; set; }
 
       /// <summary>
       /// Gets or sets a value indicating whether enable parser tracing.
@@ -46,7 +52,7 @@ namespace Org.Edgerunner.Language.Parsers
       /// Adds a listener to be notified of parser errors.
       /// </summary>
       /// <param name="listener">The listener.</param>
-      void AddErrorListener(IErrorListener<T> listener);
+      void AddErrorListener(IErrorListener<TToken> listener);
 
       /// <summary>
       /// Removes all error listeners.
@@ -57,13 +63,52 @@ namespace Org.Edgerunner.Language.Parsers
       /// Removes the error listener.
       /// </summary>
       /// <param name="listener">The listener.</param>
-      void RemoveErrorListener(IErrorListener<T> listener);
+      void RemoveErrorListener(IErrorListener<TToken> listener);
+
+      /// <summary>
+      /// Adds a listener to be notified of parser tracing.
+      /// </summary>
+      /// <param name="listener">The listener.</param>
+      void AddTraceListener(ITraceListener listener);
+
+      /// <summary>
+      /// Removes all trace listeners.
+      /// </summary>
+      void ClearTraceListeners();
+
+      /// <summary>
+      /// Removes the trace listener.
+      /// </summary>
+      /// <param name="listener">The listener.</param>
+      void RemoveTraceListener(ITraceListener listener);
+
+      /// <summary>
+      /// Generates a parser error and announces it.
+      /// </summary>
+      /// <param name="startToken">The start token.</param>
+      /// <param name="endToken">The end token.</param>
+      /// <param name="message">The message to display in the error.</param>
+      void GenerateParserError(TToken startToken, TToken endToken, string message);
+
+      /// <summary>
+      /// Generates a parser trace event and announces it.
+      /// </summary>
+      /// <param name="rule">The parser rule.</param>
+      /// <param name="traceEvent">The trace event type.</param>
+      void GenerateTraceEvent(ParserRule<TToken, TType> rule, TraceEvent traceEvent);
+
+      /// <summary>
+      /// Generates a parser trace event and announces it.
+      /// </summary>
+      /// <param name="token">The token.</param>
+      /// <param name="traceEvent">The trace event type.</param>
+      void GenerateTraceEvent(TToken token, TraceEvent traceEvent);
 
       /// <summary>
       /// Parses tokens from the stream into an object of some kind.
       /// </summary>
       /// <param name="tokens">The tokens.</param>
-      /// <returns>O.</returns>
-      TO? ParseSource(TokenStream<T> tokens);
+      /// <returns><c>true</c> if parsing succeeded, <c>false</c> otherwise.</returns>
+      bool ParseSource(TokenStream<TToken> tokens);
    }
 }

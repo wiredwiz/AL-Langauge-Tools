@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
+// <copyright company = "Edgerunner.org" file = "RootRule.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,37 +23,14 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Diagnostics;
-using Metalama.Framework.Aspects;
-using Org.Edgerunner.BC.AL.Language.Parsers;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
-
-namespace Org.Edgerunner.BC.AL.Language.Aspects
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
-   public class TraceAttribute : OverrideMethodAspect
+   public class RootRule : AlParserRule
    {
-      public override dynamic? OverrideMethod()
-      {
-         if (meta.This is not ParserRule<AlToken, AlSyntaxNodeType> rule)
-            return meta.Proceed();
-
-         if (meta.Target.Parameters.Count < 2 || meta.Target.Parameters[1].Value is not AlParser parser)
-            return meta.Proceed();
-
-         if (!parser.EnableTracing)
-            return meta.Proceed();
-
-         try
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Enter);
-            return meta.Proceed();
-         }
-         finally
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Exit);
-         }
-      }
+      /// <summary>
+      /// Initializes a new instance of the <see cref="RootRule"/> class.
+      /// </summary>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
+      public RootRule() : base(AlSyntaxNodeType.Root, "Root Rule") {}
    }
 }

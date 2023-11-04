@@ -1,6 +1,7 @@
-﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ErrorExpression.cs">
-// Copyright(c) Thaddeus Ryker 2023
+#region MIT License
+
+// <copyright company = "Edgerunner.org" file = "AlTerminalNode.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -21,39 +22,49 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
    /// <summary>
-   /// Class that represents an error expression.
-   /// Implements the <see cref="AlParserRule" />
+   /// Class that represents an AL terminal syntax node.
+   /// Implements the <see cref="TerminalNode{AlToken, AlSyntaxNodeType}" />
    /// </summary>
-   /// <seealso cref="AlParserRule" />
-   public class ErrorNode : AlTerminalNode
+   /// <seealso cref="TerminalNode{AlToken, AlSyntaxNodeType}" />
+   public abstract class AlTerminalNode : AlParserRule
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="ErrorNode"/> class.
+      /// Initializes a new instance of the <see cref="AlTerminalNode" /> class.
       /// </summary>
-      /// <param name="text">The error text.</param>
-      /// <param name="token">The start.</param>
-      public ErrorNode(string text, AlToken token) : base(AlSyntaxNodeType.Error, token)
+      /// <param name="type">The node type.</param>
+      /// <param name="symbol">The start/end symbol token.</param>
+      /// <param name="name">The node name.</param>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
+      protected AlTerminalNode(AlSyntaxNodeType type, AlToken symbol, string name) : base(type, name)
       {
-         ErrorText = text;
+         Token = symbol;
       }
 
-
       /// <summary>
-      /// The error text.
+      /// Gets the terminal token.
       /// </summary>
-      protected string ErrorText;
+      /// <value>The terminal token.</value>
+      public virtual AlToken Token { get; }
 
       /// <inheritdoc />
-      public override string ToString()
+      public override AlToken Start => Token;
+
+      /// <inheritdoc />
+      public override AlToken End => Token;
+      
+      /// <inheritdoc />
+      public override string GetText()
       {
-         return ErrorText;
+         return Token.Value;
       }
    }
 }

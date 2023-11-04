@@ -1,6 +1,5 @@
-#region MIT License
-
-// <copyright company = "Edgerunner.org" file = "AlTerminalNode.cs">
+﻿#region MIT License
+// <copyright company = "Edgerunner.org" file = "IntegerRuleGenerator.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -22,31 +21,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
+using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
 {
-   public class AlTerminalNode : TerminalNode<AlToken, AlSyntaxNodeType>
+   /// <summary>
+   /// Class that represents a generator for instances of integer literals.
+   /// Implements the <see cref="Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators.IRuleGenerator" />.
+   /// </summary>
+   /// <seealso cref="Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators.IRuleGenerator" />
+   /// <seealso cref="IntegerLiteralRule"/>
+   public class IntegerRuleGenerator : IRuleGenerator
    {
-      /// <summary>
-      /// Initializes a new instance of the <see cref="AlTerminalNode"/> class.
-      /// </summary>
-      /// <param name="type">The expression node type.</param>
-      /// <param name="symbol">The start/end symbol token.</param>
-      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public AlTerminalNode(AlSyntaxNodeType type, AlToken symbol) : base(type, symbol)
+      public bool Parses(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
       {
+         return new IntegerLiteralRule(tokens.Current).Parse(tokens, context, parentRule);
       }
-
-      /// <inheritdoc />
-      public override string GetText()
-      {
-         return Start.Value;
-      }
-
    }
 }

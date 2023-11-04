@@ -1,4 +1,5 @@
 ﻿#region MIT License
+
 // <copyright company = "Edgerunner.org" file = "AlParserExpression.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
@@ -21,9 +22,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 using Org.Edgerunner.Pooling;
 
@@ -34,14 +39,19 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
    /// Implements the <see cref="ParserRule{TToken,TType}" />
    /// </summary>
    /// <seealso cref="ParserRule{TToken,TType}" />
-   public class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>
+   public abstract class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlParserRule" /> class.
       /// </summary>
-      /// <param name="type">The expression node type.</param>
+      /// <param name="type">The rule type.</param>
+      /// <param name="name">The rule name.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public AlParserRule(AlSyntaxNodeType type) : base(type) { }
+      protected AlParserRule(AlSyntaxNodeType type, string name) : base(type, name) {}
+
+      protected delegate bool ParserHandler(TokenStream<AlToken> tokens,
+                                            IParser<AlToken, AlSyntaxNodeType> context,
+                                            ParserRule<AlToken, AlSyntaxNodeType> rule);
 
       public override string GetText()
       {
@@ -52,26 +62,79 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             case 1:
                return ((ISyntaxNode<AlToken, AlSyntaxNodeType>)Children[0]).GetText();
             default:
+            {
+               var text = StringBuilderPool.Current.Get();
+               text.Append(((ISyntaxNode<AlToken, AlSyntaxNodeType>)Children[0]).GetText());
+               for (int i = 1; i < Children.Count; i++)
                {
-                  var text = StringBuilderPool.Current.Get();
-                  text.Append(((ISyntaxNode<AlToken, AlSyntaxNodeType>)Children[0]).GetText());
-                  for (int i = 1; i < Children.Count; i++)
-                  {
-                     var previous = Children[i-1] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
-                     var child = Children[i] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
-                     var fragment = child!.GetText();
-                     var previousFragment = previous!.GetText();
+                  var previous = Children[i - 1] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
+                  var child = Children[i] as ISyntaxNode<AlToken, AlSyntaxNodeType>;
+                  var fragment = child!.GetText();
+                  var previousFragment = previous!.GetText();
 
-                     // We add spacing for readability unless the text starts with a colon, period or semi-colon.
-                     // In the case of those tokens we omit the extra space, also for readability.
-                     if (fragment.FirstOrDefault() is not ':' and not '.' and not ';' and not ')' and not ']' && previousFragment.FirstOrDefault() is not '(' and not '[')
-                        text.Append(" ");
+                  // We add spacing for readability unless the text starts with a colon, period or semi-colon.
+                  // In the case of those tokens we omit the extra space, also for readability.
+                  if (fragment.FirstOrDefault() is not ':' and not '.' and not ',' and not ';' and not ')'
+                                                   and not ']' and not '[' &&
+                      previousFragment.LastOrDefault() is not '(' and not '[')
+                     text.Append(" ");
 
-                     text.Append(fragment);
-                  }
-                  return text.ToString();
+                  text.Append(fragment);
                }
+
+               return text.ToString();
+            }
          }
+      }
+
+      /// <summary>
+      /// Parses a repeating expression with a symbol delimiter.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent parser rule.</param>
+      /// <param name="delimiter">The delimiter symbol.</param>
+      /// <param name="terminator">The terminator symbol.</param>
+      /// <param name="generator">The parser rule generator.</param>
+      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
+      // ReSharper disable once TooManyArguments
+      protected virtual bool ParseRepeatingDelimitedExpression(
+         TokenStream<AlToken> tokens,
+         AlParser context,
+         AlParserRule parentRule,
+         string delimiter,
+         string terminator,
+         IRuleGenerator generator)
+      {
+         var token = tokens.Current;
+         bool success = true;
+
+         if (token.TokenType == (int)TokenType.Symbol && terminator == token.Value)
+            return true;
+
+         while (token!.TokenType != (int)TokenType.Symbol || terminator != token.Value)
+         {
+            // Look for delimiter token
+            var parses = new SymbolRule(token).Parse(tokens, context, this, delimiter);
+            success = success && parses;
+            if (parses && !tokens.TryMoveNext(ref token)) return false;
+
+            // Now parse the expression
+            parses = generator.Parses(tokens, context, parentRule);
+            success = success && parses;
+            if (parses && !tokens.TryMoveNext(ref token)) return false;
+
+            // If both parsing attempts failed, we move ahead one to prevent infinite looping
+            if (!success)
+               if (tokens.TryMoveNext(ref token))
+                  context.GenerateTraceEvent(tokens.Previous()!, TraceEvent.Consume);
+               else
+                  return false;
+         }
+
+         tokens.TryMovePrevious(ref token);
+
+         return success;
       }
    }
 }

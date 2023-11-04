@@ -23,15 +23,15 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Objects;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   public partial class AlParser : IParser<AlToken, AlParserRule>
+   public class AlParser : IParser<AlToken, AlSyntaxNodeType>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlParser"/> class.
@@ -39,12 +39,30 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public AlParser()
       {
          HasErrors = false;
+         _State = 0;
       }
 
-      protected internal readonly List<IErrorListener<AlToken>> Listeners = new List<IErrorListener<AlToken>>();
+      protected internal readonly List<IErrorListener<AlToken>> ErrorListeners = new List<IErrorListener<AlToken>>();
+
+      protected internal readonly List<ITraceListener> TraceListeners = new List<ITraceListener>();
+      private int _State;
 
       /// <inheritdoc />
       public bool HasErrors { get; private set; }
+
+      /// <inheritdoc />
+      public virtual int State
+      {
+         get => _State;
+
+         set
+         {
+            if (value == 1)
+               HasErrors = true;
+
+            _State = value;
+         }
+      }
 
       /// <inheritdoc />
       public bool EnableTracing { get; set; } = false;
@@ -52,184 +70,69 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <inheritdoc />
       public void AddErrorListener(IErrorListener<AlToken> listener)
       {
-         Listeners.Add(listener);
+         ErrorListeners.Add(listener);
       }
 
       /// <inheritdoc />
       public void ClearErrorListeners()
       {
-         Listeners.Clear();
+         ErrorListeners.Clear();
       }
 
       /// <inheritdoc />
       public void RemoveErrorListener(IErrorListener<AlToken> listener)
       {
-         Listeners.Remove(listener);
+         ErrorListeners.Remove(listener);
+      }
+
+      /// <inheritdoc />
+      public void AddTraceListener(ITraceListener listener)
+      {
+         TraceListeners.Add(listener);
+      }
+
+      /// <inheritdoc />
+      public void ClearTraceListeners()
+      {
+         TraceListeners.Clear();
+      }
+
+      /// <inheritdoc />
+      public void RemoveTraceListener(ITraceListener listener)
+      {
+         TraceListeners.Remove(listener);
       }
 
       /// <summary>
-      /// Parses tokens from the stream into a type of <seealso cref="AlObjectBase"/>.
+      /// Parses AL code from tokens in the stream and generates a parser rule tree.
       /// </summary>
       /// <param name="tokens">The tokens.</param>
-      /// <returns>A new <seealso cref="AlParserRule"/>.</returns>
-      public AlParserRule? ParseSource(TokenStream<AlToken> tokens)
+      /// <returns><c>true</c> if parsing succeeded, <c>false</c> otherwise.</returns>
+      public bool ParseSource(TokenStream<AlToken> tokens)
       {
          HasErrors = false;
-         return null;
+         return false;
       }
 
-      /// <summary>
-      /// Validates that the <see cref="AlToken" /> matches the expected type and value.
-      /// </summary>
-      /// <param name="token">The token.</param>
-      /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <param name="type">The type to match.</param>
-      /// <param name="value">The value to match.</param>
-      /// <param name="errorMessage">The error message to generate if validation fails.</param>
-      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
-      /// <seealso cref="AlToken" />
-      // ReSharper disable once FlagArgument
-      // ReSharper disable once TooManyArguments
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, TokenType type, string value, string errorMessage)
-      {
-         if (token == null)
-            return false;
-
-         if (token.TokenType != (int)type || token.Value != value)
-         {
-            if (context.State == 0)
-            {
-               GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
-            }
-            context.State = 1;
-            return false;
-         }
-
-         context.State = 0;
-         return true;
-      }
-
-      /// <summary>
-      /// Validates that the <see cref="AlToken" /> matches the expected type and one of the allowed values.
-      /// </summary>
-      /// <param name="token">The token.</param>
-      /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <param name="type">The type to match.</param>
-      /// <param name="allowedValues">The allowable values.</param>
-      /// <param name="errorMessage">The error message to generate if validation fails.</param>
-      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
-      /// <seealso cref="AlToken" />
-      // ReSharper disable once FlagArgument
-      // ReSharper disable once TooManyArguments
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, TokenType type, IEnumerable<string> allowedValues, string errorMessage)
-      {
-         if (token == null)
-            return false;
-
-         if (token.TokenType != (int)type || allowedValues.Contains(token.Value))
-         {
-            if (context.State == 0)
-            {
-               GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
-            }
-            context.State = 1;
-            return false;
-         }
-
-         context.State = 0;
-         return true;
-      }
       
-      /// <summary>
-      /// Validates that the <see cref="AlToken"/> matches the expected type.
-      /// </summary>
-      /// <param name="token">The token.</param>
-      /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <param name="type">The type to match.</param>
-      /// <param name="errorMessage">The error message to use if validation fails.</param>
-      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
-      /// <seealso cref="AlToken"/>
-      // ReSharper disable once FlagArgument
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, TokenType type, string errorMessage)
-      {
-         if (token == null)
-            return false;
-
-         if (token.TokenType != (int)type)
-         {
-            if (context.State == 0)
-            {
-               GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
-            }
-            context.State = 1;
-            return false;
-         }
-
-         context.State = 0;
-         return true;
-      }
-
-      /// <summary>
-      /// Validates that the <see cref="AlToken"/> is a literal token of the expected literal type.
-      /// </summary>
-      /// <param name="token">The token.</param>
-      /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <param name="type">The token literal type to match.</param>
-      /// <param name="errorMessage">The error message to use if validation fails.</param>
-      /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
-      /// <remarks>Assumes a token type of Literal in this case</remarks>
-      /// <seealso cref="AlToken"/>
-      // ReSharper disable once FlagArgument
-      protected virtual bool ValidateToken(AlToken? token, AlParserContext context, AlParserRule parentRule, LiteralType type, string errorMessage)
-      {
-         if (token == null)
-            return false;
-
-         if (token is not LiteralToken literal)
-         {
-            if (context.State == 0)
-            {
-               GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
-            }
-            context.State = 1;
-            return false;
-         }
-
-         // ReSharper disable once ComplexConditionExpression
-         if (literal.TokenType != (int)TokenType.Literal || literal.LiteralType != type)
-         {
-            if (context.State == 0)
-            {
-               GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
-            }
-            context.State = 1;
-            return false;
-         }
-
-         context.State = 0;
-         return true;
-      }
-
-      /// <summary>
-      /// Generates a parser error and announces it.
-      /// </summary>
-      /// <param name="startToken">The start token.</param>
-      /// <param name="endToken">The end token.</param>
-      /// <param name="message">The message to display in the error.</param>
-      protected virtual void GenerateParserError(AlToken startToken, AlToken endToken, string message)
+      /// <inheritdoc />
+      public virtual void GenerateParserError(AlToken startToken, AlToken endToken, string message)
       {
          HasErrors = true;
          var error = new ParserError(startToken, endToken, message);
-         foreach (var listener in Listeners) listener.AnnounceError(error);
+         foreach (var listener in ErrorListeners) listener.AnnounceError(error);
+      }
+
+      /// <inheritdoc />
+      public virtual void GenerateTraceEvent(ParserRule<AlToken, AlSyntaxNodeType> rule, TraceEvent traceEvent)
+      {
+         foreach (var listener in TraceListeners) listener.AnnounceTraceMessage(rule, traceEvent);
+      }
+
+      /// <inheritdoc />
+      public void GenerateTraceEvent(AlToken token, TraceEvent traceEvent)
+      {
+         foreach (var listener in TraceListeners) listener.AnnounceTraceMessage(token, traceEvent);
       }
 
       protected virtual void AppendErrorNode(AlParserRule parent, string message, AlToken symbol)
