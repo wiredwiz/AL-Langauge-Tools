@@ -73,6 +73,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
             case '*':
             case '\\':
             case '>':
+               return BuildSymbolTokenFromBuffer(buffer, text, start, buffer.PeekChar() is '=');
             case ':':
                return BuildSymbolTokenFromBuffer(buffer, text, start, buffer.PeekChar() is '=' or ':');
             case '<':
