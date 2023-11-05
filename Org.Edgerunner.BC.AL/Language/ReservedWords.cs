@@ -28,7 +28,6 @@ namespace Org.Edgerunner.BC.AL.Language
 {
    public enum ReservedWords
    {
-      None = 0,
       OF,
       DOWNTO,
       TO,
@@ -40,6 +39,7 @@ namespace Org.Edgerunner.BC.AL.Language
       UNTIL,
       BEGIN,
       END,
+      WITH,
       FOR,
       CASE,
       MOD,
