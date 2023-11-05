@@ -30,7 +30,7 @@ using Org.Edgerunner.Pooling;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class DictionaryDeclarationRule : AlParserRule
+   public class DictionaryDeclarationRule : AlParserRule, IParsable
    {
       public DictionaryDeclarationRule() : base(AlSyntaxNodeType.DictionaryDeclaration, "Dictionary Declaration Rule") {}
 

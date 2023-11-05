@@ -30,7 +30,7 @@ using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class ObjectReferenceDeclarationRule : AlParserRule
+   public class ObjectReferenceDeclarationRule : AlParserRule, IParsable
    {
       public ObjectReferenceDeclarationRule() : base(AlSyntaxNodeType.ObjectReferenceDeclaration, "Object Reference Declaration Rule") {}
 

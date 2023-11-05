@@ -34,7 +34,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
    /// Implements the <see cref="Terminals.AlTerminalNode" />
    /// </summary>
    /// <seealso cref="Terminals.AlTerminalNode" />
-   public class DatetimeLiteralRule : AlTerminalNode
+   public class DatetimeLiteralRule : AlTerminalNode, IParsable
    {
       public DatetimeLiteralRule(AlToken symbol) : base(AlSyntaxNodeType.DateTime, symbol, "Datetime Literal") {}
 

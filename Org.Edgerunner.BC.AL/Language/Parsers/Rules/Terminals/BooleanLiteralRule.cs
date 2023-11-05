@@ -34,7 +34,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
    /// Implements the <see cref="Terminals.AlTerminalNode" />
    /// </summary>
    /// <seealso cref="Terminals.AlTerminalNode" />
-   public class BooleanLiteralRule : AlTerminalNode
+   public class BooleanLiteralRule : AlTerminalNode, IParsable
    {
       public BooleanLiteralRule(AlToken symbol) : base(AlSyntaxNodeType.Boolean, symbol, "Boolean Literal") {}
 

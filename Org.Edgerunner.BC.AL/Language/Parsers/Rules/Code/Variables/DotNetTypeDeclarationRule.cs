@@ -23,10 +23,41 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class DotNetTypeDeclarationRule
+   public class DotNetTypeDeclarationRule : AlParserRule, IParsable
    {
-      
+      /// <summary>
+      /// Initializes a new instance of the <see cref="DotNetTypeDeclarationRule"/> class.
+      /// </summary>
+      public DotNetTypeDeclarationRule() : base(AlSyntaxNodeType.DotNetDeclaration, "DotNet Declaration Rule") {}
+
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <param name="parentRule">The parent rule to link to.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      {
+         try
+         {
+            Enter(context);
+            var token = tokens.Current;
+            var parsed = true;
+            string errorMessage;
+            parentRule.AddChildNode(this);
+
+            return parsed;
+         }
+         finally
+         {
+            Exit(context);
+         }
+      }
    }
 }

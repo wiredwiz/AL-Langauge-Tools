@@ -34,7 +34,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
    /// Implements the <see cref="Terminals.AlTerminalNode" />
    /// </summary>
    /// <seealso cref="Terminals.AlTerminalNode" />
-   public class DecimalLiteralRule : AlTerminalNode
+   public class DecimalLiteralRule : AlTerminalNode, IParsable
    {
       public DecimalLiteralRule(AlToken symbol) : base(AlSyntaxNodeType.Decimal, symbol, "Decimal Literal") {}
 

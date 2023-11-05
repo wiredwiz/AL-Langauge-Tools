@@ -29,7 +29,7 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class VariableDeclarationRule : AlParserRule
+   public class VariableDeclarationRule : AlParserRule, IParsable
    {
       public VariableDeclarationRule() : base(AlSyntaxNodeType.VariableDeclaration, "Variable Declaration Rule") {}
 

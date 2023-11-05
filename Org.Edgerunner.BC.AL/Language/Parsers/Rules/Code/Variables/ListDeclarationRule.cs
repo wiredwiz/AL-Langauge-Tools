@@ -31,7 +31,7 @@ using Org.Edgerunner.Pooling;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class ListDeclarationRule : AlParserRule
+   public class ListDeclarationRule : AlParserRule, IParsable
    {
       public ListDeclarationRule() : base(AlSyntaxNodeType.ListDeclaration, "List Declaration Rule") {}
 

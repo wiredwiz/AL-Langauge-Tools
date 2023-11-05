@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ArrayDeclarationRule.cs">
+// <copyright company = "Edgerunner.org" file = "MemberAccessExpression.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,46 +23,54 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class ArrayDeclarationRule : AlParserRule, IParsable
+   public class MemberAccessExpression : AlParserRule, IParsable, IAssembled
    {
-      public ArrayDeclarationRule() : base(AlSyntaxNodeType.ArrayDeclaration, "Array Declaration Rule") {}
+      /// <summary>
+      /// Initializes a new instance of the <see cref="MemberAccessExpression"/> class.
+      /// </summary>
+      public MemberAccessExpression() : base(AlSyntaxNodeType.MemberAccessExpression, "Member Access Expression Rule") {}
 
       /// <summary>
       /// Parses this rule from the token stream.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
-            var token = tokens.Current;
-            parentRule.AddChildNode(this);
+            var parsed = true;
 
-            new IdentifierRule(token).Parse(tokens, context, this);
-            Match(context);
-            if (!tokens.TryMoveNext(ref token))
-               return false;
 
-            // look for dimensions declaration
-            var parsed = new DimensionsDeclarationRule().Parse(tokens, context, this);
-            if (parsed && !tokens.TryMoveNext(ref token)) return false;
+            return parsed;
+         }
+         finally
+         {
+            Exit(context);
+         }
+      }
 
-            // Look for identifier
-            parsed = new IdentifierRule(token!).Parse(tokens, context, this, "of");
-            if (parsed && !tokens.TryMoveNext(ref token)) return false;
+      /// <summary>
+      /// Attempts to assemble this rule from the token stream using another existing rule.
+      /// </summary>
+      /// <param name="tokens">The token stream to read.</param>
+      /// <param name="context">The AL parser.</param>
+      /// <param name="rule">The existing rule to assemble with.</param>
+      /// <returns><c>true</c> if parsing and assembly was successful, <c>false</c> otherwise.</returns>
+      public bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule)
+      {
+         try
+         {
+            Enter(context);
+            var parsed = true;
 
-            // Now parse our array sub type declaration
-            parsed = new VariableTypeDeclarationRule().Parse(tokens, context, this);
 
             return parsed;
          }

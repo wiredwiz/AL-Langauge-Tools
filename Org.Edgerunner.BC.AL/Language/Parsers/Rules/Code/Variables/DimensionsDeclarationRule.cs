@@ -30,7 +30,7 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class DimensionsDeclarationRule : AlParserRule
+   public class DimensionsDeclarationRule : AlParserRule, IParsable
    {
       public DimensionsDeclarationRule() : base(AlSyntaxNodeType.DimensionsDeclaration, "Dimensions Declaration Rule") {}
 

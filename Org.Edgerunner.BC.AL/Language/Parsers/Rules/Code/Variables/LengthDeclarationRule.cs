@@ -29,7 +29,7 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class LengthDeclarationRule : AlParserRule
+   public class LengthDeclarationRule : AlParserRule, IParsable
    {
       public LengthDeclarationRule() : base(AlSyntaxNodeType.LengthDeclaration, "Length Declaration Rule") {}
 

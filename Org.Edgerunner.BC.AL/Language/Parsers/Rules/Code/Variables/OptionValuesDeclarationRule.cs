@@ -30,7 +30,7 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class OptionValuesDeclarationRule : AlParserRule
+   public class OptionValuesDeclarationRule : AlParserRule, IParsable
    {
       public OptionValuesDeclarationRule() : base(AlSyntaxNodeType.OptionValuesDeclaration,
                                                   "Option Values Declaration Rule") {}

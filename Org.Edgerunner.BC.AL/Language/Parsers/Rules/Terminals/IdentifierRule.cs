@@ -29,7 +29,7 @@ using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class IdentifierRule : AlTerminalNode
+   public class IdentifierRule : AlTerminalNode, IParsable, IParsableExpectingValue
    {
       public IdentifierRule(AlToken symbol) : base(AlSyntaxNodeType.Identifier, symbol, "Identifier Rule") { }
 

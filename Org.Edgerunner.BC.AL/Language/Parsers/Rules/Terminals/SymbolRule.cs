@@ -29,12 +29,12 @@ using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class SymbolRule : AlTerminalNode
+   public class SymbolRule : AlTerminalNode, IParsableExpectingValue, IParsableInSet
    {
       public SymbolRule(AlToken symbol) : base(AlSyntaxNodeType.Symbol, symbol, "Symbol Rule") {}
 
       /// <summary>
-      /// Parses a symbol from the token stream.
+      /// Parses a symbol from the token stream and expects to match the specified value.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
@@ -98,6 +98,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
          {
             Exit(context);
          }
+      }
+
+      public bool IsOperator
+      {
+         get => Token.Value is "+" or "-" or "*" or "/" or "<>" or "=" or "<" or ">" or "<=" or ">=" or "+=" or "-=" or ":=" or ".." or "::";
+      }
+
+      public bool IsAssignmentOperator
+      {
+         get => Token.Value is ":=" or "+=" or "-=" or "*=" or "/=";
       }
    }
 }

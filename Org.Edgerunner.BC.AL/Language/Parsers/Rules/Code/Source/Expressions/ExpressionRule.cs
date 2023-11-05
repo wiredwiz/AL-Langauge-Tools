@@ -23,10 +23,15 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class ExpressionRule : AlParserRule
+   public abstract class ExpressionRule : AlParserRule, IParsable
    {
-      public ExpressionRule(AlSyntaxNodeType type, string name) : base(type, name) {}
+      protected ExpressionRule(AlSyntaxNodeType type, string name) : base(type, name) {}
+      public abstract bool Parse(TokenStream<AlToken> tokens, AlParser context);
    }
 }
