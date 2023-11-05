@@ -48,6 +48,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       ArrayDeclaration,
       ListDeclaration,
       DictionaryDeclaration,
-      VariableDeclaration
+      DotNetDeclaration,
+      VariableDeclaration,
+      Statement,
+      CodeBlockStatement,
+      Expression,
+      SimpleExpression,
+      BinaryExpression,
+      MemberAccessExpression,
+      ParenthesesExpression,
+      BracketedExpression,
+      RangeExpression
    }
 }
