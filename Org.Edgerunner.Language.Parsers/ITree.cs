@@ -46,6 +46,14 @@ namespace Org.Edgerunner.Language.Parsers
       /// Adds the node to the children of this instance and links it to this instance as the parent.
       /// </summary>
       /// <param name="node">The node.</param>
-      void AddChildNode(ITree node);
+      /// <returns>The added child <see cref="ITree"/>.</returns>
+      ITree AddChildNode(ITree node);
+
+      /// <summary>
+      /// Removes the child node and un-links this instance as the parent.
+      /// </summary>
+      /// <param name="node">The node.</param>
+      /// <returns>The removed child <see cref="ITree"/>.</returns>
+      ITree RemoveChildNode(ITree node);
    }
 }

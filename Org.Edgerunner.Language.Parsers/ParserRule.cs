@@ -61,10 +61,19 @@ namespace Org.Edgerunner.Language.Parsers
       public string Name { get; }
 
       /// <inheritdoc />
-      public void AddChildNode(ITree node)
+      public ITree AddChildNode(ITree node)
       {
          node.Parent = this;
          Children.Add(node);
+         return node;
+      }
+
+      /// <inheritdoc />
+      public ITree RemoveChildNode(ITree node)
+      {
+         node.Parent = null;
+         Children.Remove(node);
+         return node;
       }
 
       /// <inheritdoc />
