@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "LabelDeclarationRule.cs">
+// <copyright company = "Edgerunner.org" file = "IAssemblable.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -26,19 +26,17 @@
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
+namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
-   public class LabelDeclarationRule : AlParserRule, IParsable
+   public interface IAssemblable
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="LabelDeclarationRule"/> class.
+      /// Attempts to assemble this rule from the token stream using another existing inner rule.
       /// </summary>
-      public LabelDeclarationRule() : base(AlSyntaxNodeType.LabelDeclaration, "Label Declaration Rule") {}
-
-      /// <inheritdoc />
-      public bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         throw new NotImplementedException();
-      }
+      /// <param name="tokens">The token stream to read.</param>
+      /// <param name="context">The AL parser.</param>
+      /// <param name="rule">The existing inner rule to assemble the outer rule with.</param>
+      /// <returns><c>true</c> if parsing and assembly was successful, <c>false</c> otherwise.</returns>
+      bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule);
    }
 }

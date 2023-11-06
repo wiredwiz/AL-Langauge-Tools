@@ -41,18 +41,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// <param name="parentRule">The parent rule to link to.</param>
       /// <param name="expectedValue">The expected identifier value to match against.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule, string expectedValue)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, string expectedValue)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
             var message = string.Format(Resources.ExpectedSymbol, expectedValue, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Symbol, expectedValue, message);
+            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, expectedValue, message);
             if (tokenValidates)
             {
                context.GenerateTraceEvent(token, TraceEvent.Consume);
-               parentRule.AddChildNode(this);
                context.GenerateTraceEvent(this, TraceEvent.Match);
             }
 
@@ -69,12 +68,11 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule to link to.</param>
       /// <param name="values">The enumeration of allowed values.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
       /// <exception cref="OutOfMemoryException">The length of the resulting set text string overflows the maximum allowed length (<see cref="System.Int32.MaxValue">Int32.MaxValue</see>).</exception>
       // ReSharper disable once TooManyDeclarations
-      public bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule, IEnumerable<string> values)
+      public bool Parse(TokenStream<AlToken> tokens, AlParser context, IEnumerable<string> values)
       {
          try
          {
@@ -84,11 +82,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
             // ReSharper disable once ExceptionNotDocumented
             string setText = string.Join(", ", enumerable.Select(i => $"{i}"));
             var message = string.Format(Resources.ExpectedSymbolFromSet, setText, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, parentRule, TokenType.Symbol, enumerable, message);
+            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, enumerable, message);
             if (tokenValidates)
             {
                context.GenerateTraceEvent(token, TraceEvent.Consume);
-               parentRule.AddChildNode(this);
                context.GenerateTraceEvent(this, TraceEvent.Match);
             }
 
@@ -100,14 +97,22 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
          }
       }
 
+      /// <summary>
+      /// Gets a value indicating whether this rule represents an operator.
+      /// </summary>
+      /// <value><c>true</c> if this instance represents operator; otherwise, <c>false</c>.</value>
       public bool IsOperator
       {
-         get => Token.Value is "+" or "-" or "*" or "/" or "<>" or "=" or "<" or ">" or "<=" or ">=" or "+=" or "-=" or ":=" or ".." or "::";
+         get => ((SymbolToken)Token).IsOperator;
       }
 
+      /// <summary>
+      /// Gets a value indicating whether this instance represents an assignment operator.
+      /// </summary>
+      /// <value><c>true</c> if this instance represents an assignment operator; otherwise, <c>false</c>.</value>
       public bool IsAssignmentOperator
       {
-         get => Token.Value is ":=" or "+=" or "-=" or "*=" or "/=";
+         get => ((SymbolToken)Token).IsAssignmentOperator;
       }
    }
 }

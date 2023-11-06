@@ -39,18 +39,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
             var parsed = true;
-            parentRule.AddChildNode(this);
 
-            if (new SymbolRule(token).Parse(tokens, context, this, "["))
+            if (((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["))
             {
                if (!tokens.TryMoveNext(ref token))
                   return false;
@@ -58,12 +56,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             else
                parsed = false;
 
-            if (new IntegerLiteralRule(token!).Parse(tokens, context, this))
+            if (((IntegerLiteralRule)AddChildNode(new IntegerLiteralRule(token!))).Parse(tokens, context))
             {
                if (!tokens.TryMoveNext(ref token))
                   return false;
 
-               if (!ParseRepeatingDelimitedExpression(tokens, context, this, ",", "]", new IntegerRuleGenerator()))
+               if (!ParseRepeatingDelimitedExpression(tokens, context, ",", "]", new IntegerRuleGenerator()))
                   parsed = false;
                else if (!tokens.TryMoveNext(ref token))
                   return false;
@@ -71,7 +69,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             else
                parsed = false;
 
-            if (!new SymbolRule(token!).Parse(tokens, context, this, "]"))
+            if (!((SymbolRule)AddChildNode(new SymbolRule(token!))).Parse(tokens, context, "]"))
                parsed = false;
 
             return parsed;

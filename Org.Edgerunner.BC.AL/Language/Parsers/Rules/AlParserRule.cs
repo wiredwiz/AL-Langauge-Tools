@@ -92,7 +92,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
       /// <param name="delimiter">The delimiter symbol.</param>
       /// <param name="terminator">The terminator symbol.</param>
       /// <param name="generator">The parser rule generator.</param>
@@ -101,7 +100,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       protected virtual bool ParseRepeatingDelimitedExpression(
          TokenStream<AlToken> tokens,
          AlParser context,
-         AlParserRule parentRule,
          string delimiter,
          string terminator,
          IRuleGenerator generator)
@@ -115,12 +113,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
          while (token!.TokenType != (int)TokenType.Symbol || terminator != token.Value)
          {
             // Look for delimiter token
-            var parses = new SymbolRule(token).Parse(tokens, context, this, delimiter);
+            var parses = ((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, delimiter);
             success = success && parses;
             if (parses && !tokens.TryMoveNext(ref token)) return false;
 
             // Now parse the expression
-            parses = generator.Parses(tokens, context, parentRule);
+            parses = generator.Parses(tokens, context, this);
             success = success && parses;
             if (parses && !tokens.TryMoveNext(ref token)) return false;
 

@@ -42,16 +42,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
       // ReSharper disable once MethodTooLong
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
-            parentRule.AddChildNode(this);
             var parsed = true;
             var isArray = false;
             object? varType = null;
@@ -71,7 +69,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             if (isArray)
             {
                // Parse an array declaration e.g. array[5] of text[20]
-               if (!new ArrayDeclarationRule().Parse(tokens, context, this))
+               if (!((ArrayDeclarationRule)AddChildNode(new ArrayDeclarationRule())).Parse(tokens, context))
                   parsed = false;
             }
             else
@@ -190,7 +188,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
                   case VariableType.WebServiceActionResultCode:
                   {
                      // we have nothing extra to do, these variable types have no extra declaration
-                     new IdentifierRule(token).Parse(tokens, context, this);
+                     ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
                      break;
                   }
                   case VariableType.Text:
@@ -216,12 +214,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
                   }
                   case VariableType.Dictionary:
                   {
-                     parsed = new DictionaryDeclarationRule().Parse(tokens, context, this);
+                     parsed = ((DictionaryDeclarationRule)AddChildNode(new DictionaryDeclarationRule())).Parse(tokens, context);
                      break;
                   }
                   case VariableType.List:
                   {
-                     parsed = new ListDeclarationRule().Parse(tokens, context, this);
+                     parsed = ((ListDeclarationRule)AddChildNode(new ListDeclarationRule())).Parse(tokens, context);
                      break;
                   }
                   case VariableType.DotNet:
@@ -246,12 +244,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 
       private bool ParseOptionVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
       {
-         new IdentifierRule(token).Parse(tokens, context, this);
+         ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
          if (!tokens.TryMoveNext(ref token!))
             return false;
 
          // parse an option value declaration e.g. foo,bar,bah
-         var result = new OptionValuesDeclarationRule().Parse(tokens, context, this);
+         var result = ((OptionValuesDeclarationRule)AddChildNode(new OptionValuesDeclarationRule())).Parse(tokens, context);
          if (!result)
             return false;
 
@@ -260,12 +258,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 
       private bool ParseObjectVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
       {
-         new IdentifierRule(token).Parse(tokens, context, this);
+         ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
          if (!tokens.TryMoveNext(ref token!))
             return false;
 
          // Parse an object declaration e.g. 20 or "Customer"
-         var result = new ObjectReferenceDeclarationRule().Parse(tokens, context, this);
+         var result = ((ObjectReferenceDeclarationRule)AddChildNode(new ObjectReferenceDeclarationRule())).Parse(tokens, context);
          if (!result)
             return false;
 
@@ -275,7 +273,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       private bool ParseTextVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
       {
          // Parse a text declaration e.g. text[20]
-         new IdentifierRule(token).Parse(tokens, context, this);
+         ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
 
          // parse the length declaration portion if it exists e.g. [20]
          // text variables do not require a length declaration
@@ -284,7 +282,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             if (!tokens.TryMoveNext(ref token!))
                return false;
 
-            if (!new LengthDeclarationRule().Parse(tokens, context, this))
+            if (!((LengthDeclarationRule)AddChildNode(new LengthDeclarationRule())).Parse(tokens, context))
                return false;
          }
 
@@ -294,12 +292,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       private bool ParseCodeVariable(TokenStream<AlToken> tokens, AlParser context, AlToken token)
       {
          // Parse a code declaration e.g. code[20]
-         new IdentifierRule(token).Parse(tokens, context, this);
+         ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
          if (!tokens.TryMoveNext(ref token!))
             return false;
 
          // parse the length declaration portion e.g. [20]
-         if (!new LengthDeclarationRule().Parse(tokens, context, this))
+         if (!((LengthDeclarationRule)AddChildNode(new LengthDeclarationRule())).Parse(tokens, context))
             return false;
 
          return true;

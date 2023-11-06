@@ -39,25 +39,36 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
+      /// <param name="parserRule">The AL parser rule being validated.</param>
       /// <param name="type">The type to match.</param>
       /// <param name="value">The value to match.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <remarks>
+      ///   If the parser rule is not null and is a terminal node, the terminal node is marked as an error along with the error text.
+      ///   If the rule is not a terminal node, then a new error node is created and appended to the children of the rule node.
+      /// </remarks>
       /// <seealso cref="AlToken" />
       // ReSharper disable once FlagArgument
       // ReSharper disable once TooManyArguments
-      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule, TokenType type, string value, string errorMessage)
+      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, AlParserRule? parserRule, TokenType type, string value, string errorMessage)
       {
          if (token == null)
             return false;
 
-         if (token.TokenType != (int)type || token.Value.ToLowerInvariant() != value.ToLowerInvariant())
+         if (token.TokenType != (int)type || !string.Equals(token.Value, value, StringComparison.InvariantCultureIgnoreCase))
          {
             if (context.State == 0)
             {
                context.GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
+               if (parserRule != null)
+                  if (parserRule is AlTerminalNode terminalNode)
+                  {
+                     terminalNode.IsError = true;
+                     terminalNode.Text = errorMessage;
+                  }
+                  else
+                     parserRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -72,16 +83,20 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
+      /// <param name="parserRule">The AL parser rule being validated.</param>
       /// <param name="type">The type to match.</param>
       /// <param name="allowedValues">The allowable values.</param>
       /// <param name="errorMessage">The error message to generate if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
-      /// <remarks>The allowed values should always be all lowercase.</remarks>
+      /// <remarks>
+      ///   The allowed values should always be all lowercase.
+      ///   If the parser rule is not null and is a terminal node, the terminal node is marked as an error along with the error text.
+      ///   If the rule is not a terminal node, then a new error node is created and appended to the children of the rule node.
+      /// </remarks>
       /// <seealso cref="AlToken" />
       // ReSharper disable once FlagArgument
       // ReSharper disable once TooManyArguments
-      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule, TokenType type, IEnumerable<string> allowedValues, string errorMessage)
+      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, AlParserRule? parserRule, TokenType type, IEnumerable<string> allowedValues, string errorMessage)
       {
          if (token == null)
             return false;
@@ -91,7 +106,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             if (context.State == 0)
             {
                context.GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
+               if (parserRule != null)
+                  if (parserRule is AlTerminalNode terminalNode)
+                  {
+                     terminalNode.IsError = true;
+                     terminalNode.Text = errorMessage;
+                  }
+                  else
+                     parserRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -106,13 +128,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
+      /// <param name="parserRule">The AL parser rule being validated.</param>
       /// <param name="type">The type to match.</param>
       /// <param name="errorMessage">The error message to use if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
+      /// <remarks>
+      ///   If the parser rule is not null and is a terminal node, the terminal node is marked as an error along with the error text.
+      ///   If the rule is not a terminal node, then a new error node is created and appended to the children of the rule node.
+      /// </remarks>
       /// <seealso cref="AlToken"/>
       // ReSharper disable once FlagArgument
-      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule, TokenType type, string errorMessage)
+      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, AlParserRule? parserRule, TokenType type, string errorMessage)
       {
          if (token == null)
             return false;
@@ -122,7 +148,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             if (context.State == 0)
             {
                context.GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
+               if (parserRule != null)
+                  if (parserRule is AlTerminalNode terminalNode)
+                  {
+                     terminalNode.IsError = true;
+                     terminalNode.Text = errorMessage;
+                  }
+                  else
+                     parserRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -137,14 +170,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <param name="token">The token.</param>
       /// <param name="context">The current AL parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
+      /// <param name="parserRule">The AL parser rule being validated.</param>
       /// <param name="type">The token literal type to match.</param>
       /// <param name="errorMessage">The error message to use if validation fails.</param>
       /// <returns><c>true</c> if the token passes validation, <c>false</c> otherwise.</returns>
-      /// <remarks>Assumes a token type of Literal in this case</remarks>
+      /// <remarks>
+      ///   A token type of Literal is assumed in this case.
+      ///   If the parser rule is not null and is a terminal node, the terminal node is marked as an error along with the error text.
+      ///   If the rule is not a terminal node, then a new error node is created and appended to the children of the rule node.
+      /// </remarks>
       /// <seealso cref="AlToken"/>
       // ReSharper disable once FlagArgument
-      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, ParserRule<AlToken, AlSyntaxNodeType> parentRule, LiteralType type, string errorMessage)
+      public static bool ValidateToken(AlToken? token, IParser<AlToken, AlSyntaxNodeType> context, AlParserRule? parserRule, LiteralType type, string errorMessage)
       {
          if (token == null)
             return false;
@@ -154,7 +191,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             if (context.State == 0)
             {
                context.GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
+               if (parserRule != null)
+                  if (parserRule is AlTerminalNode terminalNode)
+                  {
+                     terminalNode.IsError = true;
+                     terminalNode.Text = errorMessage;
+                  }
+                  else
+                     parserRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;
@@ -166,7 +210,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             if (context.State == 0)
             {
                context.GenerateParserError(token, token, errorMessage);
-               parentRule.AddChildNode(new ErrorNode(errorMessage, token));
+               if (parserRule != null)
+                  if (parserRule is AlTerminalNode terminalNode)
+                  {
+                     terminalNode.IsError = true;
+                     terminalNode.Text = errorMessage;
+                  }
+                  else
+                     parserRule.AddChildNode(new ErrorNode(errorMessage, token));
             }
             context.State = 1;
             return false;

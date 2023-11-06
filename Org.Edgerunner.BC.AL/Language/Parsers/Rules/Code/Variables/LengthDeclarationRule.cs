@@ -38,26 +38,24 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
             var parsed = true;
-            parentRule.AddChildNode(this);
 
-            if (!ProcessRuleAndAdvance(new SymbolRule(token).Parse(tokens, context, this, "["), tokens, ref token,
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["), tokens, ref token,
                                        ref parsed))
                return false;
 
-            if (!ProcessRuleAndAdvance(new IntegerLiteralRule(token!).Parse(tokens, context, this), tokens, ref token,
+            if (!ProcessRuleAndAdvance(((IntegerLiteralRule)AddChildNode(new IntegerLiteralRule(token))).Parse(tokens, context), tokens, ref token,
                                        ref parsed))
                return false;
 
-            if (!new SymbolRule(token!).Parse(tokens, context, this, "]"))
+            if (!((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "]"))
                parsed = false;
 
             return parsed;

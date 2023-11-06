@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "IAssembled.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "ITerminalNode.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,20 +23,23 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.Language.Parsers
 {
-   public interface IAssembled
+   /// <summary>
+   /// Interface that defines a terminal syntax node.
+   /// Extends the <see cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{TToken, TSyntax}" />
+   /// </summary>
+   /// <typeparam name="TToken">The type of the language token.</typeparam>
+   /// <typeparam name="TSyntax">The type of the language syntax node type.</typeparam>
+   /// <seealso cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{TToken, TSyntax}" />
+   public interface ITerminalNode<out TToken, out TSyntax> : ISyntaxNode<TToken, TSyntax> where TToken : IToken
    {
       /// <summary>
-      /// Attempts to assemble this rule from the token stream using another existing rule.
+      /// Gets a value indicating whether this instance is an error.
       /// </summary>
-      /// <param name="tokens">The token stream to read.</param>
-      /// <param name="context">The AL parser.</param>
-      /// <param name="rule">The existing rule to assemble with.</param>
-      /// <returns><c>true</c> if parsing and assembly was successful, <c>false</c> otherwise.</returns>
-      bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule);
+      /// <value><c>true</c> if this instance is an error; otherwise, <c>false</c>.</value>
+      bool IsError { get; }
    }
 }

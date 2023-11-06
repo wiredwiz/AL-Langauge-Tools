@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "MemberAccessExpression.cs">
+// <copyright company = "Edgerunner.org" file = "MemberAccessExpressionRule.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -28,35 +28,13 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class MemberAccessExpression : AlParserRule, IParsable, IAssembled
+   public class MemberAccessExpressionRule : AlParserRule, IAssemblable
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="MemberAccessExpression"/> class.
+      /// Initializes a new instance of the <see cref="MemberAccessExpressionRule"/> class.
       /// </summary>
-      public MemberAccessExpression() : base(AlSyntaxNodeType.MemberAccessExpression, "Member Access Expression Rule") {}
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var parsed = true;
-
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
-
+      public MemberAccessExpressionRule() : base(AlSyntaxNodeType.MemberAccessExpression, "Member Access Expression Rule") {}
+      
       /// <summary>
       /// Attempts to assemble this rule from the token stream using another existing rule.
       /// </summary>

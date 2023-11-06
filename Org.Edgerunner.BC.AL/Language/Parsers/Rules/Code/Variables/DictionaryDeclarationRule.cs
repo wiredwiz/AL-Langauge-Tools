@@ -39,17 +39,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
-            parentRule.AddChildNode(this);
 
-            new IdentifierRule(token).Parse(tokens, context, this, "Dictionary");
+            ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context, "Dictionary");
             Match(context);
             if (!tokens.TryMoveNext(ref token))
                return false;
@@ -57,27 +55,27 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             var parsed = true;
 
             // Look for identifier
-            if (!ProcessRuleAndAdvance(new IdentifierRule(token!).Parse(tokens, context, this, "of"), tokens, ref token!, ref parsed))
+            if (!ProcessRuleAndAdvance(((IdentifierRule)AddChildNode(new IdentifierRule(token!))).Parse(tokens, context, "of"), tokens, ref token!, ref parsed))
                return false;
 
             // look for bracket
-            if (!ProcessRuleAndAdvance(new SymbolRule(token).Parse(tokens, context, this, "["), tokens, ref token, ref parsed))
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["), tokens, ref token, ref parsed))
                return false;
 
             // Now parse our dictionary key type declaration
-            if (!ProcessRuleAndAdvance(new VariableTypeDeclarationRule().Parse(tokens, context, this), tokens, ref token, ref parsed))
+            if (!ProcessRuleAndAdvance(((VariableTypeDeclarationRule)AddChildNode(new VariableTypeDeclarationRule())).Parse(tokens, context), tokens, ref token, ref parsed))
                return false;
 
             // look for comma
-            if (!ProcessRuleAndAdvance(new SymbolRule(token).Parse(tokens, context, this, ","), tokens, ref token, ref parsed))
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, ","), tokens, ref token, ref parsed))
                return false;
 
             // Now parse our dictionary value type declaration
-            if (!ProcessRuleAndAdvance(new VariableTypeDeclarationRule().Parse(tokens, context, this), tokens, ref token, ref parsed))
+            if (!ProcessRuleAndAdvance(((VariableTypeDeclarationRule)AddChildNode(new VariableTypeDeclarationRule())).Parse(tokens, context), tokens, ref token, ref parsed))
                return false;
 
             // look for bracket
-            if (!new SymbolRule(token).Parse(tokens, context, this, "]"))
+            if (!((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "]"))
                parsed = false;
 
             return parsed;

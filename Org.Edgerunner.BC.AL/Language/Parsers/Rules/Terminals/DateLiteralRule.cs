@@ -43,20 +43,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
             var message = string.Format(Resources.ExpectedDate, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, parentRule, LiteralType.Date, message);
+            var tokenValidates = Validator.ValidateToken(token, context, this, LiteralType.Date, message);
             if (tokenValidates)
             {
                context.GenerateTraceEvent(token, TraceEvent.Consume);
-               parentRule.AddChildNode(this);
                context.GenerateTraceEvent(this, TraceEvent.Match);
             }
 

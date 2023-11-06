@@ -44,26 +44,26 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
          switch ((TokenType)token.TokenType)
          {
             case TokenType.Identifier:
-               return new IdentifierRule(token).Parse(tokens, context, this);
+               return ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
             case TokenType.Literal:
             {
                var literal = token as LiteralToken;
                switch (literal!.LiteralType)
                {
                   case LiteralType.Boolean:
-                     return new BooleanLiteralRule(token).Parse(tokens, context, this);
+                     return ((BooleanLiteralRule)AddChildNode(new BooleanLiteralRule(token))).Parse(tokens, context);
                   case LiteralType.DateTime:
-                     return new DatetimeLiteralRule(token).Parse(tokens, context, this);
+                     return ((DatetimeLiteralRule)AddChildNode(new DatetimeLiteralRule(token))).Parse(tokens, context);
                   case LiteralType.Date:
-                     return new DateLiteralRule(token).Parse(tokens, context, this);
+                     return ((DateLiteralRule)AddChildNode(new DateLiteralRule(token))).Parse(tokens, context);
                   case LiteralType.Time:
-                     return new TimeLiteralRule(token).Parse(tokens, context, this);
+                     return ((TimeLiteralRule)AddChildNode(new TimeLiteralRule(token))).Parse(tokens, context);
                   case LiteralType.Decimal:
-                     return new DecimalLiteralRule(token).Parse(tokens, context, this);
+                     return ((DecimalLiteralRule)AddChildNode(new DecimalLiteralRule(token))).Parse(tokens, context);
                   case LiteralType.Integer:
-                     return new IntegerLiteralRule(token).Parse(tokens, context, this);
+                     return ((IntegerLiteralRule)AddChildNode(new IntegerLiteralRule(token))).Parse(tokens, context);
                   case LiteralType.String:
-                     return new StringLiteralRule(token).Parse(tokens, context, this);
+                     return ((StringLiteralRule)AddChildNode(new StringLiteralRule(token))).Parse(tokens, context);
                   default:
                      var errorMessage = $"Invalid expression, encountered unexpected symbol: \"{token.Value}\"";
                      context.GenerateParserError(token, token, errorMessage);

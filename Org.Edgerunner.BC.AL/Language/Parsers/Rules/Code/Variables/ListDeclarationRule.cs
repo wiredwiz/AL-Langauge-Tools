@@ -40,39 +40,37 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
-            parentRule.AddChildNode(this);
 
-            new IdentifierRule(token).Parse(tokens, context, this, "List");
+            ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context, "List");
             Match(context);
             if (!tokens.TryMoveNext(ref token))
                return false;
 
             // Look for identifier
             var parsed = true;
-            if (!ProcessRuleAndAdvance(new IdentifierRule(token!).Parse(tokens, context, this, "of"), tokens,
+            if (!ProcessRuleAndAdvance(((IdentifierRule)AddChildNode(new IdentifierRule(token!))).Parse(tokens, context, "of"), tokens,
                                        ref token!, ref parsed))
                return false;
 
             // look for bracket
-            if (!ProcessRuleAndAdvance(new SymbolRule(token!).Parse(tokens, context, this, "["), tokens,
-                                       ref token!, ref parsed))
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["), tokens,
+                                       ref token, ref parsed))
                return false;
 
             // Now parse our array sub type declaration
-            if (!ProcessRuleAndAdvance(new VariableTypeDeclarationRule().Parse(tokens, context, this), tokens, 
-                                       ref token!, ref parsed))
+            if (!ProcessRuleAndAdvance(((VariableTypeDeclarationRule)AddChildNode(new VariableTypeDeclarationRule())).Parse(tokens, context), tokens, 
+                                       ref token, ref parsed))
                return false;
 
             // look for bracket
-            if (!new SymbolRule(token!).Parse(tokens, context, this, "]"))
+            if (!((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "]"))
                parsed = false;
 
             return parsed;

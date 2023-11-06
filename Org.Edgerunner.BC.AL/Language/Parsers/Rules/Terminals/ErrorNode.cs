@@ -42,6 +42,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       public ErrorNode(string text, AlToken token) : base(AlSyntaxNodeType.Error, token, "Error")
       {
          ErrorText = text;
+         IsError = true;
       }
 
       /// <summary>

@@ -40,9 +40,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
@@ -50,7 +49,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             var token = tokens.Current;
             var parsed = true;
             string errorMessage;
-            parentRule.AddChildNode(this);
 
             return parsed;
          }

@@ -40,30 +40,28 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
             var parsed = true;
-            parentRule.AddChildNode(this);
 
             if (Validator.ValidateToken(
                                         token, 
                                         context, 
-                                        parentRule, 
+                                        this, 
                                         TokenType.Identifier, 
                                         string.Format(Resources.ExpectedOptionValue, token.Value)))
             {
-               new IdentifierRule(token).Parse(tokens, context, this);
+               ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
                Match(context);
                if (!tokens.TryMoveNext(ref token))
                   return false;
 
-               if (!ParseRepeatingDelimitedExpression(tokens, context, this, ",", ";", new OptionValueGenerator()))
+               if (!ParseRepeatingDelimitedExpression(tokens, context,  ",", ";", new OptionValueGenerator()))
                   parsed = false;
             }
             else

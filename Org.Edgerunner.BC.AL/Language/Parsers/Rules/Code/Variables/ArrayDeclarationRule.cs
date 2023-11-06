@@ -38,31 +38,29 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
+      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
             Enter(context);
             var token = tokens.Current;
-            parentRule.AddChildNode(this);
 
-            new IdentifierRule(token).Parse(tokens, context, this);
+            ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
             Match(context);
             if (!tokens.TryMoveNext(ref token))
                return false;
 
             // look for dimensions declaration
-            var parsed = new DimensionsDeclarationRule().Parse(tokens, context, this);
+            var parsed = ((DimensionsDeclarationRule)AddChildNode(new DimensionsDeclarationRule())).Parse(tokens, context);
             if (parsed && !tokens.TryMoveNext(ref token)) return false;
 
             // Look for identifier
-            parsed = new IdentifierRule(token!).Parse(tokens, context, this, "of");
+            parsed = ((IdentifierRule)AddChildNode(new IdentifierRule(token!))).Parse(tokens, context, "of");
             if (parsed && !tokens.TryMoveNext(ref token)) return false;
 
             // Now parse our array sub type declaration
-            parsed = new VariableTypeDeclarationRule().Parse(tokens, context, this);
+            parsed = ((VariableTypeDeclarationRule)AddChildNode(new VariableTypeDeclarationRule())).Parse(tokens, context);
 
             return parsed;
          }

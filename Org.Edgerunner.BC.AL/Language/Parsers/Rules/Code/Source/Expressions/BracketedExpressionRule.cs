@@ -23,23 +23,22 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class BracketedExpressionRule : AlParserRule, IParsable
+   public class BracketedExpressionRule : AlParserRule, IAssemblable
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="BracketedExpressionRule"/> class.
+      /// </summary>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
       public BracketedExpressionRule() : base(AlSyntaxNodeType.BracketedExpression, "Bracketed Expression Rule") {}
 
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      public bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule)
       {
          try
          {
@@ -47,6 +46,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
             var token = tokens.Current;
             var parsed = true;
             string errorMessage;
+
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["), tokens, ref token, ref parsed))
+               return false;
+
+            var expression = ExpressionBuilder.BuildRule(tokens, context);
+            //if (expression.Start.)
+
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "]"), tokens, ref token, ref parsed))
+               return false;
 
             return parsed;
          }

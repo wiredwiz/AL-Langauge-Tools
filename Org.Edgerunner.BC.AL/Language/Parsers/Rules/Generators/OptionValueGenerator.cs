@@ -47,7 +47,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
                                                       TokenType.Identifier, 
                                                       string.Format(Resources.ExpectedOptionValue, token.Value));
          if (tokenValidates)
-            return new IdentifierRule(token).Parse(tokens, context, parentRule);
+            return ((IdentifierRule)parentRule.AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
 
          return false;
       }

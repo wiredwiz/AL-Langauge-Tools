@@ -56,5 +56,7 @@ namespace Org.Edgerunner.BC.AL.Language.Tokens
       /// </summary>
       /// <value><c>true</c> if a reserved word; otherwise, <c>false</c>.</value>
       public bool ReservedWord { get; }
+
+      public override bool IsBinaryOperator => Value.ToUpperInvariant() is "DIV" or "MOD" or "AND" or "OR" or "IN";
    }
 }
