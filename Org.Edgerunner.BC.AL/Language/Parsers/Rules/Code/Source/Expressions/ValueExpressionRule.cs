@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "SimpleExpressionRule.cs">
+// <copyright company = "Edgerunner.org" file = "ValueExpressionRule.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -30,12 +30,12 @@ using System.Linq.Expressions;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class SimpleExpressionRule : ExpressionRule, IParsable
+   public class ValueExpressionRule : ExpressionRule, IParsable
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="SimpleExpressionRule"/> class.
+      /// Initializes a new instance of the <see cref="ValueExpressionRule"/> class.
       /// </summary>
-      public SimpleExpressionRule() : base(AlSyntaxNodeType.SimpleExpression, "Simple Expression Rule") {}
+      public ValueExpressionRule() : base(AlSyntaxNodeType.SimpleExpression, "Value Expression Rule") {}
       public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          Enter(context);

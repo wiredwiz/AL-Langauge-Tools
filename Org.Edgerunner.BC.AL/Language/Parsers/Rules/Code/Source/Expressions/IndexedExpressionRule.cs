@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "BinaryExpressionRule.cs">
+// <copyright company = "Edgerunner.org" file = "IndexedExpressionRule.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,16 +23,21 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class BinaryExpressionRule : AlParserRule, IAssemblable
+   public class IndexedExpressionRule : AlParserRule, IAssemblable
    {
-      public BinaryExpressionRule() : base(AlSyntaxNodeType.BinaryExpression, "Binary Expression Rule") {}
-      
+      /// <summary>
+      /// Initializes a new instance of the <see cref="IndexedExpressionRule"/> class.
+      /// </summary>
+      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
+      public IndexedExpressionRule() : base(AlSyntaxNodeType.IndexedExpression, "Indexed Expression Rule") {}
+
       public bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule)
       {
          try
@@ -41,6 +46,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
             var token = tokens.Current;
             var parsed = true;
             string errorMessage;
+
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["), tokens, ref token, ref parsed))
+               return false;
+
+            var expression = ExpressionBuilder.BuildRule(tokens, context);
+            AddChildNode(expression);
+
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "]"), tokens, ref token, ref parsed))
+               return false;
 
             return parsed;
          }
