@@ -61,12 +61,13 @@ namespace Org.Edgerunner.BC.AL.Language.Tokens
       /// Gets a value indicating whether this instance represents an operator.
       /// </summary>
       /// <value><c>true</c> if this instance represents an operator; otherwise, <c>false</c>.</value>
-      public override bool IsOperator => IsBinaryOperator;
+      public override bool IsOperator => IsBinaryOperator ||
+                                         string.Equals(Value, "NOT", StringComparison.InvariantCultureIgnoreCase) ;
 
       /// <summary>
       /// Gets a value indicating whether this instance represents a binary operator.
       /// </summary>
       /// <value><c>true</c> if this instance represents a binary operator; otherwise, <c>false</c>.</value>
-      public override bool IsBinaryOperator => Value.ToUpperInvariant() is "DIV" or "MOD" or "AND" or "OR" or "IN";
+      public override bool IsBinaryOperator => Value.ToUpperInvariant() is "DIV" or "MOD" or "AND" or "OR" or "XOR" or "IN";
    }
 }
