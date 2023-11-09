@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Runtime.InteropServices.JavaScript;
 using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.Language.Parsers

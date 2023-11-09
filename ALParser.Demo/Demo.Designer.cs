@@ -1,6 +1,6 @@
 ﻿namespace ALParser.Demo
 {
-   partial class Form1
+   partial class Demo
    {
       /// <summary>
       ///  Required designer variable.
@@ -29,7 +29,7 @@
       private void InitializeComponent()
       {
          components = new System.ComponentModel.Container();
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Demo));
          splitParser = new SplitContainer();
          tabConGrammar = new TabControl();
          tabPageEdit = new TabPage();
@@ -110,7 +110,6 @@
          fastColoredTextBox1.FindForm = null;
          fastColoredTextBox1.FoldingHighlightColor = Color.LightGray;
          fastColoredTextBox1.FoldingHighlightEnabled = false;
-         fastColoredTextBox1.Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
          fastColoredTextBox1.GoToForm = null;
          fastColoredTextBox1.Hotkeys = resources.GetString("fastColoredTextBox1.Hotkeys");
          fastColoredTextBox1.IsReplaceMode = false;
@@ -133,6 +132,7 @@
          fastColoredTextBox1.ToolTipDelay = 100;
          fastColoredTextBox1.WordWrap = true;
          fastColoredTextBox1.Zoom = 100;
+         fastColoredTextBox1.TextChanged += demoEdit_TextChanged;
          // 
          // tabPageGraph
          // 

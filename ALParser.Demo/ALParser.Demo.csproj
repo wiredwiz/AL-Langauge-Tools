@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.Msagl.GraphViewerGDI" Version="1.1.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Org.Edgerunner.BC.AL\Org.Edgerunner.BC.AL.csproj" />
+  </ItemGroup>
+
 </Project>
