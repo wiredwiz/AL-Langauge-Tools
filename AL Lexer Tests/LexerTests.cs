@@ -330,5 +330,34 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers.Tests
          other.EndingColumn.Should().Be(48);
          other.Value.Should().Be("OnBeforeIsBinBWReceiveOrShip");
       }
+
+      [Fact]
+      public void End_tokens_are_correct()
+      {
+         // Given a new AL lexer
+         var lexer = new AlLexer();
+
+         // loading a invoice posting codeunit al file
+         var buffer = new TextBuffer("SalesPostInvoice.Codeunit.al", Encoding.Default.CodePage);
+
+         // and then reading a series of tokens
+         var tokens = lexer.ReadTokensFromBuffer(buffer);
+
+         // Results in the expected tokens
+         tokens.Count.Should().Be(4793);
+         var last = tokens.Last();
+         last.StartingLine.Should().Be(796);
+         last.EndingLine.Should().Be(796);
+         last.StartingColumn.Should().Be(1);
+         last.EndingColumn.Should().Be(1);
+         last.Value.Should().Be("}");
+         var indexOfLast = tokens.IndexOf(last);
+         var other = tokens[indexOfLast - 5];
+         other.StartingLine.Should().Be(794);
+         other.EndingLine.Should().Be(794);
+         other.StartingColumn.Should().Be(82);
+         other.EndingColumn.Should().Be(101);
+         other.Value.Should().Be("PostedDeferralHeader");
+      }
    }
 }

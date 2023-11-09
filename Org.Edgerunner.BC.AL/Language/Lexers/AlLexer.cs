@@ -57,10 +57,14 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
                {
                   if (buffer.PeekChar() == '*')
                      result = CommentTokenizer.ReadMultiLineCommentTokenFromBuffer(buffer, this);
-                  if (buffer.PeekChar() == '/')
+                  else if (buffer.PeekChar() == '/')
+                  {
                      result = buffer.PeekChar(2) == '/'
                         ? CommentTokenizer.ReadXmlCommentTokenFromBuffer(buffer, this)
                         : CommentTokenizer.ReadSingleLineCommentTokenFromBuffer(buffer, this);
+                  }
+                  else
+                     result = SymbolTokenizer.ReadSymbolTokenFromBuffer(buffer);
 
                   buffer.GetNextChar();
                   return result;

@@ -33,6 +33,9 @@
     <None Update="Demo.al">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="SalesPostInvoice.Codeunit.al">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
