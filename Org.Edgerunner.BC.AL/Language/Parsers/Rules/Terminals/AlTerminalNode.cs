@@ -73,8 +73,5 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       {
          return Text;
       }
-
-      /// <inheritdoc />
-      public bool IsError { get; internal set; }
    }
 }

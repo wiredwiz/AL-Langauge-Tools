@@ -47,11 +47,20 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// <param name="type">The rule type.</param>
       /// <param name="name">The rule name.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      protected AlParserRule(AlSyntaxNodeType type, string name) : base(type, name) { }
+      protected AlParserRule(AlSyntaxNodeType type, string name) : base(type, name)
+      {
+         IsError = false;
+      }
 
       protected delegate bool ParserHandler(TokenStream<AlToken> tokens,
                                             IParser<AlToken, AlSyntaxNodeType> context,
                                             ParserRule<AlToken, AlSyntaxNodeType> rule);
+
+      /// <summary>
+      /// Gets a value indicating whether this instance is an error.
+      /// </summary>
+      /// <value><c>true</c> if this instance is an error; otherwise, <c>false</c>.</value>
+      public bool IsError { get; protected internal set; }
 
       public override string GetText()
       {
