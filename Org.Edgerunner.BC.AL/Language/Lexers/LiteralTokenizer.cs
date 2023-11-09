@@ -63,7 +63,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
             // check for invalid line breaks in the string
             if (tk == '\n' || tk == '\r')
                return LexerError.PackageError(lexer, text.ToString(), start, buffer.GetBufferPoint(-1),
-                                              "String reached end of file without termination");
+                                              "String reached end of line without termination");
 
             // append the currently read token and check for string termination character
             text.Append(tk);
