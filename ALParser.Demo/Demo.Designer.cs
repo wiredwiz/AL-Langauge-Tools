@@ -33,7 +33,7 @@
          splitParser = new SplitContainer();
          tabConGrammar = new TabControl();
          tabPageEdit = new TabPage();
-         fastColoredTextBox1 = new FastColoredTextBoxNS.FastColoredTextBox();
+         demoEditor = new FastColoredTextBoxNS.FastColoredTextBox();
          tabPageGraph = new TabPage();
          gViewer1 = new Microsoft.Msagl.GraphViewerGdi.GViewer();
          listView1 = new ListView();
@@ -48,7 +48,7 @@
          splitParser.SuspendLayout();
          tabConGrammar.SuspendLayout();
          tabPageEdit.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)fastColoredTextBox1).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)demoEditor).BeginInit();
          tabPageGraph.SuspendLayout();
          SuspendLayout();
          // 
@@ -83,7 +83,7 @@
          // 
          // tabPageEdit
          // 
-         tabPageEdit.Controls.Add(fastColoredTextBox1);
+         tabPageEdit.Controls.Add(demoEditor);
          tabPageEdit.Location = new Point(4, 29);
          tabPageEdit.Name = "tabPageEdit";
          tabPageEdit.Padding = new Padding(3);
@@ -92,47 +92,52 @@
          tabPageEdit.Text = "Editor";
          tabPageEdit.UseVisualStyleBackColor = true;
          // 
-         // fastColoredTextBox1
+         // demoEditor
          // 
-         fastColoredTextBox1.AccessibleDescription = "Textbox control";
-         fastColoredTextBox1.AccessibleName = "Fast Colored Text Box";
-         fastColoredTextBox1.AccessibleRole = AccessibleRole.Text;
-         fastColoredTextBox1.AutoCompleteBracketsList = new char[] { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };
-         fastColoredTextBox1.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\r\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
-         fastColoredTextBox1.AutoScrollMinSize = new Size(0, 18126);
-         fastColoredTextBox1.BackBrush = null;
-         fastColoredTextBox1.CharHeight = 18;
-         fastColoredTextBox1.CharWidth = 10;
-         fastColoredTextBox1.DefaultMarkerSize = 8;
-         fastColoredTextBox1.DisabledColor = Color.FromArgb(100, 180, 180, 180);
-         fastColoredTextBox1.Dock = DockStyle.Fill;
-         fastColoredTextBox1.EnableBlinkingStyle = false;
-         fastColoredTextBox1.FindForm = null;
-         fastColoredTextBox1.FoldingHighlightColor = Color.LightGray;
-         fastColoredTextBox1.FoldingHighlightEnabled = false;
-         fastColoredTextBox1.GoToForm = null;
-         fastColoredTextBox1.Hotkeys = resources.GetString("fastColoredTextBox1.Hotkeys");
-         fastColoredTextBox1.IsReplaceMode = false;
-         fastColoredTextBox1.LeftBracket = '{';
-         fastColoredTextBox1.LeftBracket2 = '(';
-         fastColoredTextBox1.LeftBracket3 = '[';
-         fastColoredTextBox1.Location = new Point(3, 3);
-         fastColoredTextBox1.Name = "fastColoredTextBox1";
-         fastColoredTextBox1.Paddings = new Padding(0);
-         fastColoredTextBox1.ReplaceForm = null;
-         fastColoredTextBox1.RightBracket = '}';
-         fastColoredTextBox1.RightBracket2 = ')';
-         fastColoredTextBox1.RightBracket3 = ']';
-         fastColoredTextBox1.SelectionColor = Color.FromArgb(60, 0, 0, 255);
-         fastColoredTextBox1.ServiceColors = (FastColoredTextBoxNS.ServiceColors)resources.GetObject("fastColoredTextBox1.ServiceColors");
-         fastColoredTextBox1.ShowFoldingLines = true;
-         fastColoredTextBox1.Size = new Size(925, 472);
-         fastColoredTextBox1.TabIndex = 0;
-         fastColoredTextBox1.Text = resources.GetString("fastColoredTextBox1.Text");
-         fastColoredTextBox1.ToolTipDelay = 100;
-         fastColoredTextBox1.WordWrap = true;
-         fastColoredTextBox1.Zoom = 100;
-         fastColoredTextBox1.TextChanged += demoEdit_TextChanged;
+         demoEditor.AccessibleDescription = "Textbox control";
+         demoEditor.AccessibleName = "Fast Colored Text Box";
+         demoEditor.AccessibleRole = AccessibleRole.Text;
+         demoEditor.AutoCompleteBracketsList = new char[] { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };
+         demoEditor.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\r\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
+         demoEditor.AutoScrollMinSize = new Size(0, 18126);
+         demoEditor.BackBrush = null;
+         demoEditor.BackColor = Color.Black;
+         demoEditor.CaretColor = Color.LightGray;
+         demoEditor.CharHeight = 18;
+         demoEditor.CharWidth = 10;
+         demoEditor.DefaultMarkerSize = 8;
+         demoEditor.DisabledColor = Color.FromArgb(100, 180, 180, 180);
+         demoEditor.Dock = DockStyle.Fill;
+         demoEditor.EnableBlinkingStyle = false;
+         demoEditor.FindForm = null;
+         demoEditor.FoldingHighlightColor = Color.LightGray;
+         demoEditor.FoldingHighlightEnabled = false;
+         demoEditor.Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+         demoEditor.ForeColor = Color.White;
+         demoEditor.GoToForm = null;
+         demoEditor.Hotkeys = resources.GetString("demoEditor.Hotkeys");
+         demoEditor.IsReplaceMode = false;
+         demoEditor.LeftBracket = '{';
+         demoEditor.LeftBracket2 = '(';
+         demoEditor.LeftBracket3 = '[';
+         demoEditor.Location = new Point(3, 3);
+         demoEditor.Name = "demoEditor";
+         demoEditor.Paddings = new Padding(0);
+         demoEditor.ReplaceForm = null;
+         demoEditor.RightBracket = '}';
+         demoEditor.RightBracket2 = ')';
+         demoEditor.RightBracket3 = ']';
+         demoEditor.SelectionColor = Color.FromArgb(60, 0, 0, 255);
+         demoEditor.ServiceColors = null;
+         demoEditor.ShowFoldingLines = true;
+         demoEditor.Size = new Size(925, 472);
+         demoEditor.TabIndex = 0;
+         demoEditor.Text = resources.GetString("demoEditor.Text");
+         demoEditor.TextAreaBorderColor = Color.White;
+         demoEditor.ToolTipDelay = 100;
+         demoEditor.WordWrap = true;
+         demoEditor.Zoom = 100;
+         demoEditor.TextChanged += demoEditor_TextChanged;
          // 
          // tabPageGraph
          // 
@@ -223,13 +228,13 @@
          colErrorEndCol.Text = "End Column";
          colErrorEndCol.Width = 90;
          // 
-         // Form1
+         // Demo
          // 
          AutoScaleDimensions = new SizeF(8F, 20F);
          AutoScaleMode = AutoScaleMode.Font;
          ClientSize = new Size(939, 750);
          Controls.Add(splitParser);
-         Name = "Form1";
+         Name = "Demo";
          Text = "Parser Demo";
          splitParser.Panel1.ResumeLayout(false);
          splitParser.Panel2.ResumeLayout(false);
@@ -237,7 +242,7 @@
          splitParser.ResumeLayout(false);
          tabConGrammar.ResumeLayout(false);
          tabPageEdit.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)fastColoredTextBox1).EndInit();
+         ((System.ComponentModel.ISupportInitialize)demoEditor).EndInit();
          tabPageGraph.ResumeLayout(false);
          ResumeLayout(false);
       }
@@ -253,7 +258,7 @@
       private ColumnHeader colErrorEndCol;
       private TabControl tabConGrammar;
       private TabPage tabPageEdit;
-      private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox1;
+      private FastColoredTextBoxNS.FastColoredTextBox demoEditor;
       private TabPage tabPageGraph;
       private Microsoft.Msagl.GraphViewerGdi.GViewer gViewer1;
    }
