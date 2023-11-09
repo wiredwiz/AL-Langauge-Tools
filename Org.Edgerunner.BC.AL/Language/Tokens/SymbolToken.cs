@@ -82,7 +82,7 @@ namespace Org.Edgerunner.BC.AL.Language.Tokens
       /// <value><c>true</c> if this instance represents a binary operator; otherwise, <c>false</c>.</value>
       public override bool IsBinaryOperator
       {
-         get => Value is "+" or "-" or "*" or "/" or "..";
+         get => Value is "+" or "-" or "*" or "/" or ".." or "<>" or "=" or "<" or ">" or "<=" or ">=";
       }
    }
 }

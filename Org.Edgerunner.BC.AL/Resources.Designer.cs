@@ -194,5 +194,32 @@ namespace Org.Edgerunner.BC.AL {
                 return ResourceManager.GetString("ExpectedTime", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encountered unexpected End of File.
+        /// </summary>
+        internal static string UnexpectedEof {
+            get {
+                return ResourceManager.GetString("UnexpectedEof", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encountered unexpected identifier: &quot;{0}&quot;.
+        /// </summary>
+        internal static string UnexpectedIdentifier {
+            get {
+                return ResourceManager.GetString("UnexpectedIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encountered unexpected literal: &quot;{0}&quot;.
+        /// </summary>
+        internal static string UnexpectedLiteralValue {
+            get {
+                return ResourceManager.GetString("UnexpectedLiteralValue", resourceCulture);
+            }
+        }
     }
 }

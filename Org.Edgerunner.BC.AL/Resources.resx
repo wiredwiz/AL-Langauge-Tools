@@ -162,4 +162,13 @@
   <data name="BadHandlerType" xml:space="preserve">
     <value>The handler type must be a typeof AlParserRule</value>
   </data>
+  <data name="UnexpectedEof" xml:space="preserve">
+    <value>Encountered unexpected End of File</value>
+  </data>
+  <data name="UnexpectedIdentifier" xml:space="preserve">
+    <value>Encountered unexpected identifier: "{0}"</value>
+  </data>
+  <data name="UnexpectedLiteralValue" xml:space="preserve">
+    <value>Encountered unexpected literal: "{0}"</value>
+  </data>
 </root>

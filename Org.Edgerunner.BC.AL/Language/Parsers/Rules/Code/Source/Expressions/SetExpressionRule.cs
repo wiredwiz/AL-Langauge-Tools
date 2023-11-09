@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "BracketedExpressionRule.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "SetExpressionRule.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -30,15 +30,14 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class BracketedExpressionRule : AlParserRule, IAssemblable
+   public class SetExpressionRule: AlParserRule, IParsable
    {
       /// <summary>
-      /// Initializes a new instance of the <see cref="BracketedExpressionRule"/> class.
+      /// Initializes a new instance of the <see cref="SetExpressionRule"/> class.
       /// </summary>
-      /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      public BracketedExpressionRule() : base(AlSyntaxNodeType.BracketedExpression, "Bracketed Expression Rule") {}
-
-      public bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule)
+      public SetExpressionRule() : base(AlSyntaxNodeType.SetExpression, "Set Expression Rule") {}
+      
+      public bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {
@@ -51,7 +50,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
                return false;
 
             var expression = ExpressionBuilder.BuildRule(tokens, context);
-            //if (expression.Start.)
+            AddChildNode(expression);
 
             if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "]"), tokens, ref token, ref parsed))
                return false;
