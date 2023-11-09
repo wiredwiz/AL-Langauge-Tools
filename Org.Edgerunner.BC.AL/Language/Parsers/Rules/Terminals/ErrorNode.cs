@@ -24,6 +24,7 @@
 #endregion
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
@@ -54,6 +55,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       public override string ToString()
       {
          return ErrorText;
+      }
+
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      /// <exception cref="System.InvalidOperationException">You cannot parse an error rule</exception>
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      {
+         throw new InvalidOperationException("You cannot parse an error rule");
       }
    }
 }

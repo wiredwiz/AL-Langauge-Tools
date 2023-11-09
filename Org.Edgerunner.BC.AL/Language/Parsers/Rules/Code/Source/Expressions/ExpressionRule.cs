@@ -32,6 +32,5 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
    public abstract class ExpressionRule : AlParserRule, IParsable
    {
       protected ExpressionRule(AlSyntaxNodeType type, string name) : base(type, name) {}
-      public abstract bool Parse(TokenStream<AlToken> tokens, AlParser context);
    }
 }

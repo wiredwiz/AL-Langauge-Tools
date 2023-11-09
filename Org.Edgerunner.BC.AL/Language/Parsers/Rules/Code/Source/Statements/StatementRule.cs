@@ -23,11 +23,8 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
-using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Statements
 {
@@ -38,7 +35,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Statements
       /// </summary>
       public StatementRule() : base(AlSyntaxNodeType.Statement, "Statement Rule") {}
 
-      public bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          var token = tokens.Current;
          var parsed = true;

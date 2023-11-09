@@ -29,7 +29,7 @@ using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class IdentifierRule : AlTerminalNode, IParsable, IParsableExpectingValue
+   public class IdentifierRule : AlTerminalNode, IParsableExpectingValue
    {
       public IdentifierRule(AlToken symbol) : base(AlSyntaxNodeType.Identifier, symbol, "Identifier Rule") { }
 
@@ -39,7 +39,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {

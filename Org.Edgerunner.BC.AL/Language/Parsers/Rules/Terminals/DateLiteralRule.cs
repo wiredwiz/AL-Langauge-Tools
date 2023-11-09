@@ -44,7 +44,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {

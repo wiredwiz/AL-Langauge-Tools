@@ -160,6 +160,15 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expected symbol &quot;{0}&quot;, instead encountered: &quot;{1}&quot;.
+        /// </summary>
+        internal static string ExpectedSpecificSymbol {
+            get {
+                return ResourceManager.GetString("ExpectedSpecificSymbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected valid string, instead encountered: &quot;{0}&quot;.
         /// </summary>
         internal static string ExpectedString {
@@ -169,7 +178,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected symbol &quot;{0}&quot;, instead encountered: &quot;{1}&quot;.
+        ///   Looks up a localized string similar to Expected symbol, instead encountered: &quot;{1}&quot;.
         /// </summary>
         internal static string ExpectedSymbol {
             get {

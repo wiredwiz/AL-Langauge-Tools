@@ -63,5 +63,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
             Exit(context);
          }
       }
+
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      {
+         throw new NotImplementedException();
+      }
    }
 }

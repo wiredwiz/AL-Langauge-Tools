@@ -38,7 +38,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       /// </summary>
       /// <param name="tokens">The token stream.</param>
       /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent rule to link to.</param>
       /// <param name="expectedValue">The expected identifier value to match against.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
       public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, string expectedValue)
@@ -47,7 +46,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
          {
             Enter(context);
             var token = tokens.Current;
-            var message = string.Format(Resources.ExpectedSymbol, expectedValue, token.Value);
+            var message = string.Format(Resources.ExpectedSpecificSymbol, expectedValue, token.Value);
             var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, expectedValue, message);
             if (tokenValidates)
             {
@@ -113,6 +112,28 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       public bool IsAssignmentOperator
       {
          get => ((SymbolToken)Token).IsAssignmentOperator;
+      }
+
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      {
+         try
+         {
+            Enter(context);
+            var token = tokens.Current;
+            var message = string.Format(Resources.ExpectedSymbol, token.Value);
+            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, message);
+            if (tokenValidates)
+            {
+               context.GenerateTraceEvent(token, TraceEvent.Consume);
+               context.GenerateTraceEvent(this, TraceEvent.Match);
+            }
+
+            return tokenValidates;
+         }
+         finally
+         {
+            Exit(context);
+         }
       }
    }
 }

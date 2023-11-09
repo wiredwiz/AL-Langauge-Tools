@@ -37,7 +37,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
       /// </summary>
       public SetExpressionRule() : base(AlSyntaxNodeType.SetExpression, "Set Expression Rule") {}
       
-      public bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          try
          {

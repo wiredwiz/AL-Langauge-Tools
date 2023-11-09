@@ -23,6 +23,9 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
    public class RootRule : AlParserRule
@@ -32,5 +35,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// </summary>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
       public RootRule() : base(AlSyntaxNodeType.Root, "Root Rule") {}
+
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      /// <exception cref="System.InvalidOperationException">You cannot parse a root rule</exception>
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      {
+         throw new InvalidOperationException("You cannot parse a root rule");
+      }
    }
 }

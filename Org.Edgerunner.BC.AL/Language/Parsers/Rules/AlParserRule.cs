@@ -39,7 +39,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
    /// Implements the <see cref="ParserRule{TToken,TType}" />
    /// </summary>
    /// <seealso cref="ParserRule{TToken,TType}" />
-   public abstract class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>
+   public abstract class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>, IParsable
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlParserRule" /> class.
@@ -178,5 +178,13 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             tokens.MoveNext();
          }
       }
+
+      /// <summary>
+      /// Parses this rule from the token stream.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <param name="context">The parser context.</param>
+      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
+      public abstract bool Parse(TokenStream<AlToken> tokens, AlParser context);
    }
 }

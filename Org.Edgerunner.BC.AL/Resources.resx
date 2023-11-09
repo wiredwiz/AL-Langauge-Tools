@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ExpectedSymbol" xml:space="preserve">
+  <data name="ExpectedSpecificSymbol" xml:space="preserve">
     <value>Expected symbol "{0}", instead encountered: "{1}"</value>
   </data>
   <data name="ExpectedOptionValue" xml:space="preserve">
@@ -170,5 +170,8 @@
   </data>
   <data name="UnexpectedLiteralValue" xml:space="preserve">
     <value>Encountered unexpected literal: "{0}"</value>
+  </data>
+  <data name="ExpectedSymbol" xml:space="preserve">
+    <value>Expected symbol, instead encountered: "{1}"</value>
   </data>
 </root>

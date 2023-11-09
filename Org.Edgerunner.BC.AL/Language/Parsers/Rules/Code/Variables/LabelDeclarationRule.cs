@@ -36,7 +36,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
       public LabelDeclarationRule() : base(AlSyntaxNodeType.LabelDeclaration, "Label Declaration Rule") {}
 
       /// <inheritdoc />
-      public bool Parse(TokenStream<AlToken> tokens, AlParser context)
+      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          throw new NotImplementedException();
       }
