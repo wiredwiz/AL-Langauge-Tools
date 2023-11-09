@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ReservedWords.cs">
+// <copyright company = "Edgerunner.org" file = "ReservedWord.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -24,33 +24,56 @@
 #endregion
 
 
-namespace Org.Edgerunner.BC.AL.Language
+namespace Org.Edgerunner.BC.AL
 {
-   public enum ReservedWords
+   public enum ReservedWord
    {
-      OF,
-      DOWNTO,
-      TO,
-      IF,
-      ELSE,
-      WHILE,
-      DO,
-      REPEAT,
-      UNTIL,
-      BEGIN,
-      END,
-      WITH,
-      FOR,
-      CASE,
-      NOT,
       AND,
-      OR,
+      ARRAY,
+      ASSERTERROR,
+      BEGIN,
+      BREAK,
+      CASE,
       DIV,
-      MOD,
-      IN,
+      DO,
+      DOWNTO,
+      ELSE,
+      END,
+      EVENT,
       EXIT,
-      TRUE,
       FALSE,
-      GUIALLOWED
+      FOR,
+      FOREACH,
+      FUNCTION,
+      GUIALLOWED,
+      IF,
+      IMPLEMENTS,
+      IN,
+      INDATASET,
+      INTERFACE,
+      INTERNAL,
+      LOCAL,
+      MOD,
+      NOT,
+      OF,
+      OR,
+      PROCEDURE,
+      PROGRAM,
+      PROTECTED,
+      REPEAT,
+      RUNONCLIENT,
+      SECURITYFILTERING,
+      SUPPRESSDISPOSE,
+      TEMPORARY,
+      THEN,
+      TO,
+      TRIGGER,
+      TRUE,
+      UNTIL,
+      VAR,
+      WHILE,
+      WITH,
+      WITHEVENTS,
+      XOR
    }
 }
