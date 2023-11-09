@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TextEditorColorPalette.cs">
+// <copyright company = "Edgerunner.org" file = "AlErrorListener.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,29 +23,23 @@
 // THE SOFTWARE.
 #endregion
 
-using FastColoredTextBoxNS.Types;
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
 
 namespace ALParser.Demo
 {
-   /// <summary>
-   /// Interface that defines a text editor color mapping palette
-   /// </summary>
-   public interface ITextEditorColorPalette
+   public class AlErrorListener : IErrorListener<AlToken>
    {
-      Style Default { get; }
-      Style VariableTypes { get; }
-      Style NumberLiterals { get; }
-      Style StringLiterals { get; }
-      Style OtherLiterals { get; }
-      Style Names { get; }
-      Style Identifiers { get; }
-      Style Keywords { get; }
-      Style StatementKeywords { get; }
-      Style Symbols { get; }
-      Style Operators { get; }
-      Style ComparisonOperators { get; }
-      Style AssignmentOperators { get; }
-      Style BinaryOperators { get; }
-      Style Error { get; }
+      public List<LanguageError<AlToken>> Errors { get; } = new List<LanguageError<AlToken>>();
+
+      public void AnnounceError(LanguageError<AlToken> error)
+      {
+         Errors.Add(error);
+      }
+
+      public void Clear()
+      {
+         Errors.Clear();
+      }
    }
 }

@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "ALDefaultColorPalette.cs">
+// <copyright company = "Edgerunner.org" file = "AlDefaultColorStyle.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -27,23 +27,23 @@ using FastColoredTextBoxNS.Types;
 
 namespace ALParser.Demo
 {
-   public class ALDefaultColorPalette : ITextEditorColorPalette
+   public class AlDefaultColorStyle : ITextEditorColorStyle
    {
       private Style _Error;
 
-      public ALDefaultColorPalette()
+      public AlDefaultColorStyle()
       {
          var back = new SolidBrush(Color.Transparent);
          Default = new TextStyle(new SolidBrush(Color.LightSkyBlue), back, FontStyle.Regular);
-         VariableTypes = new TextStyle(new SolidBrush(Color.MediumSpringGreen), back, FontStyle.Regular);
+         QuotedIdentifiers = new TextStyle(new SolidBrush(Color.MediumSpringGreen), back, FontStyle.Regular);
          NumberLiterals = new TextStyle(new SolidBrush(Color.MediumPurple), back, FontStyle.Regular);
          StringLiterals = new TextStyle(new SolidBrush(Color.OrangeRed), back, FontStyle.Regular);
          OtherLiterals = new TextStyle(new SolidBrush(Color.YellowGreen), back, FontStyle.Regular);
          Names = new TextStyle(new SolidBrush(Color.PaleGoldenrod), back, FontStyle.Regular);
          Identifiers = new TextStyle(new SolidBrush(Color.DarkGoldenrod), back, FontStyle.Regular);
          Keywords = new TextStyle(new SolidBrush(Color.DodgerBlue), back, FontStyle.Regular);
-         StatementKeywords = new TextStyle(new SolidBrush(Color.Fuchsia), back, FontStyle.Regular);
-         Symbols = new TextStyle(new SolidBrush(Color.Cyan), back, FontStyle.Regular);
+         StatementKeywords = new TextStyle(new SolidBrush(Color.DeepPink), back, FontStyle.Regular);
+         Symbols = new TextStyle(new SolidBrush(Color.Fuchsia), back, FontStyle.Regular);
          Operators = new TextStyle(new SolidBrush(Color.DarkOrange), back, FontStyle.Regular);
          ComparisonOperators = new TextStyle(new SolidBrush(Color.DarkOrange), back, FontStyle.Regular);
          AssignmentOperators = new TextStyle(new SolidBrush(Color.MediumOrchid), back, FontStyle.Regular);
@@ -53,7 +53,7 @@ namespace ALParser.Demo
 
       public Style Default { get; }
 
-      public Style VariableTypes { get; }
+      public Style QuotedIdentifiers { get; }
 
       public Style NumberLiterals { get; }
 

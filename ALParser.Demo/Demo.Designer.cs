@@ -36,12 +36,9 @@
          demoEditor = new FastColoredTextBoxNS.FastColoredTextBox();
          tabPageGraph = new TabPage();
          gViewer1 = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-         listView1 = new ListView();
-         colErrorMsg = new ColumnHeader();
-         colErrorStartLine = new ColumnHeader();
-         colErrorStartCol = new ColumnHeader();
-         colErrorEndLine = new ColumnHeader();
-         colErrorEndCol = new ColumnHeader();
+         MessageList = new DataGridView();
+         Source = new DataGridViewTextBoxColumn();
+         Message = new DataGridViewTextBoxColumn();
          ((System.ComponentModel.ISupportInitialize)splitParser).BeginInit();
          splitParser.Panel1.SuspendLayout();
          splitParser.Panel2.SuspendLayout();
@@ -50,6 +47,7 @@
          tabPageEdit.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)demoEditor).BeginInit();
          tabPageGraph.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)MessageList).BeginInit();
          SuspendLayout();
          // 
          // splitParser
@@ -65,9 +63,9 @@
          // 
          // splitParser.Panel2
          // 
-         splitParser.Panel2.Controls.Add(listView1);
+         splitParser.Panel2.Controls.Add(MessageList);
          splitParser.Size = new Size(939, 750);
-         splitParser.SplitterDistance = 511;
+         splitParser.SplitterDistance = 600;
          splitParser.TabIndex = 0;
          // 
          // tabConGrammar
@@ -78,7 +76,7 @@
          tabConGrammar.Location = new Point(0, 0);
          tabConGrammar.Name = "tabConGrammar";
          tabConGrammar.SelectedIndex = 0;
-         tabConGrammar.Size = new Size(939, 511);
+         tabConGrammar.Size = new Size(939, 600);
          tabConGrammar.TabIndex = 1;
          // 
          // tabPageEdit
@@ -87,7 +85,7 @@
          tabPageEdit.Location = new Point(4, 29);
          tabPageEdit.Name = "tabPageEdit";
          tabPageEdit.Padding = new Padding(3);
-         tabPageEdit.Size = new Size(931, 478);
+         tabPageEdit.Size = new Size(931, 567);
          tabPageEdit.TabIndex = 0;
          tabPageEdit.Text = "Editor";
          tabPageEdit.UseVisualStyleBackColor = true;
@@ -99,7 +97,7 @@
          demoEditor.AccessibleRole = AccessibleRole.Text;
          demoEditor.AutoCompleteBracketsList = new char[] { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };
          demoEditor.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\r\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
-         demoEditor.AutoScrollMinSize = new Size(0, 18126);
+         demoEditor.AutoScrollMinSize = new Size(0, 17154);
          demoEditor.BackBrush = null;
          demoEditor.BackColor = Color.Black;
          demoEditor.CaretColor = Color.LightGray;
@@ -112,7 +110,6 @@
          demoEditor.FindForm = null;
          demoEditor.FoldingHighlightColor = Color.LightGray;
          demoEditor.FoldingHighlightEnabled = false;
-         demoEditor.Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
          demoEditor.ForeColor = Color.White;
          demoEditor.GoToForm = null;
          demoEditor.Hotkeys = resources.GetString("demoEditor.Hotkeys");
@@ -130,7 +127,7 @@
          demoEditor.SelectionColor = Color.FromArgb(60, 0, 0, 255);
          demoEditor.ServiceColors = null;
          demoEditor.ShowFoldingLines = true;
-         demoEditor.Size = new Size(925, 472);
+         demoEditor.Size = new Size(925, 561);
          demoEditor.TabIndex = 0;
          demoEditor.Text = resources.GetString("demoEditor.Text");
          demoEditor.TextAreaBorderColor = Color.White;
@@ -145,7 +142,7 @@
          tabPageGraph.Location = new Point(4, 29);
          tabPageGraph.Name = "tabPageGraph";
          tabPageGraph.Padding = new Padding(3);
-         tabPageGraph.Size = new Size(931, 478);
+         tabPageGraph.Size = new Size(931, 567);
          tabPageGraph.TabIndex = 1;
          tabPageGraph.Text = "Graph";
          tabPageGraph.UseVisualStyleBackColor = true;
@@ -181,7 +178,7 @@
          gViewer1.SaveButtonVisible = false;
          gViewer1.SaveGraphButtonVisible = false;
          gViewer1.SaveInVectorFormatEnabled = true;
-         gViewer1.Size = new Size(925, 472);
+         gViewer1.Size = new Size(925, 561);
          gViewer1.TabIndex = 0;
          gViewer1.TightOffsetForRouting = 0.125D;
          gViewer1.ToolBarIsVisible = true;
@@ -191,42 +188,37 @@
          gViewer1.ZoomF = 1D;
          gViewer1.ZoomWindowThreshold = 0.05D;
          // 
-         // listView1
+         // MessageList
          // 
-         listView1.Columns.AddRange(new ColumnHeader[] { colErrorMsg, colErrorStartLine, colErrorStartCol, colErrorEndLine, colErrorEndCol });
-         listView1.Dock = DockStyle.Fill;
-         listView1.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-         listView1.Location = new Point(0, 0);
-         listView1.Name = "listView1";
-         listView1.Size = new Size(939, 235);
-         listView1.TabIndex = 0;
-         listView1.UseCompatibleStateImageBehavior = false;
-         listView1.View = View.Details;
+         MessageList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         MessageList.Columns.AddRange(new DataGridViewColumn[] { Source, Message });
+         MessageList.Dock = DockStyle.Fill;
+         MessageList.Location = new Point(0, 0);
+         MessageList.MultiSelect = false;
+         MessageList.Name = "MessageList";
+         MessageList.RowHeadersWidth = 51;
+         MessageList.RowTemplate.Height = 29;
+         MessageList.Size = new Size(939, 146);
+         MessageList.TabIndex = 0;
+         MessageList.CellDoubleClick += MessageList_CellDoubleClick;
          // 
-         // colErrorMsg
+         // Source
          // 
-         colErrorMsg.Text = "Error";
-         colErrorMsg.Width = 500;
+         Source.DataPropertyName = "Source";
+         Source.HeaderText = "Source";
+         Source.MinimumWidth = 6;
+         Source.Name = "Source";
+         Source.ReadOnly = true;
+         Source.Width = 125;
          // 
-         // colErrorStartLine
+         // Message
          // 
-         colErrorStartLine.Text = "Start Line";
-         colErrorStartLine.Width = 90;
-         // 
-         // colErrorStartCol
-         // 
-         colErrorStartCol.Text = "Start Column";
-         colErrorStartCol.Width = 90;
-         // 
-         // colErrorEndLine
-         // 
-         colErrorEndLine.Text = "End Line";
-         colErrorEndLine.Width = 90;
-         // 
-         // colErrorEndCol
-         // 
-         colErrorEndCol.Text = "End Column";
-         colErrorEndCol.Width = 90;
+         Message.DataPropertyName = "Message";
+         Message.HeaderText = "Message";
+         Message.MinimumWidth = 6;
+         Message.Name = "Message";
+         Message.ReadOnly = true;
+         Message.Width = 500;
          // 
          // Demo
          // 
@@ -244,22 +236,21 @@
          tabPageEdit.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)demoEditor).EndInit();
          tabPageGraph.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)MessageList).EndInit();
          ResumeLayout(false);
       }
 
       #endregion
 
       private SplitContainer splitParser;
-      private ListView listView1;
-      private ColumnHeader colErrorMsg;
-      private ColumnHeader colErrorStartLine;
-      private ColumnHeader colErrorStartCol;
-      private ColumnHeader colErrorEndLine;
-      private ColumnHeader colErrorEndCol;
       private TabControl tabConGrammar;
       private TabPage tabPageEdit;
       private FastColoredTextBoxNS.FastColoredTextBox demoEditor;
       private TabPage tabPageGraph;
       private Microsoft.Msagl.GraphViewerGdi.GViewer gViewer1;
+      private DataGridView dataGridView1;
+      private DataGridView MessageList;
+      private DataGridViewTextBoxColumn Source;
+      private DataGridViewTextBoxColumn Message;
    }
 }

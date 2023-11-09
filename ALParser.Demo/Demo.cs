@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using FastColoredTextBoxNS.Types;
 using Org.Edgerunner.BC.AL.Language.Lexers;
 using Org.Edgerunner.BC.AL.Language.Parsers;
 using Org.Edgerunner.BC.AL.Language.Tokens;
@@ -11,20 +13,25 @@ namespace ALParser.Demo
       public Demo()
       {
          InitializeComponent();
+         _Lexer.AddErrorListener(_ErrorListener);
+         _Parser.AddErrorListener(_ErrorListener);
       }
 
       private AlParser _Parser = new AlParser();
       private AlLexer _Lexer = new AlLexer();
       private TextBuffer _Buffer;
-      private ITextEditorColorPalette _Styles = new ALDefaultColorPalette();
+      private ITextEditorColorStyle _Styles = new AlDefaultColorStyle();
+      private AlErrorListener _ErrorListener = new AlErrorListener();
 
       private void demoEditor_TextChanged(object sender, FastColoredTextBoxNS.TextChangedEventArgs e)
       {
          // TODO: Add parser logic
          _Buffer = new TextBuffer(demoEditor.Text);
+         _ErrorListener.Clear();
          var tokens = _Lexer.ReadTokensFromBuffer(_Buffer);
          var stream = new TokenStream<AlToken>(tokens);
          _Parser.ParseSource(stream);
+         MessageList.DataSource = new BindingList<AlErrorFacade>(_ErrorListener.Errors.Select(x => new AlErrorFacade(x)).ToList());
          demoEditor.ClearAllStyles();
          var last = tokens.Last();
          foreach (var token in tokens)
@@ -45,7 +52,7 @@ namespace ALParser.Demo
             else if (token is IdentifierToken { ReservedWord: true })
                span.SetStyle(_Styles.Keywords);
             else if (token is IdentifierToken identToken && identToken.Value.StartsWith('"'))
-               span.SetStyle(_Styles.VariableTypes);
+               span.SetStyle(_Styles.QuotedIdentifiers);
             //else if (token is IdentifierToken)
             //   span.SetStyle(_Styles.Identifiers);
             else if (token is LiteralToken { LiteralType: LiteralType.String })
@@ -56,6 +63,17 @@ namespace ALParser.Demo
                span.SetStyle(_Styles.OtherLiterals);
             else
                span.SetStyle(_Styles.Default);
+         }
+      }
+
+      private void MessageList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+      {
+         var selectedRow = MessageList.Rows[e.RowIndex];
+         if (selectedRow.DataBoundItem is AlErrorFacade error)
+         {
+            demoEditor.Focus();
+            demoEditor.Selection = new TextSelectionRange(demoEditor, error.Column - 1, error.Line - 1, error.Column - 1, error.Line - 1);
+            demoEditor.DoCaretVisible();
          }
       }
    }

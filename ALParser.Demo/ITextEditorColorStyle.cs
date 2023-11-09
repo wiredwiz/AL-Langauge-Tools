@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
-// Copyright(c) Thaddeus Ryker 2023
+// <copyright company = "Edgerunner.org" file = "TextEditorColorPalette.cs">
+// Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,37 +23,29 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Diagnostics;
-using Metalama.Framework.Aspects;
-using Org.Edgerunner.BC.AL.Language.Parsers;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Parsers;
+using FastColoredTextBoxNS.Types;
 
-namespace Org.Edgerunner.BC.AL.Language.Aspects
+namespace ALParser.Demo
 {
-   public class TraceAttribute : OverrideMethodAspect
+   /// <summary>
+   /// Interface that defines a text editor color mapping palette
+   /// </summary>
+   public interface ITextEditorColorStyle
    {
-      public override dynamic? OverrideMethod()
-      {
-         if (meta.This is not ParserRule<AlToken, AlSyntaxNodeType> rule)
-            return meta.Proceed();
-
-         if (meta.Target.Parameters.Count < 2 || meta.Target.Parameters[1].Value is not AlParser parser)
-            return meta.Proceed();
-
-         if (!parser.EnableTracing)
-            return meta.Proceed();
-
-         try
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Enter);
-            return meta.Proceed();
-         }
-         finally
-         {
-            parser.GenerateTraceEvent(rule, TraceEvent.Exit);
-         }
-      }
+      Style Default { get; }
+      Style QuotedIdentifiers { get; }
+      Style NumberLiterals { get; }
+      Style StringLiterals { get; }
+      Style OtherLiterals { get; }
+      Style Names { get; }
+      Style Identifiers { get; }
+      Style Keywords { get; }
+      Style StatementKeywords { get; }
+      Style Symbols { get; }
+      Style Operators { get; }
+      Style ComparisonOperators { get; }
+      Style AssignmentOperators { get; }
+      Style BinaryOperators { get; }
+      Style Error { get; }
    }
 }
