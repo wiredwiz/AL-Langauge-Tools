@@ -49,7 +49,7 @@ namespace ALParser.Demo
                span.SetStyle(_Styles.Error);
             else if (token is SymbolToken)
                span.SetStyle(_Styles.Symbols);
-            else if (token is IdentifierToken { ReservedWord: true })
+            else if (token is IdentifierToken { Keyword: true })
                span.SetStyle(_Styles.Keywords);
             else if (token is IdentifierToken identToken && identToken.Value.StartsWith('"'))
                span.SetStyle(_Styles.QuotedIdentifiers);

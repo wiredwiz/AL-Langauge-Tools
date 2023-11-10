@@ -69,7 +69,12 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
             buffer.GetNextChar();
          }
 
-         return new IdentifierToken(text.ToString(), start, buffer.GetBufferPoint(-1), EnumCache<ReservedWord>.Contains(text.ToString().ToUpperInvariant()));
+         return new IdentifierToken(
+                                    text.ToString(), 
+                                    start, 
+                                    buffer.GetBufferPoint(-1), 
+                                    EnumCache<ReservedWord>.Contains(text.ToString().ToUpperInvariant()),
+                                    EnumCache<Keyword>.Contains(text.ToString().ToUpperInvariant()));
       }
    }
 }

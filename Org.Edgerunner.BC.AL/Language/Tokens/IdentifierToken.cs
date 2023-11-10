@@ -42,10 +42,12 @@ namespace Org.Edgerunner.BC.AL.Language.Tokens
       /// <param name="value">The token value.</param>
       /// <param name="start">The token start.</param>
       /// <param name="end">The token end.</param>
-      /// <param name="reservedWord">The reserved word corresponding to the token if there is one.</param>
-      public IdentifierToken(string value, BufferPoint start, BufferPoint end, bool reservedWord = false) : base(value, start, end)
+      /// <param name="reservedWord">if set to <c>true</c> is a reserved word.</param>
+      /// <param name="keyword">if set to <c>true</c> is a keyword.</param>
+      public IdentifierToken(string value, BufferPoint start, BufferPoint end, bool reservedWord = false, bool keyword = false) : base(value, start, end)
       {
          ReservedWord = reservedWord;
+         Keyword = keyword;
       }
 
       /// <inheritdoc/>
@@ -56,6 +58,12 @@ namespace Org.Edgerunner.BC.AL.Language.Tokens
       /// </summary>
       /// <value><c>true</c> if a reserved word; otherwise, <c>false</c>.</value>
       public bool ReservedWord { get; }
+
+      /// <summary>
+      /// Gets a value indicating whether token is a keyword.
+      /// </summary>
+      /// <value><c>true</c> if a keyword; otherwise, <c>false</c>.</value>
+      public bool Keyword { get; }
 
       /// <summary>
       /// Gets a value indicating whether this instance represents an operator.
