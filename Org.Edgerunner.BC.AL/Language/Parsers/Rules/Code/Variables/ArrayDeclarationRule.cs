@@ -46,7 +46,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
             Enter(context);
             var token = tokens.Current;
 
-            ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
+            ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context, "Array");
             Match(context);
             if (!tokens.TryMoveNext(ref token))
                return false;

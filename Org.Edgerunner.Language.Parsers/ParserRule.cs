@@ -58,6 +58,7 @@ namespace Org.Edgerunner.Language.Parsers
       /// <inheritdoc />
       public virtual IList<ITree> Children { get; } = new List<ITree>();
 
+      /// <inheritdoc />
       public string Name { get; }
 
       /// <inheritdoc />
@@ -100,6 +101,7 @@ namespace Org.Edgerunner.Language.Parsers
          }
       }
 
+      /// <inheritdoc />
       public TType Type { get; }
 
       /// <inheritdoc />

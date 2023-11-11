@@ -101,6 +101,12 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
          var hasDecimal = false;
          var start = buffer.GetBufferPoint();
 
+         if (buffer.Current == '-')
+         {
+            text += buffer.Current;
+            buffer.GetNextChar();
+         }
+
          // read the integral portion
          text += ReadIntegerFromBuffer(buffer);
 

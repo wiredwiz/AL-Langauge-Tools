@@ -45,7 +45,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       protected internal readonly List<IErrorListener<AlToken>> ErrorListeners = new List<IErrorListener<AlToken>>();
 
       protected internal readonly List<ITraceListener> TraceListeners = new List<ITraceListener>();
+
       private int _State;
+
+      private HashSet<AlToken> _Registry = new HashSet<AlToken>();
+
+      public ParserRule<AlToken, AlSyntaxNodeType>? Result { get; private set; }
 
       /// <inheritdoc />
       public bool HasErrors { get; private set; }
@@ -110,16 +115,27 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <returns><c>true</c> if parsing succeeded, <c>false</c> otherwise.</returns>
       public bool ParseSource(TokenStream<AlToken> tokens)
       {
+         Result = null;
          HasErrors = false;
          return false;
       }
 
-      
+      public void Reset()
+      {
+         HasErrors = false;
+         State = 0;
+      }
+
+
       /// <inheritdoc />
       public virtual void GenerateParserError(AlToken startToken, AlToken endToken, string message)
       {
          HasErrors = true;
+         if (_Registry.Contains(startToken))
+            return;
+
          var error = new ParserError(startToken, endToken, message);
+         _Registry.Add(startToken);
          foreach (var listener in ErrorListeners) listener.AnnounceError(error);
       }
 

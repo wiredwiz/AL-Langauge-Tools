@@ -63,13 +63,11 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 
                if (!ParseRepeatingDelimitedExpression(tokens, context, ",", "]", new IntegerRuleGenerator()))
                   parsed = false;
-               else if (!tokens.TryMoveNext(ref token))
-                  return false;
             }
             else
                parsed = false;
 
-            if (!((SymbolRule)AddChildNode(new SymbolRule(token!))).Parse(tokens, context, "]"))
+            if (!((SymbolRule)AddChildNode(new SymbolRule(tokens.Current))).Parse(tokens, context, "]"))
                parsed = false;
 
             return parsed;

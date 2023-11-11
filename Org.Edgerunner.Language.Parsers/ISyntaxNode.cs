@@ -54,6 +54,12 @@ namespace Org.Edgerunner.Language.Parsers
       TType Type { get; }
 
       /// <summary>
+      /// Gets the node name.
+      /// </summary>
+      /// <value>The node name.</value>
+      string Name { get; }
+
+      /// <summary>
       /// Gets the text that represents this node.
       /// </summary>
       /// <returns>A <see cref="string"/> containing the text.</returns>

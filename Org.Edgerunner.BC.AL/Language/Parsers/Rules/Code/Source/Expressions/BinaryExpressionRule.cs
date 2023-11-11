@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 #endregion
 
+using Metalama.Framework.Code.SyntaxBuilders;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
@@ -41,6 +42,18 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
             var token = tokens.Current;
             var parsed = true;
             string errorMessage;
+
+            if (!tokens.TryMoveNext(ref token))
+               return false;
+
+            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token!))).Parse(tokens, context), tokens, ref token!,
+                                       ref parsed))
+               return false;
+
+            Match(context);
+
+            var result = Generators.ExpressionBuilder.BuildRule(tokens, context);
+            parsed = result is not ErrorNode;
 
             return parsed;
          }

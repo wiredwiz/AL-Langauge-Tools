@@ -117,29 +117,35 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
          bool success = true;
 
          if (token.TokenType == (int)TokenType.Symbol && terminator == token.Value)
+         {
+            tokens.TryMovePrevious(ref token);
             return true;
+         }
+
+         var allowedValues = new List<string> { delimiter, terminator };
 
          while (token!.TokenType != (int)TokenType.Symbol || terminator != token.Value)
          {
             // Look for delimiter token
-            var parses = ((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, delimiter);
-            success = success && parses;
-            if (parses && !tokens.TryMoveNext(ref token)) return false;
+            var message = FormatSetError(Resources.ExpectedSymbolFromSet, allowedValues, token.Value);
+            var parses1 = Validator.ValidateToken(token, context, this, TokenType.Symbol, allowedValues, message);
+            var symRule = new SymbolRule(token);
+            symRule.Parse(tokens, context, delimiter);
+            if (parses1) AddChildNode(symRule);
+            if (parses1 && !tokens.TryMoveNext(ref token)) return false;
 
             // Now parse the expression
-            parses = generator.Parses(tokens, context, this);
-            success = success && parses;
-            if (parses && !tokens.TryMoveNext(ref token)) return false;
+            var parses2 = generator.Parses(tokens, context, this);
+            success = parses2;
+            if (parses2 && !tokens.TryMoveNext(ref token)) return false;
 
             // If both parsing attempts failed, we move ahead one to prevent infinite looping
-            if (!success)
+            if (!parses1 && !parses2)
                if (tokens.TryMoveNext(ref token))
                   context.GenerateTraceEvent(tokens.Previous()!, TraceEvent.Consume);
                else
                   return false;
          }
-
-         tokens.TryMovePrevious(ref token);
 
          return success;
       }
@@ -177,6 +183,28 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             context.GenerateParserError(start, tokens.Current, "Unexpected token");
             tokens.MoveNext();
          }
+      }
+
+      protected virtual string FormatSetError(string message, IEnumerable<string> allowed, string encountered)
+      {
+         var enumerable = allowed as string[] ?? allowed.ToArray();
+         if (enumerable.Length == 0)
+            return message;
+
+         var set = $"\"{enumerable[0]}\"";
+
+         if (enumerable.Length > 1)
+         {
+            if (enumerable.Length == 2)
+               set += $" or \"{enumerable[1]}\"";
+            else
+            {
+               for (int i = 1; i < enumerable.Length - 1; i++) set += $", \"{enumerable[1]}\"";
+               set += $" or \"{enumerable[^1]}\"";
+            }
+         }
+
+         return string.Format(message, set, encountered);
       }
 
       /// <summary>

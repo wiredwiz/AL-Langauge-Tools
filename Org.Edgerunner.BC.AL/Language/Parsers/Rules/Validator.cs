@@ -101,7 +101,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
          if (token == null)
             return false;
 
-         if (token.TokenType != (int)type || allowedValues.Contains(token.Value.ToLowerInvariant()))
+         if (token.TokenType != (int)type || !allowedValues.Contains(token.Value.ToLowerInvariant()))
          {
             if (context.State == 0)
             {

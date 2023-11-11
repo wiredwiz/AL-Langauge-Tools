@@ -2,9 +2,11 @@ using System.ComponentModel;
 using FastColoredTextBoxNS.Types;
 using Org.Edgerunner.BC.AL.Language.Lexers;
 using Org.Edgerunner.BC.AL.Language.Parsers;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers.Input;
 using Org.Edgerunner.Language.Lexers;
+using Org.Edgerunner.Language.Parsers;
 
 namespace ALParser.Demo
 {
@@ -15,6 +17,7 @@ namespace ALParser.Demo
          InitializeComponent();
          _Lexer.AddErrorListener(_ErrorListener);
          _Parser.AddErrorListener(_ErrorListener);
+         cmbRules.DataSource = ParserRules.Names;
       }
 
       private AlParser _Parser = new AlParser();
@@ -25,12 +28,22 @@ namespace ALParser.Demo
 
       private void demoEditor_TextChanged(object sender, FastColoredTextBoxNS.TextChangedEventArgs e)
       {
-         // TODO: Add parser logic
+         ParseSource();
+      }
+
+      private void ParseSource()
+      {
          _Buffer = new TextBuffer(demoEditor.Text);
          _ErrorListener.Clear();
+         _Parser.Reset();
          var tokens = _Lexer.ReadTokensFromBuffer(_Buffer);
          var stream = new TokenStream<AlToken>(tokens);
-         _Parser.ParseSource(stream);
+         var ruleName = cmbRules.SelectedItem?.ToString();
+         if (string.IsNullOrEmpty(ruleName) || tokens.Count == 0)
+            return;
+
+         var ruleInstance = ParserRules.GetInstance(ruleName);
+         ruleInstance.Parse(stream, _Parser);
          MessageList.DataSource = new BindingList<AlErrorFacade>(_ErrorListener.Errors.Select(x => new AlErrorFacade(x)).ToList());
          demoEditor.ClearAllStyles();
          var last = tokens.Last();
@@ -49,7 +62,7 @@ namespace ALParser.Demo
                span.SetStyle(_Styles.Error);
             else if (token is SymbolToken)
                span.SetStyle(_Styles.Symbols);
-            else if (token is IdentifierToken { Keyword: true })
+            else if (token is IdentifierToken { IsKeyword: true })
                span.SetStyle(_Styles.Keywords);
             else if (token is IdentifierToken identToken && identToken.Value.StartsWith('"'))
                span.SetStyle(_Styles.QuotedIdentifiers);
@@ -64,6 +77,28 @@ namespace ALParser.Demo
             else
                span.SetStyle(_Styles.Default);
          }
+
+         PaintErrors(ruleInstance);
+
+         listTokens.DataSource = new BindingList<AlToken>(tokens);
+         var graph = TreeGrapher.CreateGraph(ruleInstance);
+         gViewer1.Graph = graph;
+      }
+
+      void PaintErrors(AlParserRule? node)
+      {
+         if (node == null)
+            return;
+
+         if (node.IsError)
+         {
+            var start = node.Start.GetStart();
+            var end = node.End.GetEnd();
+            var span = demoEditor.GetRange(start, end);
+            span.SetStyle(_Styles.Error);
+         }
+
+         foreach (var child in node.Children) PaintErrors(child as AlParserRule);
       }
 
       private void MessageList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -75,6 +110,17 @@ namespace ALParser.Demo
             demoEditor.Selection = new TextSelectionRange(demoEditor, error.Column - 1, error.Line - 1, error.Column - 1, error.Line - 1);
             demoEditor.DoCaretVisible();
          }
+      }
+
+      private void demoEditor_SelectionChanged(object sender, EventArgs e)
+      {
+         lblLineNo.Text = (demoEditor.Selection.Start.iLine + 1).ToString();
+         lblColumnNo.Text = (demoEditor.Selection.Start.iChar + 1).ToString();
+      }
+
+      private void cmbRules_SelectedValueChanged(object sender, EventArgs e)
+      {
+         ParseSource();
       }
    }
 }

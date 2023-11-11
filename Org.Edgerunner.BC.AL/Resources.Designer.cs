@@ -187,7 +187,7 @@ namespace Org.Edgerunner.BC.AL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected a symbol from set [{0}], instead encountered: &quot;{1}&quot;.
+        ///   Looks up a localized string similar to Expected either {0}, instead encountered: &quot;{1}&quot;.
         /// </summary>
         internal static string ExpectedSymbolFromSet {
             get {

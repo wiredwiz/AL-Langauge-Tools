@@ -61,8 +61,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
                if (!tokens.TryMoveNext(ref token))
                   return false;
 
-               if (!ParseRepeatingDelimitedExpression(tokens, context,  ",", ";", new OptionValueGenerator()))
+               if (!ParseRepeatingDelimitedExpression(tokens, context, ",", ";", new OptionValueGenerator()))
                   parsed = false;
+               else
+                  tokens.TryMovePrevious(ref token);
             }
             else
                parsed = false;

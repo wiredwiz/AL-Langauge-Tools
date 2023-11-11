@@ -34,11 +34,22 @@
          tabConGrammar = new TabControl();
          tabPageEdit = new TabPage();
          demoEditor = new FastColoredTextBoxNS.FastColoredTextBox();
+         statusStrip1 = new StatusStrip();
+         lblColumnNo = new ToolStripStatusLabel();
+         toolStripStatusLabel2 = new ToolStripStatusLabel();
+         lblLineNo = new ToolStripStatusLabel();
+         toolStripStatusLabel4 = new ToolStripStatusLabel();
          tabPageGraph = new TabPage();
          gViewer1 = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+         tabPageTokens = new TabPage();
+         listTokens = new DataGridView();
+         flowLayoutPanel1 = new FlowLayoutPanel();
+         label1 = new Label();
+         cmbRules = new ComboBox();
          MessageList = new DataGridView();
          Source = new DataGridViewTextBoxColumn();
          Message = new DataGridViewTextBoxColumn();
+         menuStrip1 = new MenuStrip();
          ((System.ComponentModel.ISupportInitialize)splitParser).BeginInit();
          splitParser.Panel1.SuspendLayout();
          splitParser.Panel2.SuspendLayout();
@@ -46,46 +57,53 @@
          tabConGrammar.SuspendLayout();
          tabPageEdit.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)demoEditor).BeginInit();
+         statusStrip1.SuspendLayout();
          tabPageGraph.SuspendLayout();
+         tabPageTokens.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)listTokens).BeginInit();
+         flowLayoutPanel1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)MessageList).BeginInit();
          SuspendLayout();
          // 
          // splitParser
          // 
          splitParser.Dock = DockStyle.Fill;
-         splitParser.Location = new Point(0, 0);
+         splitParser.Location = new Point(0, 24);
          splitParser.Name = "splitParser";
          splitParser.Orientation = Orientation.Horizontal;
          // 
          // splitParser.Panel1
          // 
          splitParser.Panel1.Controls.Add(tabConGrammar);
+         splitParser.Panel1.Controls.Add(flowLayoutPanel1);
          // 
          // splitParser.Panel2
          // 
          splitParser.Panel2.Controls.Add(MessageList);
-         splitParser.Size = new Size(939, 750);
-         splitParser.SplitterDistance = 600;
+         splitParser.Size = new Size(939, 726);
+         splitParser.SplitterDistance = 580;
          splitParser.TabIndex = 0;
          // 
          // tabConGrammar
          // 
          tabConGrammar.Controls.Add(tabPageEdit);
          tabConGrammar.Controls.Add(tabPageGraph);
+         tabConGrammar.Controls.Add(tabPageTokens);
          tabConGrammar.Dock = DockStyle.Fill;
-         tabConGrammar.Location = new Point(0, 0);
+         tabConGrammar.Location = new Point(0, 44);
          tabConGrammar.Name = "tabConGrammar";
          tabConGrammar.SelectedIndex = 0;
-         tabConGrammar.Size = new Size(939, 600);
+         tabConGrammar.Size = new Size(939, 536);
          tabConGrammar.TabIndex = 1;
          // 
          // tabPageEdit
          // 
          tabPageEdit.Controls.Add(demoEditor);
+         tabPageEdit.Controls.Add(statusStrip1);
          tabPageEdit.Location = new Point(4, 29);
          tabPageEdit.Name = "tabPageEdit";
          tabPageEdit.Padding = new Padding(3);
-         tabPageEdit.Size = new Size(931, 567);
+         tabPageEdit.Size = new Size(931, 503);
          tabPageEdit.TabIndex = 0;
          tabPageEdit.Text = "Editor";
          tabPageEdit.UseVisualStyleBackColor = true;
@@ -97,7 +115,7 @@
          demoEditor.AccessibleRole = AccessibleRole.Text;
          demoEditor.AutoCompleteBracketsList = new char[] { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };
          demoEditor.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\r\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
-         demoEditor.AutoScrollMinSize = new Size(0, 17154);
+         demoEditor.AutoScrollMinSize = new Size(0, 18126);
          demoEditor.BackBrush = null;
          demoEditor.BackColor = Color.Black;
          demoEditor.CaretColor = Color.LightGray;
@@ -124,10 +142,10 @@
          demoEditor.RightBracket = '}';
          demoEditor.RightBracket2 = ')';
          demoEditor.RightBracket3 = ']';
-         demoEditor.SelectionColor = Color.FromArgb(60, 0, 0, 255);
+         demoEditor.SelectionColor = Color.FromArgb(100, 0, 120, 215);
          demoEditor.ServiceColors = null;
          demoEditor.ShowFoldingLines = true;
-         demoEditor.Size = new Size(925, 561);
+         demoEditor.Size = new Size(925, 471);
          demoEditor.TabIndex = 0;
          demoEditor.Text = resources.GetString("demoEditor.Text");
          demoEditor.TextAreaBorderColor = Color.White;
@@ -135,6 +153,42 @@
          demoEditor.WordWrap = true;
          demoEditor.Zoom = 100;
          demoEditor.TextChanged += demoEditor_TextChanged;
+         demoEditor.SelectionChanged += demoEditor_SelectionChanged;
+         // 
+         // statusStrip1
+         // 
+         statusStrip1.ImageScalingSize = new Size(20, 20);
+         statusStrip1.Items.AddRange(new ToolStripItem[] { lblColumnNo, toolStripStatusLabel2, lblLineNo, toolStripStatusLabel4 });
+         statusStrip1.Location = new Point(3, 474);
+         statusStrip1.Name = "statusStrip1";
+         statusStrip1.RightToLeft = RightToLeft.Yes;
+         statusStrip1.Size = new Size(925, 26);
+         statusStrip1.TabIndex = 3;
+         statusStrip1.Text = "statusStrip1";
+         // 
+         // lblColumnNo
+         // 
+         lblColumnNo.Name = "lblColumnNo";
+         lblColumnNo.Size = new Size(17, 20);
+         lblColumnNo.Text = "1";
+         // 
+         // toolStripStatusLabel2
+         // 
+         toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+         toolStripStatusLabel2.Size = new Size(31, 20);
+         toolStripStatusLabel2.Text = "Col";
+         // 
+         // lblLineNo
+         // 
+         lblLineNo.Name = "lblLineNo";
+         lblLineNo.Size = new Size(17, 20);
+         lblLineNo.Text = "1";
+         // 
+         // toolStripStatusLabel4
+         // 
+         toolStripStatusLabel4.Name = "toolStripStatusLabel4";
+         toolStripStatusLabel4.Size = new Size(36, 20);
+         toolStripStatusLabel4.Text = "Line";
          // 
          // tabPageGraph
          // 
@@ -142,7 +196,7 @@
          tabPageGraph.Location = new Point(4, 29);
          tabPageGraph.Name = "tabPageGraph";
          tabPageGraph.Padding = new Padding(3);
-         tabPageGraph.Size = new Size(931, 567);
+         tabPageGraph.Size = new Size(931, 503);
          tabPageGraph.TabIndex = 1;
          tabPageGraph.Text = "Graph";
          tabPageGraph.UseVisualStyleBackColor = true;
@@ -178,7 +232,7 @@
          gViewer1.SaveButtonVisible = false;
          gViewer1.SaveGraphButtonVisible = false;
          gViewer1.SaveInVectorFormatEnabled = true;
-         gViewer1.Size = new Size(925, 561);
+         gViewer1.Size = new Size(925, 497);
          gViewer1.TabIndex = 0;
          gViewer1.TightOffsetForRouting = 0.125D;
          gViewer1.ToolBarIsVisible = true;
@@ -187,6 +241,60 @@
          gViewer1.WindowZoomButtonPressed = false;
          gViewer1.ZoomF = 1D;
          gViewer1.ZoomWindowThreshold = 0.05D;
+         // 
+         // tabPageTokens
+         // 
+         tabPageTokens.Controls.Add(listTokens);
+         tabPageTokens.Location = new Point(4, 29);
+         tabPageTokens.Name = "tabPageTokens";
+         tabPageTokens.Size = new Size(931, 503);
+         tabPageTokens.TabIndex = 2;
+         tabPageTokens.Text = "Tokens";
+         tabPageTokens.UseVisualStyleBackColor = true;
+         // 
+         // listTokens
+         // 
+         listTokens.AllowUserToAddRows = false;
+         listTokens.AllowUserToDeleteRows = false;
+         listTokens.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         listTokens.Dock = DockStyle.Fill;
+         listTokens.Location = new Point(0, 0);
+         listTokens.Name = "listTokens";
+         listTokens.ReadOnly = true;
+         listTokens.RowHeadersWidth = 51;
+         listTokens.RowTemplate.Height = 29;
+         listTokens.Size = new Size(931, 503);
+         listTokens.TabIndex = 0;
+         // 
+         // flowLayoutPanel1
+         // 
+         flowLayoutPanel1.Controls.Add(label1);
+         flowLayoutPanel1.Controls.Add(cmbRules);
+         flowLayoutPanel1.Dock = DockStyle.Top;
+         flowLayoutPanel1.Location = new Point(0, 0);
+         flowLayoutPanel1.Name = "flowLayoutPanel1";
+         flowLayoutPanel1.Padding = new Padding(4);
+         flowLayoutPanel1.Size = new Size(939, 44);
+         flowLayoutPanel1.TabIndex = 2;
+         // 
+         // label1
+         // 
+         label1.Anchor = AnchorStyles.Left;
+         label1.AutoSize = true;
+         label1.Location = new Point(7, 11);
+         label1.Name = "label1";
+         label1.Size = new Size(81, 20);
+         label1.TabIndex = 1;
+         label1.Text = "Parser Rule";
+         // 
+         // cmbRules
+         // 
+         cmbRules.FormattingEnabled = true;
+         cmbRules.Location = new Point(94, 7);
+         cmbRules.Name = "cmbRules";
+         cmbRules.Size = new Size(289, 28);
+         cmbRules.TabIndex = 0;
+         cmbRules.SelectedValueChanged += cmbRules_SelectedValueChanged;
          // 
          // MessageList
          // 
@@ -198,7 +306,7 @@
          MessageList.Name = "MessageList";
          MessageList.RowHeadersWidth = 51;
          MessageList.RowTemplate.Height = 29;
-         MessageList.Size = new Size(939, 146);
+         MessageList.Size = new Size(939, 142);
          MessageList.TabIndex = 0;
          MessageList.CellDoubleClick += MessageList_CellDoubleClick;
          // 
@@ -220,12 +328,22 @@
          Message.ReadOnly = true;
          Message.Width = 500;
          // 
+         // menuStrip1
+         // 
+         menuStrip1.ImageScalingSize = new Size(20, 20);
+         menuStrip1.Location = new Point(0, 0);
+         menuStrip1.Name = "menuStrip1";
+         menuStrip1.Size = new Size(939, 24);
+         menuStrip1.TabIndex = 1;
+         menuStrip1.Text = "menuStrip1";
+         // 
          // Demo
          // 
          AutoScaleDimensions = new SizeF(8F, 20F);
          AutoScaleMode = AutoScaleMode.Font;
          ClientSize = new Size(939, 750);
          Controls.Add(splitParser);
+         Controls.Add(menuStrip1);
          Name = "Demo";
          Text = "Parser Demo";
          splitParser.Panel1.ResumeLayout(false);
@@ -234,10 +352,18 @@
          splitParser.ResumeLayout(false);
          tabConGrammar.ResumeLayout(false);
          tabPageEdit.ResumeLayout(false);
+         tabPageEdit.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)demoEditor).EndInit();
+         statusStrip1.ResumeLayout(false);
+         statusStrip1.PerformLayout();
          tabPageGraph.ResumeLayout(false);
+         tabPageTokens.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)listTokens).EndInit();
+         flowLayoutPanel1.ResumeLayout(false);
+         flowLayoutPanel1.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)MessageList).EndInit();
          ResumeLayout(false);
+         PerformLayout();
       }
 
       #endregion
@@ -252,5 +378,16 @@
       private DataGridView MessageList;
       private DataGridViewTextBoxColumn Source;
       private DataGridViewTextBoxColumn Message;
+      private TabPage tabPageTokens;
+      private DataGridView listTokens;
+      private FlowLayoutPanel flowLayoutPanel1;
+      private Label label1;
+      private ComboBox cmbRules;
+      private MenuStrip menuStrip1;
+      private StatusStrip statusStrip1;
+      private ToolStripStatusLabel lblColumnNo;
+      private ToolStripStatusLabel toolStripStatusLabel2;
+      private ToolStripStatusLabel lblLineNo;
+      private ToolStripStatusLabel toolStripStatusLabel4;
    }
 }

@@ -31,6 +31,12 @@ namespace Org.Edgerunner.Language.Parsers
    where TToken : IToken
    {
       /// <summary>
+      /// Gets the result of parsing.
+      /// </summary>
+      /// <value>The resulting parser rule tree.</value>
+      ParserRule<TToken, TType>? Result { get; }
+
+      /// <summary>
       /// Gets a value indicating whether this instance has errors after the last parse attempt.
       /// </summary>
       /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
@@ -110,5 +116,10 @@ namespace Org.Edgerunner.Language.Parsers
       /// <param name="tokens">The tokens.</param>
       /// <returns><c>true</c> if parsing succeeded, <c>false</c> otherwise.</returns>
       bool ParseSource(TokenStream<TToken> tokens);
+
+      /// <summary>
+      /// Resets this instance.
+      /// </summary>
+      void Reset();
    }
 }

@@ -30,7 +30,7 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
 {
-   public class ExpressionBuilder
+   public static class ExpressionBuilder
    {
       /// <summary>
       /// Attempts to build a new expression rule and return it.
@@ -41,7 +41,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
       public static AlParserRule BuildRule(TokenStream<AlToken> tokens, AlParser context)
       {
          var token = tokens.Current;
-         string errorMessage;
 
          if (tokens.EndOfStream())
          {
@@ -50,7 +49,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
             return new ErrorNode(Resources.UnexpectedEof, last);
          }
 
-         if (!ParseBaseExpression(tokens, context, out var baseExpression))
+         if (!ParseBaseExpression(tokens, context, out var constructedExpression))
          {
             var last = tokens.Last();
             context.GenerateParserError(last, last, Resources.UnexpectedEof);
@@ -58,14 +57,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
          }
 
          if (!tokens.TryMoveNext(ref token))
-            return baseExpression;
+            return constructedExpression;
 
-         while (!tokens.EndOfStream() && token.Value is not ";" and not "}" and not "{")
+         while (!tokens.EndOfStream())
          {
-            var result = BuildOuterExpression(tokens, context, ref baseExpression);
+            var result = BuildOuterExpression(tokens, context, ref constructedExpression);
+            if (!result)
+               return constructedExpression;
          }
-         
-         return null;
+
+         return constructedExpression;
       }
 
       private static bool ParseBaseExpression(TokenStream<AlToken> tokens, AlParser context, out AlParserRule alParserRule)
@@ -73,7 +74,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
          var token = tokens.Current;
          AlParserRule expression;
          bool parsed;
-         if (token is IdentifierToken { ReservedWord: true })
+         if (token is IdentifierToken { IsReservedWord: true })
          {
             var errorMessage = $"Encountered unexpected reserved word: \"{token.Value}\"";
             context.GenerateParserError(token, token, errorMessage);
@@ -136,16 +137,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
                alParserRule = new ErrorNode(errorMessage, token);
                return false;
             case TokenType.Literal:
-               errorMessage = string.Format(Resources.UnexpectedLiteralValue, token.Value);
-               context.GenerateParserError(token, token, errorMessage);
-               alParserRule = new ErrorNode(errorMessage, token);
+               // unexpected but not our problem. kick this can up the parser chain
                return false;
             case TokenType.Symbol:
             {
 
                if (token.Value == "[")
                {
-                  // we seem to have a bracketed expression
+                  // we seem to have a indexed expression
                }
                else if (token.Value == ".")
                {
@@ -175,6 +174,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
                {
                   // we seem to have a non-comparative binary expression
                }
+               else
+                  return false;
 
                break;
             }

@@ -79,8 +79,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
             var token = tokens.Current;
             var enumerable = values as string[] ?? values.ToArray();
             // ReSharper disable once ExceptionNotDocumented
-            string setText = string.Join(", ", enumerable.Select(i => $"{i}"));
-            var message = string.Format(Resources.ExpectedSymbolFromSet, setText, token.Value);
+            var message = FormatSetError(Resources.ExpectedSymbolFromSet, values, token.Value);
             var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, enumerable, message);
             if (tokenValidates)
             {

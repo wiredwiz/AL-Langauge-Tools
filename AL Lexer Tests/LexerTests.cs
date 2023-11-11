@@ -76,7 +76,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers.Tests
          var token = lexer.ReadTokenFromBuffer(buffer) as IdentifierToken;
 
          // The token is a valid IdentifierToken
-         token!.ReservedWord.Should().Be(reserved);
+         token!.IsReservedWord.Should().Be(reserved);
          token.TokenType.Should().Be((int)TokenType.Identifier);
          token.Value.Should().Be(name);
       }
@@ -344,7 +344,7 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers.Tests
          var tokens = lexer.ReadTokensFromBuffer(buffer);
 
          // Results in the expected tokens
-         tokens.Count.Should().Be(4793);
+         tokens.Count.Should().Be(4792);
          var last = tokens.Last();
          last.StartingLine.Should().Be(796);
          last.EndingLine.Should().Be(796);

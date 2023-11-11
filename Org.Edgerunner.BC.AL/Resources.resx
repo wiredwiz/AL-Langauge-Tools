@@ -151,7 +151,7 @@
     <value>Expected identifier "{0}", instead encountered: "{1}"</value>
   </data>
   <data name="ExpectedSymbolFromSet" xml:space="preserve">
-    <value>Expected a symbol from set [{0}], instead encountered: "{1}"</value>
+    <value>Expected either {0}, instead encountered: "{1}"</value>
   </data>
   <data name="EnteringParserRule" xml:space="preserve">
     <value>Entering {0}</value>

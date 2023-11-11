@@ -27,6 +27,7 @@
 
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Buffers;
+using Org.Edgerunner.Common.Extensions;
 using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Lexers
@@ -74,6 +75,10 @@ namespace Org.Edgerunner.BC.AL.Language.Lexers
                   return LiteralTokenizer.ReadNumericBasedLiteralFromBuffer(buffer, this);
                }
             case CharacterIndicator.Symbol:
+               if (buffer.Current == '-')
+                  if (buffer.PeekChar().IsNumber())
+                     return LiteralTokenizer.ReadNumericBasedLiteralFromBuffer(buffer, this);
+
                return SymbolTokenizer.ReadSymbolTokenFromBuffer(buffer);
             case CharacterIndicator.String:
                return LiteralTokenizer.ReadStringLiteralTokenFromBuffer(buffer, this);

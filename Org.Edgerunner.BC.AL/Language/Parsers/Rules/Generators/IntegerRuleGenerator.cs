@@ -39,7 +39,12 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators
    {
       public bool Parses(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule)
       {
-         return ((IntegerLiteralRule)parentRule.AddChildNode(new IntegerLiteralRule(tokens.Current))).Parse(tokens, context);
+         var intRule = new IntegerLiteralRule(tokens.Current);
+         var result = intRule.Parse(tokens, context);
+         if (result)
+            parentRule.AddChildNode(intRule);
+
+         return result;
       }
    }
 }
