@@ -528,6 +528,13 @@ withControlStatement
 withStatement
    : withControlStatement statement;
 
+/* 
+ *AL Exit statement logic
+ */
+
+ exitStatement
+   : EXIT (expression)?;
+
 /*
  * AL generic statement statement logic
  */
@@ -539,6 +546,7 @@ statementLine
    | withStatement
    | whileStatement
    | repeatUntilStatement
+   | exitStatement
    | expression;
    
 statementBlock
