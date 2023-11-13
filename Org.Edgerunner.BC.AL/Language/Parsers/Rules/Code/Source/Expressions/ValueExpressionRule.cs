@@ -26,7 +26,6 @@
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
-using System.Linq.Expressions;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
@@ -36,6 +35,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
       /// Initializes a new instance of the <see cref="ValueExpressionRule"/> class.
       /// </summary>
       public ValueExpressionRule() : base(AlSyntaxNodeType.SimpleExpression, "Value Expression Rule") {}
+
       public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
       {
          Enter(context);
