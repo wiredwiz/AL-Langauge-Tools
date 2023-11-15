@@ -44,7 +44,7 @@ fieldValue
    ;
 
 comparisonFilter
-   : ('<>' | '=' | '<' | '>' | '<=' | '>=' ) fieldValue
+   : (NOTEQUAL | EQUAL | LESSTHAN | GREATHERTHAN | LESSTHANEQUAL | GREATERTHANEQUAL ) fieldValue
    ;
 
 filterRule
@@ -52,7 +52,7 @@ filterRule
    ;
 
 compoundFilterRule
-   : filterRule (('|' | '&') filterRule)*?
+   : filterRule ((PIPE | AMPERSAND) filterRule)*?
    ;
 
 tableReference
@@ -64,7 +64,7 @@ fieldReference
    ;
 
 qualifiedFieldReference
-   : tableReference '.' fieldReference
+   : tableReference PERIOD fieldReference
    ;
 
 /*
@@ -72,7 +72,7 @@ qualifiedFieldReference
  */
 
 tableRelationFilter
-   : IDENTIFIER '=' (FIELD LEFTPAREN IDENTIFIER RIGHTPAREN | CONST LEFTPAREN (IDENTIFIER | DIGIT+) RIGHTPAREN)
+   : IDENTIFIER EQUAL (FIELD LEFTPAREN IDENTIFIER RIGHTPAREN | CONST LEFTPAREN (IDENTIFIER | DIGIT+) RIGHTPAREN)
    ;
 
 tableRelationFilters
@@ -114,7 +114,7 @@ calcFormulaTableFilterValue
    ;
 
 calcFormulaTableFilter
-   : fieldReference '=' calcFormulaTableFilterValue
+   : fieldReference EQUAL calcFormulaTableFilterValue
    ;
 
 calcFormulaTableFilters
@@ -126,7 +126,7 @@ calcFormulaWhereClause
    ;
 
 calcFormulaExist
-   : '-' EXIST LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS EXIST LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaCount
@@ -134,11 +134,11 @@ calcFormulaCount
    ;
 
 calcFormulaSum
-   : '-' SUM LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS SUM LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaAverage
-   : '-' AVERAGE LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS AVERAGE LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
    
 calcFormulaMin
@@ -167,7 +167,7 @@ calcForumla
  * Type declarations
  */
 
-sizeDeclaration : '[' INTEGER_LITERAL ']';
+sizeDeclaration : LEFTBRACKET INTEGER_LITERAL RIGHTBRACKET;
 
 /*
  * Tables
@@ -200,7 +200,7 @@ tableFieldType
 
 
 tableField
-   : FIELD LEFTPAREN tableFieldId ';' tableFieldName ';' tableFieldType RIGHTPAREN '{'  '}';
+   : FIELD LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE RIGHTCBRACE;
 
 /*
  * Method attributes
@@ -232,15 +232,15 @@ labelText
    ;
 
 labelMaxLength
-   : MAXLENGTH '=' INTEGER_LITERAL
+   : MAXLENGTH EQUAL INTEGER_LITERAL
    ;
 
 labelComment
-   : COMMENT '=' STRING_LITERAL
+   : COMMENT EQUAL STRING_LITERAL
    ;
 
 labelLocked
-   : LOCKED '=' (TRUE | FALSE)
+   : LOCKED EQUAL (TRUE | FALSE)
    ;
 
 labelArgument
@@ -280,7 +280,7 @@ variableTypeDeclaration
    | DEBUGGER
    | DECIMAL
    | DIALOG
-   | DICTIONARY OF '[' key COMMA dataType ']'
+   | DICTIONARY OF LEFTBRACKET key COMMA dataType RIGHTBRACKET
    | DOTNOT IDENTIFIER
    | DURATION
    | ENUM IDENTIFIER
@@ -303,7 +303,7 @@ variableTypeDeclaration
    | JSONVALUE
    | KEYREF
    | LABEL labelText (COMMA labelArgs)?
-   | LIST OF '[' dataType ']'
+   | LIST OF LEFTBRACKET dataType RIGHTBRACKET
    | MEDIA
    | MEDIASET
    | MODULEDEPENDENCYINFO
@@ -336,7 +336,7 @@ variableTypeDeclaration
    | TESTREQUESTPAGE
    | TEXT sizeDeclaration
    | TEXTBUILDER
-   | TEXTCONST IDENTIFIER '=' STRING_LITERAL
+   | TEXTCONST IDENTIFIER EQUAL STRING_LITERAL
    | TIME
    | VARIANT
    | VERSION
@@ -467,7 +467,7 @@ forValue
    ;
 
 forControlStatement
-   : FOR IDENTIFIER ':=' forValue (TO | DOWNTO) forValue DO;
+   : FOR IDENTIFIER ASSGN forValue (TO | DOWNTO) forValue DO;
 
 forStatement
    : forControlStatement statement;
@@ -572,13 +572,14 @@ indexAccessorSet
    : indexAccessorValue (COMMA indexAccessorValue)*?;
 
 expression
-   : '(' expression ')' #ParenthesisExpression
-   | expression ('*' | '/' | MOD) expression #DivMultExpression
-   | expression ('+' | '-') expression #AddSubtractExpression
-   | expression ('<' | '>' | '<=' | '>=' | '<>' | '=') expression #ComparisonExpression
+   : LEFTPAREN expression RIGHTPAREN #ParenthesisExpression
+   | expression (ASTERISK | BACKSLASH | MOD) expression #DivMultExpression
+   | expression (PLUS | MINUS) expression #AddSubtractExpression
+   | expression (LESSTHAN | GREATHERTHAN | LESSTHANEQUAL | GREATERTHANEQUAL | NOTEQUAL | EQUAL) expression #ComparisonExpression
    | expression (AND | OR) expression #LogicalComparisonExpression
-   | expression (':=' | '/=' | '*=' | '+=' | '-=') expression #AssignmentExpression
+   | expression (ASSGN | DIV_ASSGN | MULT_ASSGN | ADD_ASSGN | MINUS_ASSGN) expression #AssignmentExpression
    | expression LEFTBRACKET indexAccessorSet RIGHTBRACKET #IndexExpression
+   | expression PERIOD IDENTIFIER LEFTPAREN (expression (COMMA expression)*?)? RIGHTPAREN #MemberAccessExpression
    | booleanLiteral #BooleanLiteralExpression
    | DATE_LITERAL #DateLiteralExpression
    | TIME_LITERAL #TimeLiteralExpression

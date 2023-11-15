@@ -39,26 +39,8 @@ LESSTHANEQUAL
 NOTEQUAL
    : '<>';
 
-ASSGN
-   : ':=';
-
-MULTIPLY_ASSGN
-   : '*=';
-
-DIV_ASSGN
-   : '/=';
-
-ADD_ASSGN
-   : '+=';
-
-MINUS_ASSGN
-   : '-=';
-
 EQUALS
    : '=';
-
-ASTERISK
-   : '*';
 
 BACKSLASH
    : '/';
@@ -112,63 +94,19 @@ ASSERTERROR
    ;
 
 BEGIN
-   : B E G I N
-   ;
-
-BREAK
-   : B R E A K
-   ;
-
-CASE
-   : C A S E
-   ;
-
-DO
-   : D O
-   ;
-
-DOWNTO
-   : D O W N T O
-   ;
-
-ELSE
-   : E L S E
-   ;
-
-END
-   : E N D
+   : B E G I N -> pushMode(AL_CODE)
    ;
 
 EVENT
    : E V E N T
    ;
 
-EXIT
-   : E X I T
-   ;
-
-FOR
-   : F O R
-   ;
-
-FOREACH
-   : F O R E A C H
-   ;
-
 FUNCTION
    : F U N C T I O N
    ;
 
-IF
-   : I F
-   ;
-
 IMPLEMENTS
    : I M P L E M E N T S
-   ;
-
-IN
-   : I N
    ;
 
 INDATASET
@@ -183,10 +121,6 @@ LOCAL
    : L O C A L
    ;
 
-OF
-   : O F
-   ;
-
 PROCEDURE
    : P R O C E D U R E
    ;
@@ -197,10 +131,6 @@ PROGRAM
 
 PROTECTED
    : P R O T E C T E D
-   ;
-
-REPEAT
-   : R E P E A T
    ;
 
 RUNONCLIENT
@@ -215,64 +145,16 @@ TEMPORARY
    : T E M P O R A R Y
    ;
 
-THEN
-   : T H E N
-   ;
-
-TO
-   : T O
-   ;
-
 TRIGGER
    : T R I G G E R
-   ;
-
-UNTIL
-   : U N T I L
    ;
 
 VAR
    : V A R
    ;
 
-WHILE
-   : W H I L E
-   ;
-
-WITH
-   : W I T H
-   ;
-
 WITHEVENTS
    : W I T H E V E N T S
-   ;
-
-/* 
- * operator keywords 
- */
-
-AND
-   : A N D
-   ;
-
-DIV
-   : D I V
-   ;
-
-MOD
-   : M O D
-   ;
-
-NOT
-   : N O T
-   ;
-
-OR
-   : O R
-   ;
-
-XOR
-   : X O R
    ;
 
 /* 
@@ -348,7 +230,7 @@ DESCENDING
    ;
 
 /* 
- * application object types
+ * Application objec types
  */
 
 CODEUNIT
@@ -365,6 +247,10 @@ PAGEEXTENSION
 
 PAGECUSTOMIZATION
    : P A G E C U S T O M I Z A T I O N
+   ;
+
+DOTNET
+   : D O T N E T
    ;
 
 ENUM
@@ -519,10 +405,6 @@ DICTIONARY
    : D I C T I O N A R Y
    ;
 
-DOTNET
-   : D O T N E T
-   ;
-
 DOTNETASSEMBLY
    : D O T N E T A S S E M B L Y
    ;
@@ -630,7 +512,6 @@ OUTSTREAM
 PAGERESULT
    : P A G E R E S U L T
    ;
-
 
 RECORD
    : R E C O R D
@@ -1028,10 +909,9 @@ TEXTELEMENT
    : T E X T E L E M E N T
    ;
 
-/*TYPE
+TYPE
    : T Y P E
-   ;*/
-
+   ;
 
 /* 
  * boolean 
@@ -1169,3 +1049,334 @@ fragment W : [wW];
 fragment X : [xX];
 fragment Y : [yY];
 fragment Z : [zZ];
+
+mode AL_CODE;
+/**************************************
+ * STARTING AL Code block lexing mode *
+ **************************************/
+
+CODE_SINGLE_LINE_COMMENT
+	: '//' INPUT_CHARACTER* -> type(SINGLE_LINE_COMMENT), channel(COMMENTS_CHANNEL);
+
+CODE_DELIMITED_COMMENT
+	: '/*' .*? '*/' -> type(DELIMITED_COMMENT), channel(COMMENTS_CHANNEL);
+
+CODE_WS
+	:	[ \t\r\n] -> channel(HIDDEN)
+	;
+
+CODE_OPTION_MEMBER
+   : '::' -> type(OPTION_MEMBER);
+
+CODE_RANGE
+   : '..' -> type(RANGE);
+
+CODE_SEMICOLON
+   : ';' -> type(SEMICOLON);
+
+CODE_COLON
+   : ':' -> type(COLON);
+
+CODE_COMMA
+   : ',' -> type(COMMA);
+
+CODE_PERIOD
+   : '.' -> type(PERIOD);
+
+CODE_GREATERTHANEQUAL
+   : '>=' -> type(GREATERTHANEQUAL);
+
+CODE_LESSTHANEQUAL
+   : '<=' -> type(LESSTHANEQUAL);
+
+CODE_NOTEQUAL
+   : '<>' -> type(NOTEQUAL);
+
+ASSGN
+   : ':=';
+
+MULTIPLY_ASSGN
+   : '*=';
+
+DIV_ASSGN
+   : '/=';
+
+ADD_ASSGN
+   : '+=';
+
+MINUS_ASSGN
+   : '-=';
+
+CODE_EQUALS
+   : '=' -> type(EQUALS);
+
+ASTERISK
+   : '*';
+
+CODE_BACKSLASH
+   : '/' -> type(BACKSLASH);
+
+CODE_PLUS
+   : '+' -> type(PLUS);
+
+CODE_MINUS
+   : '-' -> type(MINUS);
+
+CODE_LESSTHAN
+   : '<' -> type(LESSTHAN);
+
+CODE_GREATERTHAN
+   : '>' -> type(GREATERTHAN);
+
+CODE_LEFTPAREN
+   : '(' -> type(LEFTPAREN);
+
+CODE_RIGHTPAREN
+   : ')' -> type(RIGHTPAREN);
+
+CODE_LEFTBRACKET
+   : '[' -> type(LEFTBRACKET);
+
+CODE_RIGHTBRACKET
+   : ']' -> type(RIGHTBRACKET);
+
+CODE_BEGIN
+   : B E G I N -> type(BEGIN), pushMode(AL_CODE)
+   ;
+
+BREAK
+   : B R E A K
+   ;
+
+CASE
+   : C A S E
+   ;
+
+DO
+   : D O
+   ;
+
+DOWNTO
+   : D O W N T O
+   ;
+
+ELSE
+   : E L S E
+   ;
+
+END
+   : E N D -> popMode
+   ;
+
+EXIT
+   : E X I T
+   ;
+
+FOR
+   : F O R
+   ;
+
+FOREACH
+   : F O R E A C H
+   ;
+
+IF
+   : I F
+   ;
+
+IN
+   : I N
+   ;
+
+OF
+   : O F
+   ;
+
+REPEAT
+   : R E P E A T
+   ;
+
+THEN
+   : T H E N
+   ;
+
+TO
+   : T O
+   ;
+
+UNTIL
+   : U N T I L
+   ;
+
+WHILE
+   : W H I L E
+   ;
+
+WITH
+   : W I T H
+   ;
+
+/* 
+ * operator keywords 
+ */
+
+AND
+   : A N D
+   ;
+
+DIV
+   : D I V
+   ;
+
+MOD
+   : M O D
+   ;
+
+NOT
+   : N O T
+   ;
+
+OR
+   : O R
+   ;
+
+XOR
+   : X O R
+   ;
+
+/* 
+ * boolean 
+ */
+
+CODE_TRUE
+   : T_ R_ U_ E_ -> type(TRUE);
+
+CODE_FALSE
+   : F_ A_ L_ S_ E_ -> type(FALSE);
+
+ /* 
+ * date 
+ */
+
+CODE_DATE_LITERAL
+   : CODE_DIGIT+ D -> type(DATE_LITERAL);
+
+/* 
+ * time 
+ */
+
+CODE_TIME_LITERAL
+   : CODE_DIGIT+ ([.] CODE_DIGIT+)? T -> type(TIME_LITERAL);
+
+/* 
+ * datetime 
+ */
+
+CODE_DATETIME_LITERAL
+   : CODE_DIGIT+ D T -> type(DATETIME_LITERAL);
+
+/* 
+ * numbers 
+ */
+
+CODE_INTEGER_LITERAL
+   : (CODE_DIGIT+
+   | ('0' X CODE_HEXDIGIT*? | CODE_DIGIT+) (CODE_EXPONENT_NOTATION CODE_EXPONENT_SIGN CODE_DIGIT+)? (CODE_INTEGER_SUFFIX | CODE_FLOAT_SUFFIX)?)  -> type(INTEGER_LITERAL)
+   ;
+
+CODE_FLOAT_LITERAL
+	: ((CODE_DIGIT+ [.] (CODE_DIGIT*)? {_input.La(1) != '.'}? (CODE_EXPONENT_NOTATION CODE_EXPONENT_SIGN DIGIT+)? 
+	| [.] CODE_DIGIT+ (CODE_EXPONENT_NOTATION CODE_EXPONENT_SIGN DIGIT+)? 
+	| CODE_DIGIT+ CODE_EXPONENT_NOTATION CODE_EXPONENT_SIGN DIGIT+) (CODE_INTEGER_SUFFIX | CODE_FLOAT_SUFFIX)?) -> type(FLOAT_LITERAL)
+	;
+
+/* 
+ * strings 
+ */
+
+CODE_STRING_LITERAL
+	: '\'' ( ESC | ~['\r\n])* '\'' -> type(STRING_LITERAL);
+
+/* 
+ * identifiers 
+ */
+
+CODE_IDENTIFIER
+	: ((CODE_LETTER | CODE_DIGIT | CODE_UNDERSCORE)+
+   | '"' ~["]+ '"')  -> type(IDENTIFIER)
+	;
+
+CODE_UNDERSCORE
+	: '_' -> type(UNDERSCORE);
+
+CODE_LETTER
+	: (CODE_LOWERCASE 
+	| CODE_UPPERCASE) -> type(LETTER)
+	;
+
+/*
+ * preprocessor directives
+ */
+
+CODE_PREPROCESSOR_DIRECTIVE
+   : '#' ~[\r\n]* '\r'? '\n' -> type(PREPROCESSOR_DIRECTIVE);
+
+/* 
+ * fragments 
+ */
+
+fragment CODE_LOWERCASE
+	: [a-z] ;
+
+fragment CODE_UPPERCASE
+	: [A-Z] ;
+
+fragment CODE_EXPONENT_NOTATION
+	: ('E' | 'e');
+
+fragment CODE_EXPONENT_SIGN
+	: ('-' | '+');
+
+fragment CODE_DIGIT
+	: [0-9] ;
+
+fragment CODE_HEXDIGIT : [0-9] | [A-F] | [a-f];
+
+fragment CODE_INTEGER_SUFFIX
+   : [uU] [lL]? [lL]? | [lL] [lL]?;
+
+fragment CODE_FLOAT_SUFFIX
+   : [fF];
+
+fragment CODE_ESC 
+	: '\'\'' ;
+
+fragment CODE_INPUT_CHARACTER
+	: ~[\r\n\u0085\u2028\u2029];
+
+fragment A_ : [aA];
+fragment B_ : [bB];
+fragment C_ : [cC];
+fragment D_ : [dD];
+fragment E_ : [eE];
+fragment F_ : [fF];
+fragment G_ : [gG];
+fragment H_ : [hH];
+fragment I_ : [iI];
+fragment J_ : [jJ];
+fragment K_ : [kK];
+fragment L_ : [lL];
+fragment M_ : [mM];
+fragment N_ : [nN];
+fragment O_ : [oO];
+fragment P_ : [pP];
+fragment Q_ : [qQ];
+fragment R_ : [rR];
+fragment S_ : [sS];
+fragment T_ : [tT];
+fragment U_ : [uU];
+fragment V_ : [vV];
+fragment W_ : [wW];
+fragment X_ : [xX];
+fragment Y_ : [yY];
+fragment Z_ : [zZ];
