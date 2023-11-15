@@ -579,7 +579,9 @@ expression
    | expression (AND | OR) expression #LogicalComparisonExpression
    | expression (ASSGN | DIV_ASSGN | MULT_ASSGN | ADD_ASSGN | MINUS_ASSGN) expression #AssignmentExpression
    | expression LEFTBRACKET indexAccessorSet RIGHTBRACKET #IndexExpression
-   | expression PERIOD IDENTIFIER LEFTPAREN (expression (COMMA expression)*?)? RIGHTPAREN #MemberAccessExpression
+   | IDENTIFIER (PERIOD IDENTIFIER)*? LEFTPAREN (expression (COMMA expression)*?)? RIGHTPAREN #MethodCallExpression
+   | expression PERIOD IDENTIFIER (PERIOD IDENTIFIER)*? #MemberAccessExpression   
+   | IDENTIFIER RIGHTPAREN #FunctionCallExpression
    | booleanLiteral #BooleanLiteralExpression
    | DATE_LITERAL #DateLiteralExpression
    | TIME_LITERAL #TimeLiteralExpression
