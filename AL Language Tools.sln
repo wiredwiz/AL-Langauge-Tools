@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AL Parser Tests", "AL Parse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALParser.Demo", "ALParser.Demo\ALParser.Demo.csproj", "{E8AB5EFD-0D0D-440E-8D98-1A00E84D4889}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grammar.AL.Antlr", "Grammar.AL.Antlr\Grammar.AL.Antlr.csproj", "{FD9CC6A1-3E27-4FDF-8E23-AC97DCCECA57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grammar.AL.Antlr", "Grammar.AL.Antlr\Grammar.AL.Antlr.csproj", "{FD9CC6A1-3E27-4FDF-8E23-AC97DCCECA57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

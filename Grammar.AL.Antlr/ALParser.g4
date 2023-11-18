@@ -44,7 +44,7 @@ fieldValue
    ;
 
 comparisonFilter
-   : (NOTEQUAL | EQUAL | LESSTHAN | GREATHERTHAN | LESSTHANEQUAL | GREATERTHANEQUAL ) fieldValue
+   : (NOTEQUAL | EQUAL | LESSTHAN | GREATERTHAN | LESSTHANEQUAL | GREATERTHANEQUAL ) fieldValue
    ;
 
 filterRule
@@ -203,6 +203,13 @@ tableField
    : FIELD LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE RIGHTCBRACE;
 
 /*
+ * Method
+ */
+
+method
+   : methodAttribute*? PROCEDURE IDENTIFIER LEFTPAREN parameterList? RIGHTPAREN returnValue? varBlock? statementBlock;
+
+/*
  * Method attributes
  */
 
@@ -281,7 +288,7 @@ variableTypeDeclaration
    | DECIMAL
    | DIALOG
    | DICTIONARY OF LEFTBRACKET key COMMA dataType RIGHTBRACKET
-   | DOTNOT IDENTIFIER
+   | DOTNET IDENTIFIER
    | DURATION
    | ENUM IDENTIFIER
    | ERRORINFO
@@ -571,17 +578,24 @@ indexAccessorValue
 indexAccessorSet
    : indexAccessorValue (COMMA indexAccessorValue)*?;
 
+valueSet
+   : expression (COMMA expression)*?;
+
 expression
    : LEFTPAREN expression RIGHTPAREN #ParenthesisExpression
    | expression (ASTERISK | BACKSLASH | MOD) expression #DivMultExpression
    | expression (PLUS | MINUS) expression #AddSubtractExpression
-   | expression (LESSTHAN | GREATHERTHAN | LESSTHANEQUAL | GREATERTHANEQUAL | NOTEQUAL | EQUAL) expression #ComparisonExpression
+   | expression (LESSTHAN | GREATERTHAN | LESSTHANEQUAL | GREATERTHANEQUAL | NOTEQUAL | EQUAL) expression #ComparisonExpression
+   | NOT expression #negationExpression
    | expression (AND | OR) expression #LogicalComparisonExpression
-   | expression (ASSGN | DIV_ASSGN | MULT_ASSGN | ADD_ASSGN | MINUS_ASSGN) expression #AssignmentExpression
+   | expression (ASSGN | DIV_ASSGN | MULTIPLY_ASSGN | ADD_ASSGN | MINUS_ASSGN) expression #AssignmentExpression
+   | expression SCOPE IDENTIFIER #ScopeExpression
    | expression LEFTBRACKET indexAccessorSet RIGHTBRACKET #IndexExpression
+   | LEFTBRACKET valueSet? RIGHTBRACKET #SetExpression
    | IDENTIFIER (PERIOD IDENTIFIER)*? LEFTPAREN (expression (COMMA expression)*?)? RIGHTPAREN #MethodCallExpression
    | expression PERIOD IDENTIFIER (PERIOD IDENTIFIER)*? #MemberAccessExpression   
    | IDENTIFIER RIGHTPAREN #FunctionCallExpression
+   | expression IN LEFTBRACKET valueSet? RIGHTBRACKET #InSetExpression
    | booleanLiteral #BooleanLiteralExpression
    | DATE_LITERAL #DateLiteralExpression
    | TIME_LITERAL #TimeLiteralExpression
@@ -592,7 +606,7 @@ expression
    | optionLiteral #OptionLiteralExpression;
 
 optionLiteral
-   : IDENTIFIER OPTION_MEMBER IDENTIFIER;
+   : IDENTIFIER SCOPE IDENTIFIER;
 
 booleanLiteral
    : TRUE
