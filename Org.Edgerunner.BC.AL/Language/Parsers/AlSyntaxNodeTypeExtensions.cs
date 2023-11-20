@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlSyntaxNodeType.cs">
+// <copyright company = "Edgerunner.org" file = "AlSyntaxNodeTypeExtensions.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,41 +23,27 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
+using Org.Edgerunner.Pooling;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
-   public enum AlSyntaxNodeType
+   public static class AlSyntaxNodeTypeExtensions
    {
-      Error,
-      Integer,
-      Decimal,
-      Symbol,
-      String,
-      Date,
-      Time,
-      DateTime,
-      Boolean,
-      Identifier,
-      LabelDeclaration,
-      LengthDeclaration,
-      DimensionsDeclaration,
-      VariableTypeDeclaration,
-      OptionValuesDeclaration,
-      ObjectReferenceDeclaration,
-      ArrayDeclaration,
-      ListDeclaration,
-      DictionaryDeclaration,
-      DotNetDeclaration,
-      VariableDeclaration,
-      Statement,
-      CodeBlockStatement,
-      Expression,
-      SimpleExpression,
-      BinaryExpression,
-      MemberAccessExpression,
-      ParenthesesExpression,
-      SetExpression,
-      IndexedExpression,
-      RangeExpression
+      static string ToName(this AlSyntaxNodeType type)
+      {
+         var builder = StringBuilderPool.Current.Get();
+         foreach (var character in type.ToString())
+         {
+            if (character <= 95 && builder.Length != 0)
+               builder.Append(' ');
+
+            if (character == 95)
+               continue;
+
+            builder.Append(character);
+         }
+         return builder.ToString();
+      }
    }
 }

@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlSyntaxNodeType.cs">
+// <copyright company = "Edgerunner.org" file = "ParserRuleAttribute.cs">
 // Copyright(c)  2023
 // </copyright>
 // The MIT License (MIT)
@@ -23,41 +23,25 @@
 // THE SOFTWARE.
 #endregion
 
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Attributes
 {
-   public enum AlSyntaxNodeType
+   public class ParserRuleAttribute : Attribute
    {
-      Error,
-      Integer,
-      Decimal,
-      Symbol,
-      String,
-      Date,
-      Time,
-      DateTime,
-      Boolean,
-      Identifier,
-      LabelDeclaration,
-      LengthDeclaration,
-      DimensionsDeclaration,
-      VariableTypeDeclaration,
-      OptionValuesDeclaration,
-      ObjectReferenceDeclaration,
-      ArrayDeclaration,
-      ListDeclaration,
-      DictionaryDeclaration,
-      DotNetDeclaration,
-      VariableDeclaration,
-      Statement,
-      CodeBlockStatement,
-      Expression,
-      SimpleExpression,
-      BinaryExpression,
-      MemberAccessExpression,
-      ParenthesesExpression,
-      SetExpression,
-      IndexedExpression,
-      RangeExpression
+      /// <summary>
+      /// Initializes a new instance of the <see cref="ParserRuleAttribute"/> class.
+      /// </summary>
+      /// <param name="type">The type.</param>
+      public ParserRuleAttribute(AlSyntaxNodeType type)
+      {
+         Type = type;
+      }
+
+      /// <summary>
+      /// Gets or sets the type.
+      /// </summary>
+      /// <value>The type.</value>
+      public AlSyntaxNodeType Type { get; set; }
    }
 }

@@ -1,16 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Language\Aspects\**" />
-    <EmbeddedResource Remove="Language\Aspects\**" />
-    <None Remove="Language\Aspects\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Metalama.Framework" Version="2023.3.8" />
@@ -37,6 +31,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Language\Attributes\" />
   </ItemGroup>
 
 </Project>

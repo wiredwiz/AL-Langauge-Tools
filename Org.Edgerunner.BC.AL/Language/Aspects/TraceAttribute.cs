@@ -1,6 +1,6 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "AlSyntaxNodeType.cs">
-// Copyright(c)  2023
+// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
+// Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
 // 
@@ -23,41 +23,29 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Diagnostics;
+using Metalama.Framework.Aspects;
+using Org.Edgerunner.BC.AL.Language.Parsers;
 
-namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
+namespace Org.Edgerunner.BC.AL.Language.Aspects
 {
-   public enum AlSyntaxNodeType
+   public class TraceAttribute : OverrideMethodAspect
    {
-      Error,
-      Integer,
-      Decimal,
-      Symbol,
-      String,
-      Date,
-      Time,
-      DateTime,
-      Boolean,
-      Identifier,
-      LabelDeclaration,
-      LengthDeclaration,
-      DimensionsDeclaration,
-      VariableTypeDeclaration,
-      OptionValuesDeclaration,
-      ObjectReferenceDeclaration,
-      ArrayDeclaration,
-      ListDeclaration,
-      DictionaryDeclaration,
-      DotNetDeclaration,
-      VariableDeclaration,
-      Statement,
-      CodeBlockStatement,
-      Expression,
-      SimpleExpression,
-      BinaryExpression,
-      MemberAccessExpression,
-      ParenthesesExpression,
-      SetExpression,
-      IndexedExpression,
-      RangeExpression
+      public override dynamic? OverrideMethod()
+      {
+         if (meta.This is not AlParser { EnableTracing: true })
+            return meta.Proceed();
+
+         var name = meta.Target.Method.ToDisplayString();
+
+         if (name.Length < 6 || !name.StartsWith("Parse"))
+            return meta.Proceed();
+
+         name = name.Substring(5);
+         Trace.TraceInformation(Resources.EnteringParserRule, name);
+         var result = meta.Proceed();
+         Trace.TraceInformation(Resources.ExitingParserRule, name);
+         return result;
+      }
    }
 }
