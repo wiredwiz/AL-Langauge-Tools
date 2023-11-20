@@ -43,6 +43,40 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          _State = 0;
       }
 
+      public readonly Dictionary<AlSyntaxNodeType, string> Rules = new Dictionary<AlSyntaxNodeType, string>
+                                                                   {
+                                                                      { AlSyntaxNodeType.ArrayDeclaration, "Array Declaration"},
+                                                                      { AlSyntaxNodeType.BinaryExpression, "Binary Expression"},
+                                                                      { AlSyntaxNodeType.Boolean, "Boolean"},
+                                                                      { AlSyntaxNodeType.CodeBlockStatement, "Code Block Statement"},
+                                                                      { AlSyntaxNodeType.Date, "Date"},
+                                                                      { AlSyntaxNodeType.DateTime, "DateTime"},
+                                                                      { AlSyntaxNodeType.Decimal, "Decimal"},
+                                                                      { AlSyntaxNodeType.DictionaryDeclaration, "Dictionary Declaration"},
+                                                                      { AlSyntaxNodeType.DimensionsDeclaration, "Dimensions Declaration"},
+                                                                      { AlSyntaxNodeType.DotNetDeclaration, "DotNet Declaration"},
+                                                                      { AlSyntaxNodeType.Error, "Error"},
+                                                                      { AlSyntaxNodeType.Expression, "Expression"},
+                                                                      { AlSyntaxNodeType.Identifier, "Identifier"},
+                                                                      { AlSyntaxNodeType.IndexedExpression, "Indexed Expression"},
+                                                                      { AlSyntaxNodeType.LabelDeclaration, "Label Declaration"},
+                                                                      { AlSyntaxNodeType.LengthDeclaration, "Length Declaration"},
+                                                                      { AlSyntaxNodeType.ListDeclaration, "List Declaration"},
+                                                                      { AlSyntaxNodeType.MemberAccessExpression, "Member Access Expression"},
+                                                                      { AlSyntaxNodeType.ObjectReferenceDeclaration , "Object Reference Declaration"},
+                                                                      { AlSyntaxNodeType.OptionValuesDeclaration , "Option Values Declaration"},
+                                                                      { AlSyntaxNodeType.ParenthesesExpression , "Parentheses Expression"},
+                                                                      { AlSyntaxNodeType.RangeExpression , "Range Expression"},
+                                                                      { AlSyntaxNodeType.SetExpression , "Set Expression"},
+                                                                      { AlSyntaxNodeType.SimpleExpression , "Simple Expression"},
+                                                                      { AlSyntaxNodeType.Statement , "Statement"},
+                                                                      { AlSyntaxNodeType.Symbol , "Symbol"},
+                                                                      { AlSyntaxNodeType.String , "String"},
+                                                                      { AlSyntaxNodeType.Time , "Time"},
+                                                                      { AlSyntaxNodeType.VariableDeclaration , "Variable Declaration"},
+                                                                      { AlSyntaxNodeType.VariableTypeDeclaration , "Variable Type Declaration"}
+                                                                   };
+
       protected internal readonly List<IErrorListener<AlToken>> ErrorListeners = new List<IErrorListener<AlToken>>();
 
       protected internal readonly List<ITraceListener> TraceListeners = new List<ITraceListener>();
@@ -121,10 +155,21 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          return false;
       }
 
+      /// <inheritdoc />
       public void Reset()
       {
          HasErrors = false;
          State = 0;
+      }
+
+      /// <summary>
+      /// Gets the name of the rule.
+      /// </summary>
+      /// <param name="type">The type.</param>
+      /// <returns>A string containing the name of the rule or null if unable to find the rule.</returns>
+      public string GetRuleName(AlSyntaxNodeType type)
+      {
+         return Rules[type];
       }
 
       /// <summary>
@@ -253,15 +298,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       }
 
       /// <inheritdoc />
-      public virtual void GenerateTraceEvent(ParserRule<AlToken, AlSyntaxNodeType> rule, TraceEvent traceEvent)
+      public void GenerateTraceEvent(AlToken token, string ruleName, TraceEvent traceEvent)
       {
-         foreach (var listener in TraceListeners) listener.AnnounceTraceMessage(rule, traceEvent);
-      }
-
-      /// <inheritdoc />
-      public void GenerateTraceEvent(AlToken token, TraceEvent traceEvent)
-      {
-         foreach (var listener in TraceListeners) listener.AnnounceTraceMessage(token, traceEvent);
+         foreach (var listener in TraceListeners) listener.AnnounceTraceMessage(token, ruleName, traceEvent);
       }
 
       protected virtual void AppendErrorNode(AlParserRule parent, string message, AlToken symbol)
@@ -271,6 +310,42 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                        Parent = parent
                     };
          parent.Children.Add(node);
+      }
+
+      protected virtual string FormatSetError(string message, IEnumerable<string> allowed, string encountered)
+      {
+         var enumerable = allowed as string[] ?? allowed.ToArray();
+         if (enumerable.Length == 0)
+            return message;
+
+         var set = $"\"{enumerable[0]}\"";
+
+         if (enumerable.Length > 1)
+         {
+            if (enumerable.Length == 2)
+               set += $" or \"{enumerable[1]}\"";
+            else
+            {
+               for (int i = 1; i < enumerable.Length - 1; i++) set += $", \"{enumerable[1]}\"";
+               set += $" or \"{enumerable[^1]}\"";
+            }
+         }
+
+         return string.Format(message, set, encountered);
+      }
+
+      protected virtual void Enter(AlToken token, AlSyntaxNodeType type)
+      {
+         GenerateTraceEvent(token, GetRuleName(type), TraceEvent.Enter);
+      }
+
+      protected virtual void Exit(AlToken token, AlSyntaxNodeType type)
+      {
+         GenerateTraceEvent(token, GetRuleName(type), TraceEvent.Exit);
+      }
+      protected virtual void Consume(AlToken token, AlSyntaxNodeType type)
+      {
+         GenerateTraceEvent(token, GetRuleName(type), TraceEvent.Consume);
       }
 
       protected virtual void ScanTillSymbolReached(TokenStream<AlToken> tokens, IEnumerable<string> terminators)

@@ -99,16 +99,10 @@ namespace Org.Edgerunner.Language.Parsers
       /// <summary>
       /// Generates a parser trace event and announces it.
       /// </summary>
-      /// <param name="rule">The parser rule.</param>
-      /// <param name="traceEvent">The trace event type.</param>
-      void GenerateTraceEvent(ParserRule<TToken, TType> rule, TraceEvent traceEvent);
-
-      /// <summary>
-      /// Generates a parser trace event and announces it.
-      /// </summary>
       /// <param name="token">The token.</param>
+      /// <param name="ruleName">The parser rule name.</param>
       /// <param name="traceEvent">The trace event type.</param>
-      void GenerateTraceEvent(TToken token, TraceEvent traceEvent);
+      void GenerateTraceEvent(TToken token, string ruleName, TraceEvent traceEvent);
 
       /// <summary>
       /// Parses tokens from the stream into an object of some kind.
