@@ -43,13 +43,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       public ErrorNode(string text, AlToken token) : base(AlSyntaxNodeType.Error, token, "Error")
       {
          ErrorText = text;
-         IsError = true;
       }
 
       /// <summary>
       /// The error text.
       /// </summary>
       protected string ErrorText;
+
+      /// <inheritdoc />
+      public override bool IsError => true;
 
       /// <inheritdoc />
       public override string ToString()

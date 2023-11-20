@@ -43,39 +43,39 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          _State = 0;
       }
 
-      public readonly Dictionary<AlSyntaxNodeType, string> Rules = new Dictionary<AlSyntaxNodeType, string>
-                                                                   {
-                                                                      { AlSyntaxNodeType.ArrayDeclaration, "Array Declaration"},
-                                                                      { AlSyntaxNodeType.BinaryExpression, "Binary Expression"},
-                                                                      { AlSyntaxNodeType.Boolean, "Boolean"},
-                                                                      { AlSyntaxNodeType.CodeBlockStatement, "Code Block Statement"},
-                                                                      { AlSyntaxNodeType.Date, "Date"},
-                                                                      { AlSyntaxNodeType.DateTime, "DateTime"},
-                                                                      { AlSyntaxNodeType.Decimal, "Decimal"},
-                                                                      { AlSyntaxNodeType.DictionaryDeclaration, "Dictionary Declaration"},
-                                                                      { AlSyntaxNodeType.DimensionsDeclaration, "Dimensions Declaration"},
-                                                                      { AlSyntaxNodeType.DotNetDeclaration, "DotNet Declaration"},
-                                                                      { AlSyntaxNodeType.Error, "Error"},
-                                                                      { AlSyntaxNodeType.Expression, "Expression"},
-                                                                      { AlSyntaxNodeType.Identifier, "Identifier"},
-                                                                      { AlSyntaxNodeType.IndexedExpression, "Indexed Expression"},
-                                                                      { AlSyntaxNodeType.LabelDeclaration, "Label Declaration"},
-                                                                      { AlSyntaxNodeType.LengthDeclaration, "Length Declaration"},
-                                                                      { AlSyntaxNodeType.ListDeclaration, "List Declaration"},
-                                                                      { AlSyntaxNodeType.MemberAccessExpression, "Member Access Expression"},
-                                                                      { AlSyntaxNodeType.ObjectReferenceDeclaration , "Object Reference Declaration"},
-                                                                      { AlSyntaxNodeType.OptionValuesDeclaration , "Option Values Declaration"},
-                                                                      { AlSyntaxNodeType.ParenthesesExpression , "Parentheses Expression"},
-                                                                      { AlSyntaxNodeType.RangeExpression , "Range Expression"},
-                                                                      { AlSyntaxNodeType.SetExpression , "Set Expression"},
-                                                                      { AlSyntaxNodeType.SimpleExpression , "Simple Expression"},
-                                                                      { AlSyntaxNodeType.Statement , "Statement"},
-                                                                      { AlSyntaxNodeType.Symbol , "Symbol"},
-                                                                      { AlSyntaxNodeType.String , "String"},
-                                                                      { AlSyntaxNodeType.Time , "Time"},
-                                                                      { AlSyntaxNodeType.VariableDeclaration , "Variable Declaration"},
-                                                                      { AlSyntaxNodeType.VariableTypeDeclaration , "Variable Type Declaration"}
-                                                                   };
+      private readonly Dictionary<AlSyntaxNodeType, string> _Rules = new Dictionary<AlSyntaxNodeType, string>
+                                                                    {
+                                                                       { AlSyntaxNodeType.ArrayDeclaration, "Array Declaration"},
+                                                                       { AlSyntaxNodeType.BinaryExpression, "Binary Expression"},
+                                                                       { AlSyntaxNodeType.Boolean, "Boolean"},
+                                                                       { AlSyntaxNodeType.CodeBlockStatement, "Code Block Statement"},
+                                                                       { AlSyntaxNodeType.Date, "Date"},
+                                                                       { AlSyntaxNodeType.DateTime, "DateTime"},
+                                                                       { AlSyntaxNodeType.Decimal, "Decimal"},
+                                                                       { AlSyntaxNodeType.DictionaryDeclaration, "Dictionary Declaration"},
+                                                                       { AlSyntaxNodeType.DimensionsDeclaration, "Dimensions Declaration"},
+                                                                       { AlSyntaxNodeType.DotNetDeclaration, "DotNet Declaration"},
+                                                                       { AlSyntaxNodeType.Error, "Error"},
+                                                                       { AlSyntaxNodeType.Expression, "Expression"},
+                                                                       { AlSyntaxNodeType.Identifier, "Identifier"},
+                                                                       { AlSyntaxNodeType.IndexedExpression, "Indexed Expression"},
+                                                                       { AlSyntaxNodeType.LabelDeclaration, "Label Declaration"},
+                                                                       { AlSyntaxNodeType.LengthDeclaration, "Length Declaration"},
+                                                                       { AlSyntaxNodeType.ListDeclaration, "List Declaration"},
+                                                                       { AlSyntaxNodeType.MemberAccessExpression, "Member Access Expression"},
+                                                                       { AlSyntaxNodeType.ObjectReferenceDeclaration , "Object Reference Declaration"},
+                                                                       { AlSyntaxNodeType.OptionValuesDeclaration , "Option Values Declaration"},
+                                                                       { AlSyntaxNodeType.ParenthesesExpression , "Parentheses Expression"},
+                                                                       { AlSyntaxNodeType.RangeExpression , "Range Expression"},
+                                                                       { AlSyntaxNodeType.SetExpression , "Set Expression"},
+                                                                       { AlSyntaxNodeType.SimpleExpression , "Simple Expression"},
+                                                                       { AlSyntaxNodeType.Statement , "Statement"},
+                                                                       { AlSyntaxNodeType.Symbol , "Symbol"},
+                                                                       { AlSyntaxNodeType.String , "String"},
+                                                                       { AlSyntaxNodeType.Time , "Time"},
+                                                                       { AlSyntaxNodeType.VariableDeclaration , "Variable Declaration"},
+                                                                       { AlSyntaxNodeType.VariableTypeDeclaration , "Variable Type Declaration"}
+                                                                    };
 
       protected internal readonly List<IErrorListener<AlToken>> ErrorListeners = new List<IErrorListener<AlToken>>();
 
@@ -83,7 +83,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
 
       private int _State;
 
-      private HashSet<AlToken> _Registry = new HashSet<AlToken>();
+      private readonly HashSet<AlToken> _Registry = new HashSet<AlToken>();
 
       public ParserRule<AlToken, AlSyntaxNodeType>? Result { get; private set; }
 
@@ -169,7 +169,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <returns>A string containing the name of the rule or null if unable to find the rule.</returns>
       public string GetRuleName(AlSyntaxNodeType type)
       {
-         return Rules[type];
+         return _Rules[type];
       }
 
       /// <summary>
@@ -334,16 +334,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          return string.Format(message, set, encountered);
       }
 
-      protected virtual void Enter(AlToken token, AlSyntaxNodeType type)
+      protected internal void Enter(AlToken token, AlSyntaxNodeType type)
       {
          GenerateTraceEvent(token, GetRuleName(type), TraceEvent.Enter);
       }
 
-      protected virtual void Exit(AlToken token, AlSyntaxNodeType type)
+      protected internal void Exit(AlToken token, AlSyntaxNodeType type)
       {
          GenerateTraceEvent(token, GetRuleName(type), TraceEvent.Exit);
       }
-      protected virtual void Consume(AlToken token, AlSyntaxNodeType type)
+      protected internal void Consume(AlToken token, AlSyntaxNodeType type)
       {
          GenerateTraceEvent(token, GetRuleName(type), TraceEvent.Consume);
       }

@@ -1,5 +1,5 @@
 ﻿#region MIT License
-// <copyright company = "Edgerunner.org" file = "TraceAttribute.cs">
+// <copyright company = "Edgerunner.org" file = "ParserRuleAttribute.cs">
 // Copyright(c) Thaddeus Ryker 2023
 // </copyright>
 // The MIT License (MIT)
@@ -24,28 +24,57 @@
 #endregion
 
 using System.Diagnostics;
+using System.Xml.Linq;
 using Metalama.Framework.Aspects;
 using Org.Edgerunner.BC.AL.Language.Parsers;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
+using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.Language.Lexers;
+using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Aspects
 {
-   public class TraceAttribute : OverrideMethodAspect
+   public class ParserRuleAttribute : OverrideMethodAspect
    {
+      /// <summary>
+      /// Initializes a new instance of the <see cref="ParserRuleAttribute"/> class.
+      /// </summary>
+      /// <param name="ruleType">Type of the parser rule.</param>
+      public ParserRuleAttribute(int ruleType)
+      {
+         RuleType = ruleType;
+      }
+
+      /// <summary>
+      /// Gets or sets the type of the parser rule.
+      /// </summary>
+      /// <value>The type of the parser rule.</value>
+      public int RuleType { get; }
+
       public override dynamic? OverrideMethod()
       {
-         if (meta.This is not AlParser { EnableTracing: true })
+         if (meta.This is not AlParser { EnableTracing: true } parser)
             return meta.Proceed();
 
-         var name = meta.Target.Method.ToDisplayString();
-
-         if (name.Length < 6 || !name.StartsWith("Parse"))
+         if (meta.Target.Method.Parameters.Count < 1)
             return meta.Proceed();
 
-         name = name.Substring(5);
-         Trace.TraceInformation(Resources.EnteringParserRule, name);
-         var result = meta.Proceed();
-         Trace.TraceInformation(Resources.ExitingParserRule, name);
-         return result;
+         var stream = meta.Target.Parameters[0].Value as TokenStream<AlToken>;
+         if (stream == null)
+            return meta.Proceed();
+
+         var token = stream.Current;
+         var name = parser.GetRuleName((AlSyntaxNodeType)RuleType);
+
+         try
+         {
+            parser.GenerateTraceEvent(token, name, TraceEvent.Enter);
+            return meta.Proceed();
+         }
+         finally
+         {
+            parser.GenerateTraceEvent(token, name, TraceEvent.Exit);
+         }
       }
    }
 }

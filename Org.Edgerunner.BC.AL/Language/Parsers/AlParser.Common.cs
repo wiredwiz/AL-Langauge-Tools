@@ -207,7 +207,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="tokens">The token stream.</param>
       /// <param name="values">The enumeration of allowed values.</param>
       /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
-      [ParserRule(AlSyntaxNodeType.Symbol)]
+      [ParserRule((int)AlSyntaxNodeType.Symbol)]
       public AlParserRule ParseSymbol(TokenStream<AlToken> tokens, IEnumerable<string> values)
       {
          var token = tokens.Current;

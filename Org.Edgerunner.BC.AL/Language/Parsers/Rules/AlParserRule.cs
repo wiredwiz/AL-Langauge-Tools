@@ -47,21 +47,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// <param name="type">The rule type.</param>
       /// <param name="name">The rule name.</param>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
-      protected AlParserRule(AlSyntaxNodeType type, string name) : base(type, name)
-      {
-         IsError = false;
-      }
+      protected AlParserRule(AlSyntaxNodeType type, string name) : base(type, name) {}
 
       protected delegate bool ParserHandler(TokenStream<AlToken> tokens,
                                             IParser<AlToken, AlSyntaxNodeType> context,
                                             ParserRule<AlToken, AlSyntaxNodeType> rule);
 
-      /// <summary>
-      /// Gets a value indicating whether this instance is an error.
-      /// </summary>
-      /// <value><c>true</c> if this instance is an error; otherwise, <c>false</c>.</value>
-      public bool IsError { get; protected internal set; }
 
+
+      /// <inheritdoc />
       public override string GetText()
       {
          switch (Children.Count)
@@ -199,7 +193,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
                set += $" or \"{enumerable[1]}\"";
             else
             {
+#pragma warning disable S1643
+               // Our allowed enumeration should never be big enough to justify using StringBuilder
                for (int i = 1; i < enumerable.Length - 1; i++) set += $", \"{enumerable[1]}\"";
+#pragma warning restore S1643
                set += $" or \"{enumerable[^1]}\"";
             }
          }
@@ -214,5 +211,30 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
       /// <param name="context">The parser context.</param>
       /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
       public abstract bool Parse(TokenStream<AlToken> tokens, AlParser context);
+
+      /// <inheritdoc />
+      public override bool HasErrors
+      {
+         get
+         {
+            if (IsError) return true;
+
+            switch (Children.Count)
+            {
+               case 0:
+                  return false;
+               case 1:
+                  return ((AlParserRule)Children[0]).IsError;
+               default:
+               {
+                  foreach (var child in Children)
+                     if (((AlParserRule)child).IsError)
+                        return true;
+
+                  return false;
+               }
+            }
+         }
+      }
    }
 }
