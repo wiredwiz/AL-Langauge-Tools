@@ -40,7 +40,7 @@ namespace Org.Edgerunner.BC.AL.Language.Aspects
       /// Initializes a new instance of the <see cref="ParserRuleAttribute"/> class.
       /// </summary>
       /// <param name="ruleType">Type of the parser rule.</param>
-      public ParserRuleAttribute(int ruleType)
+      public ParserRuleAttribute(AlSyntaxNodeType ruleType)
       {
          RuleType = ruleType;
       }
@@ -49,7 +49,7 @@ namespace Org.Edgerunner.BC.AL.Language.Aspects
       /// Gets or sets the type of the parser rule.
       /// </summary>
       /// <value>The type of the parser rule.</value>
-      public int RuleType { get; }
+      public AlSyntaxNodeType RuleType { get; }
 
       public override dynamic? OverrideMethod()
       {

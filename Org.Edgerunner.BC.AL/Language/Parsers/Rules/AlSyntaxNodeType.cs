@@ -24,8 +24,11 @@
 #endregion
 
 
+using Metalama.Framework.Aspects;
+
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
 {
+   [RunTimeOrCompileTime]
    public enum AlSyntaxNodeType
    {
       Error,
