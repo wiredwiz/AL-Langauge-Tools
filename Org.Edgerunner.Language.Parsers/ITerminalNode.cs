@@ -36,10 +36,5 @@ namespace Org.Edgerunner.Language.Parsers
    /// <seealso cref="Org.Edgerunner.Language.Parsers.ISyntaxNode{TToken, TSyntax}" />
    public interface ITerminalNode<out TToken, out TSyntax> : ISyntaxNode<TToken, TSyntax> where TToken : IToken
    {
-      /// <summary>
-      /// Gets a value indicating whether this instance is an error.
-      /// </summary>
-      /// <value><c>true</c> if this instance is an error; otherwise, <c>false</c>.</value>
-      bool IsError { get; }
    }
 }

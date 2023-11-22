@@ -236,5 +236,17 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
             }
          }
       }
+
+      /// <inheritdoc />
+      public override bool IsError
+      {
+         get
+         {
+            if (Children.Count == 0)
+               return base.IsError;
+
+            return ((AlParserRule)Children[^1]).IsError;
+         }
+      }
    }
 }
