@@ -23,51 +23,10 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class ArrayDeclarationRule : AlParserRule, IParsable
+   public class ArrayDeclarationRule : AlParserRule
    {
       public ArrayDeclarationRule() : base(AlSyntaxNodeType.ArrayDeclaration, "Array Declaration Rule") {}
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-
-            ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context, "Array");
-            Match(context);
-            if (!tokens.TryMoveNext(ref token))
-               return false;
-
-            // look for dimensions declaration
-            var parsed = ((DimensionsDeclarationRule)AddChildNode(new DimensionsDeclarationRule())).Parse(tokens, context);
-            if (parsed && !tokens.TryMoveNext(ref token)) return false;
-
-            // Look for identifier
-            parsed = ((IdentifierRule)AddChildNode(new IdentifierRule(token!))).Parse(tokens, context, "of");
-            if (parsed && !tokens.TryMoveNext(ref token)) return false;
-
-            // Now parse our array sub type declaration
-            parsed = ((VariableTypeDeclarationRule)AddChildNode(new VariableTypeDeclarationRule())).Parse(tokens, context);
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
    }
 }

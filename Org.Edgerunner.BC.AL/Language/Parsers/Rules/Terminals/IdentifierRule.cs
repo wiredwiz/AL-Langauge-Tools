@@ -29,65 +29,8 @@ using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class IdentifierRule : AlTerminalNode, IParsableExpectingValue
+   public class IdentifierRule : AlTerminalNode
    {
       public IdentifierRule(AlToken symbol) : base(AlSyntaxNodeType.Identifier, symbol, "Identifier Rule") { }
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var message = string.Format(Resources.ExpectedIdentifier, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Identifier, message);
-            if (tokenValidates)
-            {
-               context.GenerateTraceEvent(token, TraceEvent.Consume);
-               context.GenerateTraceEvent(this, TraceEvent.Match);
-            }
-
-            return tokenValidates;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="expectedValue">The expected identifier value to match against.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, string expectedValue)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var message = string.Format(Resources.ExpectedSpecificIdentifier, expectedValue, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Identifier, expectedValue, message);
-            if (tokenValidates)
-            {
-               context.GenerateTraceEvent(token, TraceEvent.Consume);
-               context.GenerateTraceEvent(this, TraceEvent.Match);
-            }
-
-            return tokenValidates;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
    }
 }

@@ -23,59 +23,10 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class DimensionsDeclarationRule : AlParserRule, IParsable
+   public class DimensionsDeclarationRule : AlParserRule
    {
       public DimensionsDeclarationRule() : base(AlSyntaxNodeType.DimensionsDeclaration, "Dimensions Declaration Rule") {}
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var parsed = true;
-
-            if (((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["))
-            {
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
-            }
-            else
-               parsed = false;
-
-            if (((IntegerLiteralRule)AddChildNode(new IntegerLiteralRule(token!))).Parse(tokens, context))
-            {
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
-
-               if (!ParseRepeatingDelimitedExpression(tokens, context, ",", "]", new IntegerRuleGenerator()))
-                  parsed = false;
-            }
-            else
-               parsed = false;
-
-            if (!((SymbolRule)AddChildNode(new SymbolRule(tokens.Current))).Parse(tokens, context, "]"))
-               parsed = false;
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
    }
 }

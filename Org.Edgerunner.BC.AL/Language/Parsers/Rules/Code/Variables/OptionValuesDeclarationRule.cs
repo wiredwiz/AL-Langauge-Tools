@@ -23,58 +23,11 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class OptionValuesDeclarationRule : AlParserRule, IParsable
+   public class OptionValuesDeclarationRule : AlParserRule
    {
       public OptionValuesDeclarationRule() : base(AlSyntaxNodeType.OptionValuesDeclaration,
                                                   "Option Values Declaration Rule") {}
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var parsed = true;
-
-            if (Validator.ValidateToken(
-                                        token, 
-                                        context, 
-                                        this, 
-                                        TokenType.Identifier, 
-                                        string.Format(Resources.ExpectedOptionValue, token.Value)))
-            {
-               ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
-               Match(context);
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
-
-               if (!ParseRepeatingDelimitedExpression(tokens, context, ",", ";", new OptionValueGenerator()))
-                  parsed = false;
-               else
-                  tokens.TryMovePrevious(ref token);
-            }
-            else
-               parsed = false;
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
    }
 }

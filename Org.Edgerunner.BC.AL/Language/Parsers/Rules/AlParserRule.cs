@@ -25,8 +25,6 @@
 
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Generators;
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
 using Org.Edgerunner.Language.Lexers;
 using Org.Edgerunner.Language.Parsers;
@@ -39,7 +37,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
    /// Implements the <see cref="ParserRule{TToken,TType}" />
    /// </summary>
    /// <seealso cref="ParserRule{TToken,TType}" />
-   public abstract class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>, IParsable
+   public abstract class AlParserRule : ParserRule<AlToken, AlSyntaxNodeType>
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="AlParserRule" /> class.
@@ -89,128 +87,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules
                }
          }
       }
-
-      /// <summary>
-      /// Parses a repeating expression with a symbol delimiter.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="delimiter">The delimiter symbol.</param>
-      /// <param name="terminator">The terminator symbol.</param>
-      /// <param name="generator">The parser rule generator.</param>
-      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      // ReSharper disable once TooManyArguments
-      protected virtual bool ParseRepeatingDelimitedExpression(
-         TokenStream<AlToken> tokens,
-         AlParser context,
-         string delimiter,
-         string terminator,
-         IRuleGenerator generator)
-      {
-         var token = tokens.Current;
-         bool success = true;
-
-         if (token.TokenType == (int)TokenType.Symbol && terminator == token.Value)
-         {
-            tokens.TryMovePrevious(ref token);
-            return true;
-         }
-
-         var allowedValues = new List<string> { delimiter, terminator };
-
-         while (token!.TokenType != (int)TokenType.Symbol || terminator != token.Value)
-         {
-            // Look for delimiter token
-            var message = FormatSetError(Resources.ExpectedSymbolFromSet, allowedValues, token.Value);
-            var parses1 = Validator.ValidateToken(token, context, this, TokenType.Symbol, allowedValues, message);
-            var symRule = new SymbolRule(token);
-            symRule.Parse(tokens, context, delimiter);
-            if (parses1) AddChildNode(symRule);
-            if (parses1 && !tokens.TryMoveNext(ref token)) return false;
-
-            // Now parse the expression
-            var parses2 = generator.Parses(tokens, context, this);
-            success = parses2;
-            if (parses2 && !tokens.TryMoveNext(ref token)) return false;
-
-            // If both parsing attempts failed, we move ahead one to prevent infinite looping
-            if (!parses1 && !parses2)
-               if (tokens.TryMoveNext(ref token))
-                  context.GenerateTraceEvent(tokens.Previous()!, TraceEvent.Consume);
-               else
-                  return false;
-         }
-
-         return success;
-      }
-
-      // ReSharper disable once FlagArgument
-      protected virtual bool ProcessRuleAndAdvance(bool ruleResult, TokenStream<AlToken> tokens, ref AlToken token, ref bool parsed)
-      {
-         if (ruleResult)
-         {
-            if (!tokens.TryMoveNext(ref token!))
-               return false;
-         }
-         else
-            parsed = false;
-
-         return true;
-      }
-
-      protected void ScanForTokenRegisteringErrors(TokenStream<AlToken> tokens, AlParser context, AlParserRule parentRule, TokenType type, string value)
-      {
-         if (tokens.EndOfStream())
-            return;
-
-         if (tokens.Current.TokenType == (int)type &&
-             tokens.Current.Value.ToLowerInvariant() == value.ToLowerInvariant())
-            return;
-
-         var start = tokens.Current;
-
-         // ReSharper disable once ComplexConditionExpression
-         while (!tokens.EndOfStream() &&
-                (tokens.Current.TokenType != (int)type || tokens.Current.Value.ToLowerInvariant() != value.ToLowerInvariant()))
-         {
-            parentRule.AddChildNode(new ErrorNode("Unexpected token", tokens.Current));
-            context.GenerateParserError(start, tokens.Current, "Unexpected token");
-            tokens.MoveNext();
-         }
-      }
-
-      protected virtual string FormatSetError(string message, IEnumerable<string> allowed, string encountered)
-      {
-         var enumerable = allowed as string[] ?? allowed.ToArray();
-         if (enumerable.Length == 0)
-            return message;
-
-         var set = $"\"{enumerable[0]}\"";
-
-         if (enumerable.Length > 1)
-         {
-            if (enumerable.Length == 2)
-               set += $" or \"{enumerable[1]}\"";
-            else
-            {
-#pragma warning disable S1643
-               // Our allowed enumeration should never be big enough to justify using StringBuilder
-               for (int i = 1; i < enumerable.Length - 1; i++) set += $", \"{enumerable[1]}\"";
-#pragma warning restore S1643
-               set += $" or \"{enumerable[^1]}\"";
-            }
-         }
-
-         return string.Format(message, set, encountered);
-      }
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public abstract bool Parse(TokenStream<AlToken> tokens, AlParser context);
 
       /// <inheritdoc />
       public override bool HasErrors

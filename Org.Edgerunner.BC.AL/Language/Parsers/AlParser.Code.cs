@@ -172,6 +172,28 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          return newRule;
       }
 
+
+      /// <summary>
+      /// Parses an AL list variable declaration.
+      /// </summary>
+      /// <param name="tokens">The tokens to read.</param>
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      [ParserRule(AlSyntaxNodeType.ListDeclaration)]
+      public AlParserRule ParseListDeclaration(TokenStream<AlToken> tokens)
+      {
+            var newRule = new ListDeclarationRule();
+
+            newRule.AddChildNode(ParseIdentifierLiteral(tokens, "list"));
+            newRule.AddChildNode(ParseIdentifierLiteral(tokens, "of"));
+            newRule.AddChildNode(ParseSymbol(tokens, "["));
+            newRule.AddChildNode(ParseVariableType(tokens));
+            newRule.AddChildNode(ParseSymbol(tokens, "]"));
+            
+            return newRule;
+      }
+
+
+
       /// <summary>
       /// Parses the variable type declaration.
       /// </summary>
@@ -357,6 +379,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                }
             case VariableType.List:
                {
+                  // parse a list declaration
+                  newRule.AddChildNode(ParseListDeclaration(tokens));
                   break;
                }
             case VariableType.DotNet:

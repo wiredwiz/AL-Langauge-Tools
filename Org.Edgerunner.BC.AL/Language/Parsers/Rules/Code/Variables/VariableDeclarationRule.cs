@@ -23,56 +23,10 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables
 {
-   public class VariableDeclarationRule : AlParserRule, IParsable
+   public class VariableDeclarationRule : AlParserRule
    {
       public VariableDeclarationRule() : base(AlSyntaxNodeType.VariableDeclaration, "Variable Declaration Rule") {}
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var parsed = true;
-
-            // read the variable name
-            parsed = ((IdentifierRule)AddChildNode(new IdentifierRule(token))).Parse(tokens, context);
-            Match(context);
-            if (!tokens.TryMoveNext(ref token))
-               return false;
-
-            // check for colon separator
-            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token!))).Parse(tokens, context, ":"), tokens,
-                                       ref token!, ref parsed))
-               return false;
-            
-            // read data type
-            if (!ProcessRuleAndAdvance(((VariableTypeDeclarationRule)AddChildNode(new VariableTypeDeclarationRule())).Parse(tokens, context), tokens, 
-                                       ref token!, ref parsed))
-               return false;
-
-            // now look for the statement terminator
-            if (!((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, ";"))
-               parsed = false;
-            
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
    }
 }

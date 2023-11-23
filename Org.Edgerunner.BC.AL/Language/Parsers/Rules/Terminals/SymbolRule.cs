@@ -29,71 +29,9 @@ using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
 {
-   public class SymbolRule : AlTerminalNode, IParsableExpectingValue, IParsableInSet
+   public class SymbolRule : AlTerminalNode
    {
       public SymbolRule(AlToken symbol) : base(AlSyntaxNodeType.Symbol, symbol, "Symbol Rule") {}
-
-      /// <summary>
-      /// Parses a symbol from the token stream and expects to match the specified value.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="expectedValue">The expected identifier value to match against.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public virtual bool Parse(TokenStream<AlToken> tokens, AlParser context, string expectedValue)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var message = string.Format(Resources.ExpectedSpecificSymbol, expectedValue, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, expectedValue, message);
-            if (tokenValidates)
-            {
-               context.GenerateTraceEvent(token, TraceEvent.Consume);
-               context.GenerateTraceEvent(this, TraceEvent.Match);
-            }
-
-            return tokenValidates;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
-
-      /// <summary>
-      /// Parses a symbol from the stream that matches one of the specified values.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="values">The enumeration of allowed values.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      /// <exception cref="OutOfMemoryException">The length of the resulting set text string overflows the maximum allowed length (<see cref="System.Int32.MaxValue">Int32.MaxValue</see>).</exception>
-      // ReSharper disable once TooManyDeclarations
-      public bool Parse(TokenStream<AlToken> tokens, AlParser context, IEnumerable<string> values)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var enumerable = values as string[] ?? values.ToArray();
-            // ReSharper disable once ExceptionNotDocumented
-            var message = FormatSetError(Resources.ExpectedSymbolFromSet, values, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, enumerable, message);
-            if (tokenValidates)
-            {
-               context.GenerateTraceEvent(token, TraceEvent.Consume);
-               context.GenerateTraceEvent(this, TraceEvent.Match);
-            }
-
-            return tokenValidates;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
 
       /// <summary>
       /// Gets a value indicating whether this rule represents an operator.
@@ -111,28 +49,6 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals
       public bool IsAssignmentOperator
       {
          get => ((SymbolToken)Token).IsAssignmentOperator;
-      }
-
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var message = string.Format(Resources.ExpectedSymbol, token.Value);
-            var tokenValidates = Validator.ValidateToken(token, context, this, TokenType.Symbol, message);
-            if (tokenValidates)
-            {
-               context.GenerateTraceEvent(token, TraceEvent.Consume);
-               context.GenerateTraceEvent(this, TraceEvent.Match);
-            }
-
-            return tokenValidates;
-         }
-         finally
-         {
-            Exit(context);
-         }
       }
    }
 }
