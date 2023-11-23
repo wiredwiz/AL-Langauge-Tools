@@ -45,8 +45,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedInteger, token.Value);
-         var tokenValidates = ValidateToken(token, LiteralType.Integer, message);
-         return tokenValidates ? new IntegerLiteralRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, LiteralType.Integer, message))
+         {
+            Consume(token, AlSyntaxNodeType.Integer);
+            AlParserRule result = new IntegerLiteralRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -59,8 +66,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedDecimal, token.Value);
-         var tokenValidates = ValidateToken(token, LiteralType.Decimal, message);
-         return tokenValidates ? new DecimalLiteralRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, LiteralType.Decimal, message))
+         {
+            Consume(token, AlSyntaxNodeType.Decimal);
+            AlParserRule result = new DecimalLiteralRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -73,8 +87,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedDatetime, token.Value);
-         var tokenValidates = ValidateToken(token, LiteralType.DateTime, message);
-         return tokenValidates ? new DatetimeLiteralRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, LiteralType.DateTime, message))
+         {
+            Consume(token, AlSyntaxNodeType.DateTime);
+            AlParserRule result = new DatetimeLiteralRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -87,8 +108,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedDate, token.Value);
-         var tokenValidates = ValidateToken(token, LiteralType.Date, message);
-         return tokenValidates ? new DateLiteralRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, LiteralType.Date, message))
+         {
+            Consume(token, AlSyntaxNodeType.Date);
+            AlParserRule result = new DateLiteralRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -101,8 +129,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedTime, token.Value);
-         var tokenValidates = ValidateToken(token, LiteralType.Time, message);
-         return tokenValidates ? new TimeLiteralRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, LiteralType.Time, message))
+         {
+            Consume(token, AlSyntaxNodeType.Time);
+            AlParserRule result = new TimeLiteralRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -115,8 +150,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedBoolean, token.Value);
-         var tokenValidates = ValidateToken(token, LiteralType.Boolean, message);
-         return tokenValidates ? new BooleanLiteralRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, LiteralType.Boolean, message))
+         {
+            Consume(token, AlSyntaxNodeType.Boolean);
+            AlParserRule result = new BooleanLiteralRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -129,8 +171,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedString, token.Value);
-         var tokenValidates = ValidateToken(token, LiteralType.String, message);
-         return tokenValidates ? new StringLiteralRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, LiteralType.String, message))
+         {
+            Consume(token, AlSyntaxNodeType.String);
+            AlParserRule result = new StringLiteralRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -143,8 +192,15 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedIdentifier, token.Value);
-         var tokenValidates = ValidateToken(token, TokenType.Identifier, message);
-         return tokenValidates ? new IdentifierRule(token) : new ErrorNode(message, token);
+         if (ValidateToken(token, TokenType.Identifier, message))
+         {
+            Consume(token, AlSyntaxNodeType.Identifier);
+            AlParserRule result = new IdentifierRule(token);
+            tokens.TryMoveNext(ref token);
+            return result;
+         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -157,20 +213,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public AlParserRule ParseIdentifierLiteral(TokenStream<AlToken> tokens, string expectedValue)
       {
          var token = tokens.Current;
-         try
+         var message = string.Format(Resources.ExpectedSpecificIdentifier, expectedValue, token.Value);
+         if (ValidateToken(token, TokenType.Identifier, expectedValue, message))
          {
-            Enter(token, AlSyntaxNodeType.Identifier);
-            var message = string.Format(Resources.ExpectedSpecificIdentifier, expectedValue, token.Value);
-            var tokenValidates = ValidateToken(token, TokenType.Identifier, expectedValue, message);
-            AlParserRule result = tokenValidates ? new IdentifierRule(token) : new ErrorNode(message, token);
-            if (tokenValidates) Consume(token, AlSyntaxNodeType.Identifier);
-
+            Consume(token, AlSyntaxNodeType.Identifier);
+            AlParserRule result = new IdentifierRule(token);
+            tokens.TryMoveNext(ref token);
             return result;
          }
-         finally
-         {
-            Exit(token, AlSyntaxNodeType.Identifier);
-         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -183,20 +235,16 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public AlParserRule ParseSymbol(TokenStream<AlToken> tokens, string value)
       {
          var token = tokens.Current;
-         try
+         var message = string.Format(Resources.ExpectedSymbol, value, token.Value);
+         if (ValidateToken(token, TokenType.Symbol, value, message))
          {
-            Enter(token, AlSyntaxNodeType.Symbol);
-            var message = string.Format(Resources.ExpectedSymbol, value, token.Value);
-            var tokenValidates = ValidateToken(token, TokenType.Symbol, value, message);
-            AlParserRule result = tokenValidates ? new SymbolRule(token) : new ErrorNode(message, token);
-            if (tokenValidates) Consume(token, AlSyntaxNodeType.Symbol);
-
+            Consume(token, AlSyntaxNodeType.Symbol);
+            AlParserRule result = new SymbolRule(token);
+            tokens.TryMoveNext(ref token);
             return result;
          }
-         finally
-         {
-            Exit(token, AlSyntaxNodeType.Symbol);
-         }
+
+         return new ErrorNode(message, token);
       }
 
       /// <summary>
@@ -209,29 +257,23 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       public AlParserRule ParseSymbol(TokenStream<AlToken> tokens, IEnumerable<string> values)
       {
          var token = tokens.Current;
-         try
+         var enumerable = values as string[] ?? values.ToArray();
+         var message = FormatSetError(Resources.ExpectedSymbolFromSet, enumerable, token.Value);
+         if (ValidateToken(token, TokenType.Symbol, enumerable, message))
          {
-            Enter(token, AlSyntaxNodeType.Symbol);
-            var enumerable = values as string[] ?? values.ToArray();
-            var message = FormatSetError(Resources.ExpectedSymbolFromSet, enumerable, token.Value);
-            var tokenValidates = ValidateToken(token, TokenType.Symbol, enumerable, message);
-            AlParserRule result = tokenValidates ? new SymbolRule(token) : new ErrorNode(message, token);
-            if (tokenValidates) Consume(token, AlSyntaxNodeType.Symbol);
-
+            Consume(token, AlSyntaxNodeType.Symbol);
+            AlParserRule result = new SymbolRule(token);
+            tokens.TryMoveNext(ref token);
             return result;
          }
-         finally
-         {
-            Exit(token, AlSyntaxNodeType.Symbol);
-         }
+
+         return new ErrorNode(message, token);
       }
 
       bool DoParse(TokenStream<AlToken> tokens, AlParserRule parentRule, AlParserRule rule)
       {
          AlToken? token = null;
          parentRule.AddChildNode(rule);
-         if (!rule.IsError)
-            tokens.TryMoveNext(ref token);
 
          return !rule.IsError;
       }

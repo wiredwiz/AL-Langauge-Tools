@@ -45,9 +45,9 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var newRule = new LengthDeclarationRule();
 
-         DoParse(tokens, newRule, ParseSymbol(tokens, "["));
-         DoParse(tokens, newRule, ParseIntegerLiteral(tokens));
-         DoParse(tokens, newRule, ParseSymbol(tokens, "]"));
+         newRule.AddChildNode(ParseSymbol(tokens, "["));
+         newRule.AddChildNode(ParseIntegerLiteral(tokens));
+         newRule.AddChildNode(ParseSymbol(tokens, "]"));
 
          return newRule;
       }
@@ -62,10 +62,10 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var newRule = new DimensionsDeclarationRule();
 
-         DoParse(tokens, newRule, ParseSymbol(tokens, "["));
+         newRule.AddChildNode(ParseSymbol(tokens, "["));
          // ReSharper disable once ExceptionNotDocumented
          ParseRepeatingDelimitedExpression(tokens, newRule, ",", "]", ParseIntegerLiteral);
-         DoParse(tokens, newRule, ParseSymbol(tokens, "]"));
+         newRule.AddChildNode(ParseSymbol(tokens, "]"));
 
          return newRule;
       }
@@ -74,111 +74,85 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// Parses an AL object declaration.
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      [Trace]
-      public bool ParseVariableObjectDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      [ParserRule(AlSyntaxNodeType.ObjectReferenceDeclaration)]
+      public AlParserRule ParseVariableObjectDeclaration(TokenStream<AlToken> tokens)
       {
          var token = tokens.Current;
-         var newRule = new AlParserRule(AlSyntaxNodeType.ObjectReferenceDeclaration);
-         parentRule.AddChildNode(newRule);
-
+         var newRule = new ObjectReferenceDeclarationRule();
          var errorMessage = $"Expected an object number or name identifier, instead encountered ${token.Value}";
 
          // Look for an object integer number
-         var parsed = token.TokenType == (int)TokenType.Literal && token is LiteralToken { LiteralType: LiteralType.Integer };
-         if (parsed)
-            parsed = ParseIntegerLiteral(tokens, context, newRule);
+         var isInteger = token.TokenType == (int)TokenType.Literal && token is LiteralToken { LiteralType: LiteralType.Integer };
+         if (isInteger)
+            newRule.AddChildNode(ParseIntegerLiteral(tokens));
          else if (token.TokenType == (int)TokenType.Identifier)
             // if we didn't have a number, but instead an identifier, then we are still good
-            parsed = ParseIdentifierLiteral(tokens, context, newRule);
+            newRule.AddChildNode(ParseIdentifierLiteral(tokens));
          else
          {
             GenerateParserError(token, token, errorMessage);
             newRule.AddChildNode(new ErrorNode(errorMessage, token));
-            parsed = false;
          }
 
-         return parsed;
+         return newRule;
       }
 
       /// <summary>
       /// Parses an AL array variable declaration.
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      [Trace]
-      public bool ParseArrayVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      [ParserRule(AlSyntaxNodeType.ArrayDeclaration)]
+      public AlParserRule ParseArrayVariableDeclaration(TokenStream<AlToken> tokens)
       {
-         var token = tokens.Current;
-         var newRule = new AlParserRule(AlSyntaxNodeType.ArrayDeclaration);
-         parentRule.AddChildNode(newRule);
+         var newRule = new ArrayDeclarationRule();
 
-         ParseIdentifierLiteral(tokens, context, newRule);
-         if (!tokens.TryMoveNext(ref token))
-            return false;
+         newRule.AddChildNode(ParseIdentifierLiteral(tokens));
          
          // look for length declaration
-         var parsed = ParseArrayDimensionsDeclaration(tokens, context, newRule);
-         if (parsed && !tokens.TryMoveNext(ref token)) return false;
+         newRule.AddChildNode(ParseArrayDimensionsDeclaration(tokens));
 
          // Look for identifier
-         parsed = ParseIdentifierLiteral(tokens, context, newRule, "of");
-         if (parsed && !tokens.TryMoveNext(ref token)) return false;
+         newRule.AddChildNode(ParseIdentifierLiteral(tokens, "of"));
 
          // Now parse our array sub type declaration
-         parsed = ParseVariableType(tokens, context, newRule);
+         newRule.AddChildNode(ParseVariableType(tokens));
 
-         return parsed;
+         return newRule;
       }
 
       /// <summary>
       /// Parses an AL option values declaration.
       /// </summary>
       /// <param name="tokens">The tokens to read.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <returns><c>true</c> if parsing succeeds, <c>false</c> otherwise.</returns>
-      [Trace]
-      public bool ParseOptionValuesDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      [ParserRule(AlSyntaxNodeType.OptionValuesDeclaration)]
+      public AlParserRule ParseOptionValuesDeclaration(TokenStream<AlToken> tokens)
       {
-         var parsed = true;
          var token = tokens.Current;
-         var newRule = new AlParserRule(AlSyntaxNodeType.OptionValuesDeclaration);
-         parentRule.AddChildNode(newRule);
+         var newRule = new OptionValuesDeclarationRule();
 
          var allowed = new[] { ",", ";" };
-         var message = string.Format(Resources.ExpectedSymbol, "',' or ';'", token.Value);
-         while (token!.TokenType != (int)TokenType.Symbol || token.Value != ";")
+         var message = FormatSetError(Resources.ExpectedSymbolFromSet, allowed, token.Value);
+         while (token.TokenType != (int)TokenType.Symbol || token.Value != ";")
          {
             // read values
-            bool noMatch = false;
+            bool noMatch = true;
 
             // check if we have a semi-colon
-            var tokenValidates = ValidateToken(token, context, newRule, TokenType.Symbol, ",", message);
+            var tokenValidates = ValidateToken(token, TokenType.Symbol, ",", message);
             if (tokenValidates)
             {
-               var node = new AlTerminalNode(AlSyntaxNodeType.Symbol, token);
-               newRule.AddChildNode(node);
-
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
+               noMatch = false;
+               newRule.AddChildNode(new SymbolRule(token));
             }
-            else
-               noMatch = true;
 
             // check if we have an identifier
-            tokenValidates = ValidateToken(token, context, newRule, TokenType.Identifier, string.Format(Resources.ExpectedOptionValue, token.Value));
+            tokenValidates = ValidateToken(token, TokenType.Identifier, string.Format(Resources.ExpectedOptionValue, token.Value));
             if (tokenValidates)
             {
-               var node = new AlTerminalNode(AlSyntaxNodeType.Identifier, token);
-               newRule.AddChildNode(node);
-
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
+               newRule.AddChildNode(new IdentifierRule(token));
                noMatch = false;
             }
 
@@ -190,287 +164,233 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                   break;
 
                // The next token is a semi-colon, so we are done parsing option values
-               if (tokens.Next()?.TokenType == (int)TokenType.Symbol && tokens.Next()?.Value == ";")
+               if (tokens.Next()?.TokenType == (int)TokenType.Symbol && tokens.Current.Value == ";")
                   break;
-
-               if (!tokens.TryMoveNext(ref token))
-                  return false;
             }
          }
 
-         return parsed;
+         return newRule;
       }
 
       /// <summary>
       /// Parses the variable type declaration.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <returns>bool.</returns>
-      [Trace]
-      public bool ParseVariableType(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      [ParserRule(AlSyntaxNodeType.VariableTypeDeclaration)]
+      public AlParserRule ParseVariableType(TokenStream<AlToken> tokens)
       {
          var token = tokens.Current;
-         var newRule = new AlParserRule(AlSyntaxNodeType.VariableTypeDeclaration);
-         parentRule.AddChildNode(newRule);
-         string errorMessage;
-         var parsed = true;
+         var newRule = new VariableTypeDeclarationRule();
          var isArray = false;
          object? varType = null;
 
-         if (token.TokenType == (int)TokenType.Identifier && token.Value == "array")
+         if (token.TokenType == (int)TokenType.Identifier && token.Value.ToLowerInvariant() == "array")
             isArray = true;
          else if (token.TokenType != (int)TokenType.Identifier ||
                   !Enum.TryParse(typeof(VariableType), token.Value, true, out varType))
          {
-            errorMessage = $"Expected a valid AL data type, but instead encountered: {token.Value}";
+            var errorMessage = $"Expected a valid AL data type, but instead encountered: {token.Value}";
             GenerateParserError(token, token, errorMessage);
             newRule.AddChildNode(new ErrorNode(errorMessage, token));
 
-            return false;
+            return newRule;
          }
 
          if (isArray)
          {
             // Parse an array declaration e.g. array[5] of text[20]
-            if (!ParseArrayVariableDeclaration(tokens, context, newRule))
-               parsed = false;
+            newRule.AddChildNode(ParseArrayVariableDeclaration(tokens));
+            return newRule;
          }
-         else
-            switch (varType)
-            {
-               case VariableType.BigInteger:
-               case VariableType.BigText:
-               case VariableType.Blob:
-               case VariableType.Boolean:
-               case VariableType.Byte:
-               case VariableType.Char:
-               case VariableType.CompanyProperty:
-               case VariableType.Database:
-               case VariableType.DataTransfer:
-               case VariableType.Date:
-               case VariableType.DateFormula:
-               case VariableType.DateTime:
-               case VariableType.Debugger:
-               case VariableType.Decimal:
-               case VariableType.Dialog:
-               case VariableType.Duration:
-               case VariableType.ErrorInfo:
-               case VariableType.FieldRef:
-               case VariableType.File:
-               case VariableType.FilterPageBuilder:
-               case VariableType.Guid:
-               case VariableType.HttpClient:
-               case VariableType.HttpHeaders:
-               case VariableType.HttpRequestMessage:
-               case VariableType.HttpResponseMessage:
-               case VariableType.InStream:
-               case VariableType.Integer:
-               case VariableType.IsolatedStorage:
-               case VariableType.JsonArray:
-               case VariableType.JsonObject:
-               case VariableType.JsonToken:
-               case VariableType.JsonValue:
-               case VariableType.KeyRef:
-               case VariableType.Media:
-               case VariableType.MediaSet:
-               case VariableType.ModuleDependencyInfo:
-               case VariableType.ModuleInfo:
-               case VariableType.NavApp:
-               case VariableType.None:
-               case VariableType.Notification:
-               case VariableType.NumberSequence:
-               case VariableType.OutStream:
-               case VariableType.ProductName:
-               case VariableType.RecordId:
-               case VariableType.RecordRef:
-               case VariableType.RequestPage:
-               case VariableType.SecretText:
-               case VariableType.Session:
-               case VariableType.SessionInformation:
-               case VariableType.SessionSettings:
-               case VariableType.System:
-               case VariableType.TaskScheduler:
-               case VariableType.TestAction:
-               case VariableType.TestField:
-               case VariableType.TestFilterField:
-               case VariableType.TestPage:
-               case VariableType.TestPart:
-               case VariableType.TestPageRequest:
-               case VariableType.TextBuilder:
-               case VariableType.TextConst:
-               case VariableType.Time:
-               case VariableType.Variant:
-               case VariableType.Version:
-               case VariableType.WebServiceActionContext:
-               case VariableType.XmlAttribute:
-               case VariableType.XmlAttributeCollection:
-               case VariableType.XmlCData:
-               case VariableType.XmlDeclaration:
-               case VariableType.XmlDocument:
-               case VariableType.XmlDocumentType:
-               case VariableType.XmlElement:
-               case VariableType.XmlNamespaceManager:
-               case VariableType.XmlNameTable:
-               case VariableType.XmlNode:
-               case VariableType.XmlNodeList:
-               case VariableType.Xmlport:
-               case VariableType.XmlProcessingInstruction:
-               case VariableType.XmlReadOptions:
-               case VariableType.XmlText:
-               case VariableType.XmlWriteOptions:
-               case VariableType.Action:
-               case VariableType.AuditCategory:
-               case VariableType.ClientType:
-               case VariableType.CommitBehavior:
-               case VariableType.DataClassification:
-               case VariableType.DataScope:
-               case VariableType.DefaultLayout:
-               case VariableType.ErrorBehavior:
-               case VariableType.ErrorType:
-               case VariableType.ExecutionContext:
-               case VariableType.ExecutionMode:
-               case VariableType.FieldClass:
-               case VariableType.FieldType:
-               case VariableType.InherentPermissionsScope:
-               case VariableType.IsolationLevel:
-               case VariableType.NotificationScope:
-               case VariableType.ObjectType:
-               case VariableType.PageBackgroundTaskErrorLevel:
-               case VariableType.PermissionObjectType:
-               case VariableType.ReportFormat:
-               case VariableType.ReportLayoutType:
-               case VariableType.SecurityFilter:
-               case VariableType.SecurityOperationResult:
-               case VariableType.TableConnectionType:
-               case VariableType.TelemetryScope:
-               case VariableType.TestPermissions:
-               case VariableType.TextEncoding:
-               case VariableType.TransactionModel:
-               case VariableType.TransactionType:
-               case VariableType.Verbosity:
-               case VariableType.WebServiceActionResultCode:
-                  {
-                     // we have nothing extra to do, these variable types have no extra declaration
-                     ParseIdentifierLiteral(tokens, context, newRule);
-                     if (!tokens.TryMoveNext(ref token))
-                        return false;
-                     break;
-                  }
-               case VariableType.Code:
-               case VariableType.Text:
-                  {
-                     // Parse a length declaration e.g. [20]
-                     ParseIdentifierLiteral(tokens, context, newRule);
-                     if (!tokens.TryMoveNext(ref token))
-                        return false;
-                     var result = ParseLengthDeclaration(tokens, context, newRule);
-                     if (result)
-                     {
-                        if (!tokens.TryMoveNext(ref token))
-                           return false;
-                     }
-                     else
-                        parsed = false;
-                     break;
-                  }
-               case VariableType.Record:
-               case VariableType.Codeunit:
-               case VariableType.Enum:
-               case VariableType.Page:
-               case VariableType.Query:
-               case VariableType.Report:
-                  {
-                     ParseIdentifierLiteral(tokens, context, newRule);
-                     if (!tokens.TryMoveNext(ref token))
-                        return false;
 
-                     // Parse an object declaration e.g. 20 or "Customer"
-                     var result = ParseVariableObjectDeclaration(tokens, context, newRule);
-                     if (!result)
-                        parsed = false;
-                     break;
-                  }
-               case VariableType.Option:
-                  {
-                     ParseIdentifierLiteral(tokens, context, newRule);
-                     if (!tokens.TryMoveNext(ref token))
-                        return false;
+         switch (varType)
+         {
+            case VariableType.BigInteger:
+            case VariableType.BigText:
+            case VariableType.Blob:
+            case VariableType.Boolean:
+            case VariableType.Byte:
+            case VariableType.Char:
+            case VariableType.CompanyProperty:
+            case VariableType.Database:
+            case VariableType.DataTransfer:
+            case VariableType.Date:
+            case VariableType.DateFormula:
+            case VariableType.DateTime:
+            case VariableType.Debugger:
+            case VariableType.Decimal:
+            case VariableType.Dialog:
+            case VariableType.Duration:
+            case VariableType.ErrorInfo:
+            case VariableType.FieldRef:
+            case VariableType.File:
+            case VariableType.FilterPageBuilder:
+            case VariableType.Guid:
+            case VariableType.HttpClient:
+            case VariableType.HttpHeaders:
+            case VariableType.HttpRequestMessage:
+            case VariableType.HttpResponseMessage:
+            case VariableType.InStream:
+            case VariableType.Integer:
+            case VariableType.IsolatedStorage:
+            case VariableType.JsonArray:
+            case VariableType.JsonObject:
+            case VariableType.JsonToken:
+            case VariableType.JsonValue:
+            case VariableType.KeyRef:
+            case VariableType.Media:
+            case VariableType.MediaSet:
+            case VariableType.ModuleDependencyInfo:
+            case VariableType.ModuleInfo:
+            case VariableType.NavApp:
+            case VariableType.None:
+            case VariableType.Notification:
+            case VariableType.NumberSequence:
+            case VariableType.OutStream:
+            case VariableType.ProductName:
+            case VariableType.RecordId:
+            case VariableType.RecordRef:
+            case VariableType.RequestPage:
+            case VariableType.SecretText:
+            case VariableType.Session:
+            case VariableType.SessionInformation:
+            case VariableType.SessionSettings:
+            case VariableType.System:
+            case VariableType.TaskScheduler:
+            case VariableType.TestAction:
+            case VariableType.TestField:
+            case VariableType.TestFilterField:
+            case VariableType.TestPage:
+            case VariableType.TestPart:
+            case VariableType.TestPageRequest:
+            case VariableType.TextBuilder:
+            case VariableType.TextConst:
+            case VariableType.Time:
+            case VariableType.Variant:
+            case VariableType.Version:
+            case VariableType.WebServiceActionContext:
+            case VariableType.XmlAttribute:
+            case VariableType.XmlAttributeCollection:
+            case VariableType.XmlCData:
+            case VariableType.XmlDeclaration:
+            case VariableType.XmlDocument:
+            case VariableType.XmlDocumentType:
+            case VariableType.XmlElement:
+            case VariableType.XmlNamespaceManager:
+            case VariableType.XmlNameTable:
+            case VariableType.XmlNode:
+            case VariableType.XmlNodeList:
+            case VariableType.Xmlport:
+            case VariableType.XmlProcessingInstruction:
+            case VariableType.XmlReadOptions:
+            case VariableType.XmlText:
+            case VariableType.XmlWriteOptions:
+            case VariableType.Action:
+            case VariableType.AuditCategory:
+            case VariableType.ClientType:
+            case VariableType.CommitBehavior:
+            case VariableType.DataClassification:
+            case VariableType.DataScope:
+            case VariableType.DefaultLayout:
+            case VariableType.ErrorBehavior:
+            case VariableType.ErrorType:
+            case VariableType.ExecutionContext:
+            case VariableType.ExecutionMode:
+            case VariableType.FieldClass:
+            case VariableType.FieldType:
+            case VariableType.InherentPermissionsScope:
+            case VariableType.IsolationLevel:
+            case VariableType.NotificationScope:
+            case VariableType.ObjectType:
+            case VariableType.PageBackgroundTaskErrorLevel:
+            case VariableType.PermissionObjectType:
+            case VariableType.ReportFormat:
+            case VariableType.ReportLayoutType:
+            case VariableType.SecurityFilter:
+            case VariableType.SecurityOperationResult:
+            case VariableType.TableConnectionType:
+            case VariableType.TelemetryScope:
+            case VariableType.TestPermissions:
+            case VariableType.TextEncoding:
+            case VariableType.TransactionModel:
+            case VariableType.TransactionType:
+            case VariableType.Verbosity:
+            case VariableType.WebServiceActionResultCode:
+               {
+                  // we have nothing extra to do, these variable types have no extra declaration
+                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+                  break;
+               }
+            case VariableType.Code:
+            case VariableType.Text:
+               {
+                  // Parse a length declaration e.g. [20]
+                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+                  newRule.AddChildNode(ParseLengthDeclaration(tokens));
+                  break;
+               }
+            case VariableType.Record:
+            case VariableType.Codeunit:
+            case VariableType.Enum:
+            case VariableType.Page:
+            case VariableType.Query:
+            case VariableType.Report:
+               {
+                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
 
-                     // parse an option value declaration e.g. foo,bar,bah
-                     var result = ParseOptionValuesDeclaration(tokens, context, newRule);
-                     if (!result)
-                        parsed = false;
-                     break;
-                  }
-               case VariableType.Dictionary:
-                  {
-                     break;
-                  }
-               case VariableType.List:
-                  {
-                     break;
-                  }
-               case VariableType.DotNet:
-                  {
-                     break;
-                  }
-               case VariableType.Label:
-                  {
-                     break;
-                  }
-               default:
-                  return false;
-            }
+                  // Parse an object declaration e.g. 20 or "Customer"
+                  newRule.AddChildNode(ParseVariableObjectDeclaration(tokens));
+                  break;
+               }
+            case VariableType.Option:
+               {
+                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+                  
+                  // parse an option value declaration e.g. foo,bar,bah
+                  newRule.AddChildNode(ParseOptionValuesDeclaration(tokens));
+                  break;
+               }
+            case VariableType.Dictionary:
+               {
+                  break;
+               }
+            case VariableType.List:
+               {
+                  break;
+               }
+            case VariableType.DotNet:
+               {
+                  break;
+               }
+            case VariableType.Label:
+               {
+                  break;
+               }
+            default:
+               return newRule;
+         }
 
-         return parsed;
+         return newRule;
       }
 
       /// <summary>
       /// Parses the variable declaration.
       /// </summary>
       /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <param name="parentRule">The parent parser rule.</param>
-      /// <returns>bool.</returns>
-      [Trace]
-      public bool ParseVariableDeclaration(TokenStream<AlToken> tokens, AlParserContext context, AlParserRule parentRule)
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      [ParserRule(AlSyntaxNodeType.VariableDeclaration)]
+      public AlParserRule ParseVariableDeclaration(TokenStream<AlToken> tokens)
       {
-         var parsed = true;
-         AlToken? token = null;
-         var newRule = new AlParserRule(AlSyntaxNodeType.VariableDeclaration);
-         parentRule.AddChildNode(newRule);
+         var newRule = new VariableDeclarationRule();
 
-         if (ParseIdentifierLiteral(tokens, context, newRule))
-         {
-            if (!tokens.TryMoveNext(ref token))
-               return false;
-         }
-         else
-            parsed = false;
 
-         if (ParseSymbol(tokens, context, newRule, ":"))
-         {
-            if (!tokens.TryMoveNext(ref token))
-               return false;
-         }
-         else
-            parsed = false;
+         newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+         newRule.AddChildNode(ParseSymbol(tokens, ":"));
+         newRule.AddChildNode(ParseVariableType(tokens));
 
-         if (!ParseVariableType(tokens, context, newRule))
-            parsed = false;
-
-         if (tokens.Current.TokenType != (int)TokenType.Symbol || tokens.Current.Value != ";")
-            ScanTillSymbolReached(tokens, new[] { ";", "}" });
-
-         var node = new AlTerminalNode(AlSyntaxNodeType.Symbol, tokens.Current);
-         newRule.AddChildNode(node);
-
-         if (!tokens.EndOfStream())
-            tokens.MoveNext();
-
-         return parsed;
+         newRule.AddChildNode(ParseSymbol(tokens, ";"));
+         return newRule;
       }
    }
 }
