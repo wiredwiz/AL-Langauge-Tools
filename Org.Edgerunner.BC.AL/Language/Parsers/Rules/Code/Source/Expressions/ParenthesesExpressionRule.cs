@@ -23,36 +23,10 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class ParenthesesExpressionRule : AlParserRule, IParsable
+   public class ParenthesesExpressionRule : AlParserRule
    {
       public ParenthesesExpressionRule() : base(AlSyntaxNodeType.ParenthesesExpression, "Parentheses Expression Rule") {}
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var parsed = true;
-            string errorMessage;
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
    }
 }

@@ -28,31 +28,8 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Statements
 {
-   public class CodeBlockStatementRule : AlParserRule, IParsable
+   public class CodeBlockStatementRule : AlParserRule
    {
       public CodeBlockStatementRule() : base(AlSyntaxNodeType.CodeBlockStatement, "Code Block Statement") {}
-
-      /// <summary>
-      /// Parses this rule from the token stream.
-      /// </summary>
-      /// <param name="tokens">The token stream.</param>
-      /// <param name="context">The parser context.</param>
-      /// <returns><c>true</c> if parsing was successful, <c>false</c> otherwise.</returns>
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var parsed = true;
-            string errorMessage;
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
    }
 }

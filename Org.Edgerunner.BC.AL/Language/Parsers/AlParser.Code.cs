@@ -30,6 +30,8 @@ using Org.Edgerunner.BC.AL.Language.Parsers.Rules;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Variables;
 using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Terminals;
 using Org.Edgerunner.BC.AL.Language.Tokens;
+using Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions;
+using Org.Edgerunner.Language.Parsers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers
 {
@@ -88,7 +90,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             newRule.AddChildNode(ParseIntegerLiteral(tokens));
          else if (token.TokenType == (int)TokenType.Identifier)
             // if we didn't have a number, but instead an identifier, then we are still good
-            newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+            newRule.AddChildNode(ParseIdentifier(tokens));
          else
          {
             GenerateParserError(token, token, errorMessage);
@@ -108,13 +110,13 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
          var newRule = new ArrayDeclarationRule();
 
-         newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+         newRule.AddChildNode(ParseIdentifier(tokens));
          
          // look for length declaration
          newRule.AddChildNode(ParseArrayDimensionsDeclaration(tokens));
 
          // Look for identifier
-         newRule.AddChildNode(ParseIdentifierLiteral(tokens, "of"));
+         newRule.AddChildNode(ParseIdentifier(tokens, "of"));
 
          // Now parse our array sub type declaration
          newRule.AddChildNode(ParseVariableType(tokens));
@@ -167,6 +169,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                if (tokens.Next()?.TokenType == (int)TokenType.Symbol && tokens.Current.Value == ";")
                   break;
             }
+            token = tokens.Current;
          }
 
          return newRule;
@@ -183,8 +186,8 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       {
             var newRule = new ListDeclarationRule();
 
-            newRule.AddChildNode(ParseIdentifierLiteral(tokens, "list"));
-            newRule.AddChildNode(ParseIdentifierLiteral(tokens, "of"));
+            newRule.AddChildNode(ParseIdentifier(tokens, "list"));
+            newRule.AddChildNode(ParseIdentifier(tokens, "of"));
             newRule.AddChildNode(ParseSymbol(tokens, "["));
             newRule.AddChildNode(ParseVariableType(tokens));
             newRule.AddChildNode(ParseSymbol(tokens, "]"));
@@ -192,7 +195,26 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             return newRule;
       }
 
+      /// <summary>
+      /// Parses an AL dictionary variable declaration.
+      /// </summary>
+      /// <param name="tokens">The tokens to read.</param>
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      [ParserRule(AlSyntaxNodeType.DictionaryDeclaration)]
+      public AlParserRule ParseDictionaryDeclaration(TokenStream<AlToken> tokens)
+      {
+         var newRule = new ListDeclarationRule();
 
+         newRule.AddChildNode(ParseIdentifier(tokens, "dictionary"));
+         newRule.AddChildNode(ParseIdentifier(tokens, "of"));
+         newRule.AddChildNode(ParseSymbol(tokens, "["));
+         newRule.AddChildNode(ParseVariableType(tokens));
+         newRule.AddChildNode(ParseSymbol(tokens, ","));
+         newRule.AddChildNode(ParseVariableType(tokens));
+         newRule.AddChildNode(ParseSymbol(tokens, "]"));
+            
+         return newRule;
+      }
 
       /// <summary>
       /// Parses the variable type declaration.
@@ -341,14 +363,14 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             case VariableType.WebServiceActionResultCode:
                {
                   // we have nothing extra to do, these variable types have no extra declaration
-                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+                  newRule.AddChildNode(ParseIdentifier(tokens));
                   break;
                }
             case VariableType.Code:
             case VariableType.Text:
                {
                   // Parse a length declaration e.g. [20]
-                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+                  newRule.AddChildNode(ParseIdentifier(tokens));
                   newRule.AddChildNode(ParseLengthDeclaration(tokens));
                   break;
                }
@@ -359,7 +381,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
             case VariableType.Query:
             case VariableType.Report:
                {
-                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+                  newRule.AddChildNode(ParseIdentifier(tokens));
 
                   // Parse an object declaration e.g. 20 or "Customer"
                   newRule.AddChildNode(ParseVariableObjectDeclaration(tokens));
@@ -367,7 +389,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                }
             case VariableType.Option:
                {
-                  newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+                  newRule.AddChildNode(ParseIdentifier(tokens));
                   
                   // parse an option value declaration e.g. foo,bar,bah
                   newRule.AddChildNode(ParseOptionValuesDeclaration(tokens));
@@ -409,12 +431,86 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          var newRule = new VariableDeclarationRule();
 
 
-         newRule.AddChildNode(ParseIdentifierLiteral(tokens));
+         newRule.AddChildNode(ParseIdentifier(tokens));
          newRule.AddChildNode(ParseSymbol(tokens, ":"));
          newRule.AddChildNode(ParseVariableType(tokens));
 
          newRule.AddChildNode(ParseSymbol(tokens, ";"));
          return newRule;
+      }
+
+      /// <summary>
+      /// Parses a simple expression.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      public AlParserRule ParseSimpleExpression(TokenStream<AlToken> tokens)
+      {
+         var token = tokens.Current;
+         AlParserRule expression;
+         if (token is IdentifierToken { IsReservedWord: true })
+         {
+            var errorMessage = $"Encountered unexpected reserved word: \"{token.Value}\"";
+            GenerateParserError(token, token, errorMessage);
+            return new ErrorNode(errorMessage, token);
+         }
+
+         if (token is SymbolToken { Value: "[" })
+         {
+            // we have a set expression
+            
+         }
+
+         if (token is SymbolToken { Value: "(" })
+         {
+            // we have a parentheses expression
+            
+         }
+
+         return ParseValueExpression(tokens);
+      }
+
+      /// <summary>
+      /// Parses a value expression.
+      /// </summary>
+      /// <param name="tokens">The token stream.</param>
+      /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
+      public AlParserRule ParseValueExpression(TokenStream<AlToken> tokens)
+      {
+         var token = tokens.Current;
+
+         switch ((TokenType)token.TokenType)
+         {
+            case TokenType.Identifier:
+               return ParseIdentifier(tokens);
+            case TokenType.Literal:
+            {
+               var literal = token as LiteralToken;
+               switch (literal!.LiteralType)
+               {
+                  case LiteralType.Boolean:
+                     return ParseBooleanLiteral(tokens);
+                  case LiteralType.DateTime:
+                     return ParseDatetimeLiteral(tokens);
+                  case LiteralType.Date:
+                     return ParseDateLiteral(tokens);
+                  case LiteralType.Time:
+                     return ParseTimeLiteral(tokens);
+                  case LiteralType.Decimal:
+                     return ParseDecimalLiteral(tokens);
+                  case LiteralType.Integer:
+                     return ParseIntegerLiteral(tokens);
+                  case LiteralType.String:
+                     return ParseStringLiteral(tokens);
+               }
+
+               break;
+            }
+         }
+
+         var errorMessage = $"Invalid expression, encountered unexpected symbol: \"{token.Value}\"";
+         GenerateParserError(token, token, errorMessage);
+         return new ErrorNode(errorMessage, token);
       }
    }
 }

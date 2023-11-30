@@ -23,44 +23,13 @@
 // THE SOFTWARE.
 #endregion
 
-using Org.Edgerunner.BC.AL.Language.Tokens;
-using Org.Edgerunner.Language.Lexers;
-
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class MemberAccessExpressionRule : AlParserRule, IAssemblable
+   public class MemberAccessExpressionRule : AlParserRule
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="MemberAccessExpressionRule"/> class.
       /// </summary>
       public MemberAccessExpressionRule() : base(AlSyntaxNodeType.MemberAccessExpression, "Member Access Expression Rule") {}
-      
-      /// <summary>
-      /// Attempts to assemble this rule from the token stream using another existing rule.
-      /// </summary>
-      /// <param name="tokens">The token stream to read.</param>
-      /// <param name="context">The AL parser.</param>
-      /// <param name="rule">The existing rule to assemble with.</param>
-      /// <returns><c>true</c> if parsing and assembly was successful, <c>false</c> otherwise.</returns>
-      public bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule)
-      {
-         try
-         {
-            Enter(context);
-            var parsed = true;
-
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
-
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         throw new NotImplementedException();
-      }
    }
 }

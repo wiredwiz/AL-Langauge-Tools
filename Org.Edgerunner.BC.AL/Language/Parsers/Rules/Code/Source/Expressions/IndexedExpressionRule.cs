@@ -30,43 +30,12 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class IndexedExpressionRule : AlParserRule, IAssemblable
+   public class IndexedExpressionRule : AlParserRule
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="IndexedExpressionRule"/> class.
       /// </summary>
       /// <remarks>This overload assumes that the start and end positions are both the same symbol token.</remarks>
       public IndexedExpressionRule() : base(AlSyntaxNodeType.IndexedExpression, "Indexed Expression Rule") {}
-
-      public bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var parsed = true;
-            string errorMessage;
-
-            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "["), tokens, ref token, ref parsed))
-               return false;
-
-            var expression = ExpressionBuilder.BuildRule(tokens, context);
-            AddChildNode(expression);
-
-            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token))).Parse(tokens, context, "]"), tokens, ref token, ref parsed))
-               return false;
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
-
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         throw new NotImplementedException();
-      }
    }
 }

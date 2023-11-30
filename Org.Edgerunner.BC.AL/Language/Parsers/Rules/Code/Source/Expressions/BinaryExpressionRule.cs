@@ -30,42 +30,8 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Expressions
 {
-   public class BinaryExpressionRule : AlParserRule, IAssemblable
+   public class BinaryExpressionRule : AlParserRule
    {
       public BinaryExpressionRule() : base(AlSyntaxNodeType.BinaryExpression, "Binary Expression Rule") {}
-      
-      public bool AssembleFrom(TokenStream<AlToken> tokens, AlParser context, AlParserRule rule)
-      {
-         try
-         {
-            Enter(context);
-            var token = tokens.Current;
-            var parsed = true;
-            string errorMessage;
-
-            if (!tokens.TryMoveNext(ref token))
-               return false;
-
-            if (!ProcessRuleAndAdvance(((SymbolRule)AddChildNode(new SymbolRule(token!))).Parse(tokens, context), tokens, ref token!,
-                                       ref parsed))
-               return false;
-
-            Match(context);
-
-            var result = Generators.ExpressionBuilder.BuildRule(tokens, context);
-            parsed = result is not ErrorNode;
-
-            return parsed;
-         }
-         finally
-         {
-            Exit(context);
-         }
-      }
-
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         throw new NotImplementedException();
-      }
    }
 }

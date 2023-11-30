@@ -7,7 +7,539 @@ compileUnit
    | statement EOF
 	;
 
+action
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "action"}?
+   ;
+
+comment
+   : IDENTIFIER
+   ;
+
+maxLength
+   : IDENTIFIER
+   ;
+
+locked
+   : IDENTIFIER
+   ;
+
+any
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "any"}?
+   ;
+
+bigInteger
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "biginteger"}?
+   ;
+
+bigText
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "bigtext"}?
+   ;
+
+blob
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "blob"}?
+   ;
+
+boolean
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "boolean"}?
+   ;
+
+byte
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "byte"}?
+   ;
+
+char
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "char"}?
+   ;
+
+code
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "code"}?
+   ;
+
+codeunit
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "codeunit"}?
+   ;
+
+companyProperty
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "companyproperty"}?
+   ;
+
+database
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "database"}?
+   ;
+
+dataTransfer
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "datatransfer"}?
+   ;
+
+date
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "date"}?
+   ;
+
+dateformula
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dateformula"}?
+   ;
+
+datetime
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "datetime"}?
+   ;
+
+debugger
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "debugger"}?
+   ;
+
+decimal
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "decimal"}?
+   ;
+
+dialog
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dialog"}?
+   ;
+
+dictionary
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dictionary"}?
+   ;
+
+dotnet
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dotnet"}?
+   ;
+
+duration
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "duration"}?
+   ;
+
+enum
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "enum"}?
+   ;
+
+errorInfo
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "errorinfo"}?
+   ;
+
+fieldRef
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "fieldref"}?
+   ;
+
+file
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "file"}?
+   ;
+
+filterPageBuilder
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "filterpagebuilder"}?
+   ;
+
+guid
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "guid"}?
+   ;
+
+httpClient
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpclient"}?
+   ;
+
+httpContent
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpcontent"}?
+   ;
+
+httpHeaders
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpheaders"}?
+   ;
+
+httpRequestMessage
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httprequestmessage"}?
+   ;
+
+httpresponsemessage
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpresponsemessage"}?
+   ;
+
+inStream
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "instream"}?
+   ;
+
+integer
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "integer"}?
+   ;
+
+isolatedStorage
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "isolatedstorage"}?
+   ;
+
+jsonArray
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsonarray"}?
+   ;
+
+jsonObject
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsonobject"}?
+   ;
+
+jsonToken
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsontoken"}?
+   ;
+
+jsonValue
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsonvalue"}?
+   ;
+
+keyRef
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "keyref"}?
+   ;
+
+label
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "label"}?
+   ;
+
+list
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "list"}?
+   ;
+
+media
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "media"}?
+   ;
+
+mediaSet
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "mediaset"}?
+   ;
+
+moduleDependencyInfo
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "moduledependencyinfo"}?
+   ;
+
+moduleInfo
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "moduleinfo"}?
+   ;
+
+navApp
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "navapp"}?
+   ;
+
+none
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "none"}?
+   ;
+
+notification
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "notification"}?
+   ;
+
+numberSequence
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "numbersequence"}?
+   ;
+
+option
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "option"}?
+   ;
+
+outStream
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "outstream"}?
+   ;
+
+page
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "page"}?
+   ;
+
+productName
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "productname"}?
+   ;
+
+query
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "query"}?
+   ;
+
+record
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "record"}?
+   ;
+
+recordId
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "recordid"}?
+   ;
+
+recordRef
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "recordref"}?
+   ;
+
+report
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "report"}?
+   ;
+
+requestPage
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "requestpage"}?
+   ;
+
+session
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "session"}?
+   ;
+
+sessionInformation
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "sessioninformation"}?
+   ;
+
+sessionSettings
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "sessionsettings"}?
+   ;
+
+system
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "system"}?
+   ;
+
+taskScheduler
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "taskscheduler"}?
+   ;
+
+testAction
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testaction"}?
+   ;
+
+testField
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testfield"}?
+   ;
+
+testFilter
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testfilter"}?
+   ;
+
+testFilterField
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testfilterfield"}?
+   ;
+
+testPage
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testpage"}?
+   ;
+
+testPart
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testpart"}?
+   ;
+
+testrequestpage
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testrequestpage"}?
+   ;
+
+temporary
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "temporary"}?
+   ;
+
+text
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "text"}?
+   ;
+
+textBuilder
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "textbuilder"}?
+   ;
+
+textConst
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "textconst"}?
+   ;
+
+time
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "time"}?
+   ;
+
+variant
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "variant"}?
+   ;
+
+version
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "version"}?
+   ;
+
+webServiceActionContext
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "webserviceactioncontext"}?
+   ;
+
+xmlAttribute
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlattribute"}?
+   ;
+
+xmlAttributeCollection
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlattributecollection"}?
+   ;
+
+xmlCdata
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlcdata"}?
+   ;
+
+xmlComment
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlcomment"}?
+   ;
+
+xmlDeclaration
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmldeclaration"}?
+   ;
+
+xmlDocument
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmldocument"}?
+   ;
+
+xmlDocumentType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmldocumenttype"}?
+   ;
+
+xmlElement
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlelement"}?
+   ;
+
+xmlNamespaceManager
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnamespacemanager"}?
+   ;
+
+xmlNameTable
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnametable"}?
+   ;
+
+xmlNode
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnode"}?
+   ;
+
+xmlNodeList
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnodelist"}?
+   ;
+
+xmlport
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlport"}?
+   ;
+
+xmlProcessingInstruction
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlprocessinginstruction"}?
+   ;
+
+xmlReadOptions
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlreadoptions"}?
+   ;
+
+xmlText
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmltext"}?
+   ;
+
+xmlWriteOptions
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlwriteoptions"}?
+   ;
+
+auditCategory
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "auditcategory"}?
+   ;
+
+clientType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "clienttype"}?
+   ;
+
+commitBehavior
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "commitbehavior"}?
+   ;
+
+dataClassification
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dataclassification"}?
+   ;
+
+dataScope
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "datascope"}?
+   ;
+
+defaultLayout
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "defaultlayout"}?
+   ;
+
+errorBehavior
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "errorbehavior"}?
+   ;
+
+errorType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "errortype"}?
+   ;
+
+executionContext
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "executioncontext"}?
+   ;
+
+executionMode
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "executionmode"}?
+   ;
+
+fieldClass
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "fieldclass"}?
+   ;
+
+fieldType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "fieldtype"}?
+   ;
+
+inherentPermissionsScope
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "inherentpermissionsscope"}?
+   ;
+
+isolationLevel
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "isolationlevel"}?
+   ;
+
+notificationScope
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "notificationscope"}?
+   ;
+
+objectType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "objecttype"}?
+   ;
+
+pageBackgroundTaskErrorLevel
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "pagebackgroundtaskerrorlevel"}?
+   ;
+
+permissionObjectType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "permissionobjecttype"}?
+   ;
+
+reportFormat
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "reportformat"}?
+   ;
+
+reportLayoutType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "reportlayouttype"}?
+   ;
+
+securityFilter
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "securityfilter"}?
+   ;
+
+securityOperationResult
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "securityoperationresult"}?
+   ;
+
+tableConnectionType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "tableconnectiontype"}?
+   ;
+
+telemetryScope
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "telemetryscope"}?
+   ;
+
+testPermissions
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testpermissions"}?
+   ;
+
+textEncoding
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "textencoding"}?
+   ;
+
+transactionModel
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "transactionmodel"}?
+   ;
+
+transactionType
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "transactiontype"}?
+   ;
+
+verbosity
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "verbosity"}?
+   ;
+
+webServiceActionResultCode
+   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "webserviceactionresultcode"}?
+   ;
+
+/*
+ * Type declarations
+ */
+
+sizeDeclaration : LEFTBRACKET INTEGER_LITERAL RIGHTBRACKET;
+
 builtinType
+   : IDENTIFIER;
+   /*
    : ACTION | ARRAY | AUTOMATION | BIGINTEGER | BIGTEXT | BLOB | BOOLEAN | BYTE | CHAR | CLIENTTYPE | CODE 
    | CODEUNIT | COMPLETIONTRIGGERERRORLEVEL | CONNECTIONTYPE | DATABASE | DATACLASSIFICATION | DATASCOPE 
    | DATE | DATEFORMULA | DATETIME | DECIMAL | DEFAULTLAYOUT | DIALOG | DICTIONARY | DOTNET | DOTNETASSEMBLY 
@@ -23,15 +555,22 @@ builtinType
    | XMLCDATA | XMLDECLARATION | XMLDOCUMENT | XMLDOCUMENTTYPE | XMLELEMENT | XMLNAMESPACEMANAGER 
    | XMLNAMETABLE | XMLNODE | XMLNODELIST | XMLPROCESSINGINSTRUCTION | XMLREADOPTIONS | XMLTEXT 
    | XMLWRITEOPTIONS | WEBSERVICEACTIONCONTEXT | WEBSERVICEACTIONRESULTCODE | SESSIONSETTINGS;
+*/
+
+/*
 
 applicationObjectType
    : CODEUNIT | PAGE | PAGEEXTENSION | PAGECUSTOMIZATION | DOTNET | ENUM | ENUMEXTENSION | VALUE | QUERY 
    | REPORT | TABLE | TABLEEXTENSION | XMLPORT | PROFILE | CONTROLADDIN | REPORTEXTENSION | INTERFACE 
    | PERMISSIONSET | PERMISSIONSETEXTENSION | ENTITLEMENT;
+ */
 
 /*
  * Field related rules
  */
+
+
+/******************************************************
 
 fieldValue
    : IDENTIFIER 
@@ -69,18 +608,66 @@ qualifiedFieldReference
 
 /*
  * Table relations
- */
+ * /
+
+average
+   : IDENTIFIER
+   ;
+
+const
+   : IDENTIFIER
+   ;
+
+count
+   : IDENTIFIER
+   ;
+
+exist
+   : IDENTIFIER
+   ;
+
+field
+   : IDENTIFIER
+   ;
+
+filter
+   : IDENTIFIER
+   ;
+
+lookup
+   : IDENTIFIER
+   ;
+
+max
+   : IDENTIFIER
+   ;
+
+min
+   : IDENTIFIER
+   ;
+
+upperLimit
+   : IDENTIFIER
+   ;
+
+sum
+   : IDENTIFIER
+   ;
 
 tableRelationFilter
-   : IDENTIFIER EQUAL (FIELD LEFTPAREN IDENTIFIER RIGHTPAREN | CONST LEFTPAREN (IDENTIFIER | DIGIT+) RIGHTPAREN)
+   : IDENTIFIER EQUAL (field LEFTPAREN IDENTIFIER RIGHTPAREN | const LEFTPAREN (IDENTIFIER | DIGIT+) RIGHTPAREN)
    ;
 
 tableRelationFilters
    : tableRelationFilter (COMMA tableRelationFilter)*?
    ;
 
+where
+   : IDENTIFIER
+   ;
+
 tableRelationWhereClause
-   : WHERE LEFTPAREN tableRelationFilters RIGHTPAREN
+   : where LEFTPAREN tableRelationFilters RIGHTPAREN
    ;
 
 fieldRelationClause
@@ -102,15 +689,15 @@ tableRelation
 
 /*
  * Flow fields
- */
+ * /
 
 calcFormulaTableFilterValue
-   : CONST LEFTPAREN fieldValue RIGHTPAREN
-   | FILTER LEFTPAREN compoundFilterRule RIGHTPAREN
-   | FIELD LEFTPAREN IDENTIFIER RIGHTPAREN
-   | FIELD LEFTPAREN UPPERLIMIT LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
-   | FIELD LEFTPAREN FILTER LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
-   | FIELD LEFTPAREN UPPERLIMIT LEFTPAREN FILTER LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN RIGHTPAREN
+   : const LEFTPAREN fieldValue RIGHTPAREN
+   | filter LEFTPAREN compoundFilterRule RIGHTPAREN
+   | field LEFTPAREN IDENTIFIER RIGHTPAREN
+   | field LEFTPAREN upperLimit LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
+   | field LEFTPAREN filter LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
+   | field LEFTPAREN upperLimit LEFTPAREN filter LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN RIGHTPAREN
    ;
 
 calcFormulaTableFilter
@@ -122,35 +709,35 @@ calcFormulaTableFilters
    ;
 
 calcFormulaWhereClause
-   : WHERE LEFTPAREN calcFormulaTableFilters RIGHTPAREN
+   : where LEFTPAREN calcFormulaTableFilters RIGHTPAREN
    ;
 
 calcFormulaExist
-   : MINUS EXIST LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS exist LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaCount
-   : COUNT LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
+   : count LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaSum
-   : MINUS SUM LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS sum LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaAverage
-   : MINUS AVERAGE LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS average LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
    
 calcFormulaMin
-   : MIN LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : min LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaMax
-   : MAX LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : max LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaLookup
-   : LOOKUP LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : lookup LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcForumla
@@ -164,14 +751,8 @@ calcForumla
    ;
 
 /*
- * Type declarations
- */
-
-sizeDeclaration : LEFTBRACKET INTEGER_LITERAL RIGHTBRACKET;
-
-/*
  * Tables
- */
+ * /
 
 tableFieldId : INTEGER_LITERAL;
 
@@ -200,18 +781,18 @@ tableFieldType
 
 
 tableField
-   : FIELD LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE RIGHTCBRACE;
+   : field LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE RIGHTCBRACE;
 
 /*
  * Method
- */
+ * /
 
 method
    : methodAttribute*? PROCEDURE IDENTIFIER LEFTPAREN parameterList? RIGHTPAREN returnValue? varBlock? statementBlock;
 
 /*
  * Method attributes
- */
+ * /
 
 attributeArgument
    : IDENTIFIER COLON builtinType;
@@ -221,6 +802,8 @@ attributeArgumentList
 
 methodAttribute
    : LEFTBRACKET IDENTIFIER (LEFTPAREN attributeArgumentList? RIGHTPAREN)? RIGHTBRACKET;
+
+***************************************/
 
 /*
  * Variables
@@ -239,15 +822,15 @@ labelText
    ;
 
 labelMaxLength
-   : MAXLENGTH EQUAL INTEGER_LITERAL
+   : maxLength EQUAL INTEGER_LITERAL
    ;
 
 labelComment
-   : COMMENT EQUAL STRING_LITERAL
+   : comment EQUAL STRING_LITERAL
    ;
 
 labelLocked
-   : LOCKED EQUAL (TRUE | FALSE)
+   : locked EQUAL (TRUE | FALSE)
    ;
 
 labelArgument
@@ -269,133 +852,133 @@ optionValueList
    ;
 
 variableTypeDeclaration
-   : ANY
-   | BIGINTEGER
-   | BIGTEXT
-   | BLOB
-   | BOOLEAN
-   | BYTE
-   | CHAR
-   | CODE sizeDeclaration
-   | CODEUNIT IDENTIFIER
-   | COMPANYPROPERTY
-   | DATABASE
-   | DATATRANSFER
-   | DATE
-   | DATEFORMULA
-   | DATETIME
-   | DEBUGGER
-   | DECIMAL
-   | DIALOG
-   | DICTIONARY OF LEFTBRACKET key COMMA dataType RIGHTBRACKET
-   | DOTNET IDENTIFIER
-   | DURATION
-   | ENUM IDENTIFIER
-   | ERRORINFO
-   | FIELDREF
-   | FILE
-   | FILTERPAGEBUILDER
-   | GUID
-   | HTTPCLIENT
-   | HTTPCONTENT
-   | HTTPHEADERS
-   | HTTPREQUESTMESSAGE
-   | HTTPRESPONSEMESSAGE
-   | INSTREAM
-   | INTEGER
-   | ISOLATEDSTORAGE
-   | JSONARRAY
-   | JSONOBJECT
-   | JSONTOKEN
-   | JSONVALUE
-   | KEYREF
-   | LABEL labelText (COMMA labelArgs)?
-   | LIST OF LEFTBRACKET dataType RIGHTBRACKET
-   | MEDIA
-   | MEDIASET
-   | MODULEDEPENDENCYINFO
-   | MODULEINFO
-   | NAVAPP
-   | NONE
-   | NOTIFICATION
-   | NUMBERSEQUENCE
-   | OPTION optionValueList
-   | OUTSTREAM
-   | PAGE IDENTIFIER
-   | PRODUCTNAME
-   | QUERY IDENTIFIER
-   | RECORD IDENTIFIER TEMPORARY?
-   | RECORDID
-   | RECORDREF
-   | REPORT IDENTIFIER
-   | REQUESTPAGE IDENTIFIER
-   | SESSION
-   | SESSIONINFORMATION
-   | SESSIONSETTINGS
-   | SYSTEM
-   | TASKSCHEDULER
-   | TESTACTION
-   | TESTFIELD
-   | TESTFILTER
-   | TESTFILTERFIELD
-   | TESTPAGE
-   | TESTPART
-   | TESTREQUESTPAGE
-   | TEXT sizeDeclaration
-   | TEXTBUILDER
-   | TEXTCONST IDENTIFIER EQUAL STRING_LITERAL
-   | TIME
-   | VARIANT
-   | VERSION
-   | WEBSERVICEACTIONCONTEXT
-   | XMLATTRIBUTE
-   | XMLATTRIBUTECOLLECTION
-   | XMLCDATA
-   | XMLCOMMENT
-   | XMLDECLARATION
-   | XMLDOCUMENT
-   | XMLDOCUMENTTYPE
-   | XMLELEMENT
-   | XMLNAMESPACEMANAGER
-   | XMLNAMETABLE
-   | XMLNODE
-   | XMLNODELIST
-   | XMLPORT
-   | XMLPROCESSINGINSTRUCTION
-   | XMLREADOPTIONS
-   | XMLTEXT
-   | XMLWRITEOPTIONS
-   | ACTION
-   | AUDITCATEGORY
-   | CLIENTTYPE
-   | COMMITBEHAVIOR
-   | DATACLASSIFICATION
-   | DATASCOPE
-   | DEFAULTLAYOUT
-   | ERRORBEHAVIOR
-   | ERRORTYPE
-   | EXECUTIONCONTEXT
-   | EXECUTIONMODE
-   | FIELDCLASS
-   | FIELDTYPE
-   | INHERENTPERMISSIONSSCOPE
-   | ISOLATIONLEVEL
-   | NOTIFICATIONSCOPE
-   | OBJECTTYPE
-   | PAGEBACKGROUNDTASKERRORLEVEL
-   | PERMISSIONOBJECTTYPE
-   | REPORTFORMAT
-   | REPORTLAYOUTTYPE
-   | SECURITYFILTER
-   | SECURITYOPERATIONRESULT
-   | TABLECONNECTIONTYPE
-   | TELEMETRYSCOPE
-   | TESTPERMISSIONS
-   | TEXTENCODING
-   | TRANSACTIONMODEL
-   | TRANSACTIONTYPE
-   | VERBOSITY
-   | WEBSERVICEACTIONRESULTCODE
+   : any
+   | bigInteger
+   | bigText
+   | blob
+   | boolean
+   | byte
+   | char
+   | code sizeDeclaration
+   | codeunit IDENTIFIER
+   | companyProperty
+   | database
+   | dataTransfer
+   | date
+   | dateformula
+   | datetime
+   | debugger
+   | decimal
+   | dialog
+   | dictionary OF LEFTBRACKET key COMMA dataType RIGHTBRACKET
+   | dotnet IDENTIFIER
+   | duration
+   | enum IDENTIFIER
+   | errorInfo
+   | fieldRef
+   | file
+   | filterPageBuilder
+   | guid
+   | httpClient
+   | httpContent
+   | httpHeaders
+   | httpRequestMessage
+   | httpresponsemessage
+   | inStream
+   | integer
+   | isolatedStorage
+   | jsonArray
+   | jsonObject
+   | jsonToken
+   | jsonValue
+   | keyRef
+   | label labelText (COMMA labelArgs)?
+   | list OF LEFTBRACKET dataType RIGHTBRACKET
+   | media
+   | mediaSet
+   | moduleDependencyInfo
+   | moduleInfo
+   | navApp
+   | none
+   | notification
+   | numberSequence
+   | option optionValueList
+   | outStream
+   | page IDENTIFIER
+   | productName
+   | query IDENTIFIER
+   | record IDENTIFIER temporary?
+   | recordId
+   | recordRef
+   | report IDENTIFIER
+   | requestPage IDENTIFIER
+   | session
+   | sessionInformation
+   | sessionSettings
+   | system
+   | taskScheduler
+   | testAction
+   | testField
+   | testFilter
+   | testFilterField
+   | testPage
+   | testPart
+   | testrequestpage
+   | text sizeDeclaration
+   | textBuilder
+   | textConst IDENTIFIER EQUAL STRING_LITERAL
+   | time
+   | variant
+   | version
+   | webServiceActionContext
+   | xmlAttribute
+   | xmlAttributeCollection
+   | xmlCdata
+   | xmlComment
+   | xmlDeclaration
+   | xmlDocument
+   | xmlDocumentType
+   | xmlElement
+   | xmlNamespaceManager
+   | xmlNameTable
+   | xmlNode
+   | xmlNodeList
+   | xmlport
+   | xmlProcessingInstruction
+   | xmlReadOptions
+   | xmlText
+   | xmlWriteOptions
+   | action
+   | auditCategory
+   | clientType
+   | commitBehavior
+   | dataClassification
+   | dataScope
+   | defaultLayout
+   | errorBehavior
+   | errorType
+   | executionContext
+   | executionMode
+   | fieldClass
+   | fieldType
+   | inherentPermissionsScope
+   | isolationLevel
+   | notificationScope
+   | objectType
+   | pageBackgroundTaskErrorLevel
+   | permissionObjectType
+   | reportFormat
+   | reportLayoutType
+   | securityFilter
+   | securityOperationResult
+   | tableConnectionType
+   | telemetryScope
+   | testPermissions
+   | textEncoding
+   | transactionModel
+   | transactionType
+   | verbosity
+   | webServiceActionResultCode
    ;
 
 parameterDeclaration

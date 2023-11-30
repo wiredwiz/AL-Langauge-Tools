@@ -28,24 +28,11 @@ using Org.Edgerunner.Language.Lexers;
 
 namespace Org.Edgerunner.BC.AL.Language.Parsers.Rules.Code.Source.Statements
 {
-   public class StatementRule : AlParserRule, IParsable
+   public class StatementRule : AlParserRule
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="StatementRule"/> class.
       /// </summary>
       public StatementRule() : base(AlSyntaxNodeType.Statement, "Statement Rule") {}
-
-      public override bool Parse(TokenStream<AlToken> tokens, AlParser context)
-      {
-         var token = tokens.Current;
-         var parsed = true;
-
-         while (!tokens.EndOfStream() && (token.TokenType != (int)TokenType.Symbol || token.Value != ";"))
-         {
-            // attempt to assemble expressions
-         }
-
-         return parsed;
-      }
    }
 }

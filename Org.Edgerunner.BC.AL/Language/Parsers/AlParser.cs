@@ -43,7 +43,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
          _State = 0;
       }
 
-      private readonly Dictionary<AlSyntaxNodeType, string> _Rules = new Dictionary<AlSyntaxNodeType, string>
+      public static readonly Dictionary<AlSyntaxNodeType, string> Rules = new Dictionary<AlSyntaxNodeType, string>
                                                                     {
                                                                        { AlSyntaxNodeType.ArrayDeclaration, "Array Declaration"},
                                                                        { AlSyntaxNodeType.BinaryExpression, "Binary Expression"},
@@ -59,6 +59,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
                                                                        { AlSyntaxNodeType.Expression, "Expression"},
                                                                        { AlSyntaxNodeType.Identifier, "Identifier"},
                                                                        { AlSyntaxNodeType.IndexedExpression, "Indexed Expression"},
+                                                                       { AlSyntaxNodeType.Integer, "Integer"},
                                                                        { AlSyntaxNodeType.LabelDeclaration, "Label Declaration"},
                                                                        { AlSyntaxNodeType.LengthDeclaration, "Length Declaration"},
                                                                        { AlSyntaxNodeType.ListDeclaration, "List Declaration"},
@@ -169,7 +170,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <returns>A string containing the name of the rule or null if unable to find the rule.</returns>
       public string GetRuleName(AlSyntaxNodeType type)
       {
-         return _Rules[type];
+         return Rules[type];
       }
 
       /// <summary>

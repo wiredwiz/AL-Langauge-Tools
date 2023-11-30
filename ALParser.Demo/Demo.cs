@@ -17,7 +17,7 @@ namespace ALParser.Demo
          InitializeComponent();
          _Lexer.AddErrorListener(_ErrorListener);
          _Parser.AddErrorListener(_ErrorListener);
-         cmbRules.DataSource = ParserRules.Names;
+         cmbRules.DataSource = AlParser.Rules.Values.ToList();
       }
 
       private AlParser _Parser = new AlParser();

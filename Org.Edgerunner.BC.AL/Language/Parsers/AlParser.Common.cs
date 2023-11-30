@@ -188,7 +188,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="tokens">The token stream.</param>
       /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
       [ParserRule(AlSyntaxNodeType.Identifier)]
-      public AlParserRule ParseIdentifierLiteral(TokenStream<AlToken> tokens)
+      public AlParserRule ParseIdentifier(TokenStream<AlToken> tokens)
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedIdentifier, token.Value);
@@ -210,7 +210,7 @@ namespace Org.Edgerunner.BC.AL.Language.Parsers
       /// <param name="expectedValue">The expected identifier value.</param>
       /// <returns>A new <see cref="AlParserRule"/> instance.</returns>
       [ParserRule(AlSyntaxNodeType.Identifier)]
-      public AlParserRule ParseIdentifierLiteral(TokenStream<AlToken> tokens, string expectedValue)
+      public AlParserRule ParseIdentifier(TokenStream<AlToken> tokens, string expectedValue)
       {
          var token = tokens.Current;
          var message = string.Format(Resources.ExpectedSpecificIdentifier, expectedValue, token.Value);
