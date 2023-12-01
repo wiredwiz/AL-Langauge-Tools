@@ -2,14 +2,60 @@ parser grammar ALParser;
 
 options { tokenVocab=ALLexer; }
 
+@parser::members 
+{  // define our member text lists
+   List<string> Builtins = new List<string>() 
+      {
+         "action", "array", "automation", "biginteger", "bigtext", "blob", "boolean", "byte", 
+         "char", "clienttype", "code", "codeunit", "completiontriggererrorlevel", "connectiontype", 
+         "database", "dataclassification", "datascope", "date", "dateformula", "datetime", "decimal", 
+         "defaultlayout", "dialog", "dictionary", "dotnet", "dotnetassembly", "dotnettypedeclaration", 
+         "duration", "enum", "errorinfo", "errortype", "executioncontext", "executionmode", "fieldclass", 
+         "fieldref", "fieldtype", "file", "filterpagebuilder", "guid", "instream", "integer", "joker", 
+         "keyref", "list", "moduledependencyinfo", "moduleinfo", "none", "notification", 
+         "notificationscope", "objecttype", "option", "outstream", "page", "pageresult", "query", 
+         "record", "recordid", "recordref", "report", "reportformat", "securityfilter", "securityfiltering", 
+         "table", "tableconnectiontype", "tablefilter", "testaction", "testfield", "testfilterfield", 
+         "testpage", "testpermissions", "testrequestpage", "text", "textbuilder", "textconst", "textencoding", 
+         "time", "transactionmodel", "transactiontype", "variant", "verbosity", "version", "xmlport", 
+         "httpcontent", "httpheaders", "httpclient", "httprequestmessage", "httpresponsemessage", 
+         "jsontoken", "jsonvalue", "jsonarray", "jsonobject", "view", "views", "xmlattribute", 
+         "xmlattributecollection", "xmlcomment", "xmlcdata", "xmldeclaration", "xmldocument", 
+         "xmldocumenttype", "xmlelement", "xmlnamespacemanager", "xmlnametable", "xmlnode", 
+         "xmlnodelist", "xmlprocessinginstruction", "xmlreadoptions", "xmltext", "xmlwriteoptions", 
+         "webserviceactioncontext", "webserviceactionresultcode", "sessionsettings;"
+      };
+
+      List<string> VariableTypes = new List<string>() 
+      {
+         "any", "biginteger", "bigtext", "blob", "boolean", "byte", "char", "code", 
+         "codeunit", "companyproperty", "database", "datatransfer", "date", "dateformula", 
+         "datetime", "debugger", "decimal", "dialog", "dictionary", "dotnet", "duration", 
+         "enum", "errorinfo", "fieldref", "file", "filterpagebuilder", "guid", "httpclient", 
+         "httpcontent", "httpheaders", "httprequestmessage", "httpresponsemessage", 
+         "instream", "integer", "isolatedstorage", "jsonarray", "jsonobject", "jsontoken", "jsonvalue", 
+         "keyref", "label", "list", "media", "mediaset", "moduledependencyinfo", "moduleinfo", 
+         "navapp", "none", "notification", "numbersequence", "option", "outstream", "page", "productname", "query", 
+         "record", "recordid", "recordref", "report", "requestpage", "session", "sessioninformation", 
+         "sessionsettings", "system", "taskscheduler", "testaction", "testfield", 
+         "testfilter", "testfilterfield", "testpage", "testpart", "testrequestpage", "text", 
+         "textbuilder", "textconst", "time", "variant", "version", "webserviceactioncontext", 
+         "xmlattribute", "xmlattributecollection", "xmlcdata", "xmlcomment", "xmldeclaration", 
+         "xmldocument", "xmldocumenttype", "xmlelement", "xmlnamespacemanager", "xmlnametable", 
+         "xmlnode", "xmlnodelist", "xmlport", "xmlprocessinginstruction", "xmlreadoptions", "xmltext", 
+         "xmlwriteoptions", "action", "auditcategory", "clienttype", "commitbehavior", "dataclassification", 
+         "datascope", "defaultlayout", "errorbehavior", "errortype", "executioncontext", "executionmode", 
+         "fieldclass", "fieldtype", "inherentpermissionsscope", "isolationlevel", "notificationscope", 
+         "objecttype", "pagebackgroundtaskerrorlevel", "permissionobjecttype", "reportformat", "reportlayouttype", 
+         "securityfilter", "securityoperationresult", "tableconnectiontype", "telemetryscope", "testpermissions", 
+         "textencoding", "transactionmodel", "transactiontype", "verbosity", "webserviceactionresultcode"
+      };
+}
+
 compileUnit
 	: EOF
    | statement EOF
 	;
-
-action
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "action"}?
-   ;
 
 comment
    : IDENTIFIER
@@ -24,511 +70,515 @@ locked
    ;
 
 any
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "any"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "any"}? IDENTIFIER
    ;
 
 bigInteger
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "biginteger"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "biginteger"}? IDENTIFIER
    ;
 
 bigText
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "bigtext"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "bigtext"}? IDENTIFIER
    ;
 
 blob
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "blob"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "blob"}? IDENTIFIER
    ;
 
 boolean
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "boolean"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "boolean"}? IDENTIFIER
    ;
 
 byte
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "byte"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "byte"}? IDENTIFIER
    ;
 
 char
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "char"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "char"}? IDENTIFIER
    ;
 
 code
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "code"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "code"}? IDENTIFIER
    ;
 
 codeunit
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "codeunit"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "codeunit"}? IDENTIFIER
    ;
 
 companyProperty
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "companyproperty"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "companyproperty"}? IDENTIFIER
    ;
 
 database
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "database"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "database"}? IDENTIFIER
    ;
 
 dataTransfer
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "datatransfer"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "datatransfer"}? IDENTIFIER
    ;
 
 date
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "date"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "date"}? IDENTIFIER
    ;
 
-dateformula
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dateformula"}?
+dateFormula
+   : {_input.Lt(1).Text.ToLowerInvariant() == "dateformula"}? IDENTIFIER
    ;
 
 datetime
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "datetime"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "datetime"}? IDENTIFIER
    ;
 
 debugger
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "debugger"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "debugger"}? IDENTIFIER
    ;
 
 decimal
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "decimal"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "decimal"}? IDENTIFIER
    ;
 
 dialog
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dialog"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "dialog"}? IDENTIFIER
    ;
 
 dictionary
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dictionary"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "dictionary"}? IDENTIFIER
    ;
 
 dotnet
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dotnet"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "dotnet"}? IDENTIFIER
    ;
 
 duration
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "duration"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "duration"}? IDENTIFIER
    ;
 
 enum
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "enum"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "enum"}? IDENTIFIER
    ;
 
 errorInfo
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "errorinfo"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "errorinfo"}? IDENTIFIER
    ;
 
 fieldRef
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "fieldref"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "fieldref"}? IDENTIFIER
    ;
 
 file
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "file"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "file"}? IDENTIFIER
    ;
 
 filterPageBuilder
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "filterpagebuilder"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "filterpagebuilder"}? IDENTIFIER
    ;
 
 guid
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "guid"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "guid"}? IDENTIFIER
    ;
 
 httpClient
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpclient"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "httpclient"}? IDENTIFIER
    ;
 
 httpContent
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpcontent"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "httpcontent"}? IDENTIFIER
    ;
 
 httpHeaders
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpheaders"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "httpheaders"}? IDENTIFIER
    ;
 
 httpRequestMessage
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httprequestmessage"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "httprequestmessage"}? IDENTIFIER
    ;
 
-httpresponsemessage
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "httpresponsemessage"}?
+httpResponseMessage
+   : {_input.Lt(1).Text.ToLowerInvariant() == "httpresponsemessage"}? IDENTIFIER
    ;
 
 inStream
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "instream"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "instream"}? IDENTIFIER
    ;
 
 integer
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "integer"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "integer"}? IDENTIFIER
    ;
 
 isolatedStorage
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "isolatedstorage"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "isolatedstorage"}? IDENTIFIER
    ;
 
 jsonArray
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsonarray"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "jsonarray"}? IDENTIFIER
    ;
 
 jsonObject
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsonobject"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "jsonobject"}? IDENTIFIER
    ;
 
 jsonToken
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsontoken"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "jsontoken"}? IDENTIFIER
    ;
 
 jsonValue
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "jsonvalue"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "jsonvalue"}? IDENTIFIER
    ;
 
 keyRef
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "keyref"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "keyref"}? IDENTIFIER
    ;
 
 label
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "label"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "label"}? IDENTIFIER
    ;
 
 list
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "list"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "list"}? IDENTIFIER
    ;
 
 media
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "media"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "media"}? IDENTIFIER
    ;
 
 mediaSet
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "mediaset"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "mediaset"}? IDENTIFIER
    ;
 
 moduleDependencyInfo
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "moduledependencyinfo"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "moduledependencyinfo"}? IDENTIFIER
    ;
 
 moduleInfo
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "moduleinfo"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "moduleinfo"}? IDENTIFIER
    ;
 
 navApp
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "navapp"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "navapp"}? IDENTIFIER
    ;
 
 none
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "none"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "none"}? IDENTIFIER
    ;
 
 notification
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "notification"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "notification"}? IDENTIFIER
    ;
 
 numberSequence
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "numbersequence"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "numbersequence"}? IDENTIFIER
    ;
 
 option
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "option"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "option"}? IDENTIFIER
    ;
 
 outStream
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "outstream"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "outstream"}? IDENTIFIER
    ;
 
 page
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "page"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "page"}? IDENTIFIER
    ;
 
 productName
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "productname"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "productname"}? IDENTIFIER
    ;
 
 query
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "query"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "query"}? IDENTIFIER
    ;
 
 record
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "record"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "record"}? IDENTIFIER
    ;
 
 recordId
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "recordid"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "recordid"}? IDENTIFIER
    ;
 
 recordRef
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "recordref"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "recordref"}? IDENTIFIER
    ;
 
 report
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "report"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "report"}? IDENTIFIER
    ;
 
 requestPage
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "requestpage"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "requestpage"}? IDENTIFIER
    ;
 
 session
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "session"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "session"}? IDENTIFIER
    ;
 
 sessionInformation
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "sessioninformation"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "sessioninformation"}? IDENTIFIER
    ;
 
 sessionSettings
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "sessionsettings"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "sessionsettings"}? IDENTIFIER
    ;
 
 system
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "system"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "system"}? IDENTIFIER
    ;
 
 taskScheduler
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "taskscheduler"}?
-   ;
-
-testAction
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testaction"}?
-   ;
-
-testField
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testfield"}?
-   ;
-
-testFilter
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testfilter"}?
-   ;
-
-testFilterField
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testfilterfield"}?
-   ;
-
-testPage
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testpage"}?
-   ;
-
-testPart
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testpart"}?
-   ;
-
-testrequestpage
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testrequestpage"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "taskscheduler"}? IDENTIFIER
    ;
 
 temporary
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "temporary"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "temporary"}? IDENTIFIER
+   ;
+
+testAction
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testaction"}? IDENTIFIER
+   ;
+
+testField
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testfield"}? IDENTIFIER
+   ;
+
+testFilter
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testfilter"}? IDENTIFIER
+   ;
+
+testFilterField
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testfilterfield"}? IDENTIFIER
+   ;
+
+testPage
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testpage"}? IDENTIFIER
+   ;
+
+testPart
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testpart"}? IDENTIFIER
+   ;
+
+testRequestPage
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testrequestpage"}? IDENTIFIER
    ;
 
 text
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "text"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "text"}? IDENTIFIER
    ;
 
 textBuilder
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "textbuilder"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "textbuilder"}? IDENTIFIER
    ;
 
 textConst
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "textconst"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "textconst"}? IDENTIFIER
    ;
 
 time
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "time"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "time"}? IDENTIFIER
    ;
 
 variant
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "variant"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "variant"}? IDENTIFIER
    ;
 
 version
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "version"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "version"}? IDENTIFIER
    ;
 
 webServiceActionContext
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "webserviceactioncontext"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "webserviceactioncontext"}? IDENTIFIER
    ;
 
 xmlAttribute
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlattribute"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlattribute"}? IDENTIFIER
    ;
 
 xmlAttributeCollection
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlattributecollection"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlattributecollection"}? IDENTIFIER
    ;
 
 xmlCdata
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlcdata"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlcdata"}? IDENTIFIER
    ;
 
 xmlComment
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlcomment"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlcomment"}? IDENTIFIER
    ;
 
 xmlDeclaration
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmldeclaration"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmldeclaration"}? IDENTIFIER
    ;
 
 xmlDocument
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmldocument"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmldocument"}? IDENTIFIER
    ;
 
 xmlDocumentType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmldocumenttype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmldocumenttype"}? IDENTIFIER
    ;
 
 xmlElement
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlelement"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlelement"}? IDENTIFIER
    ;
 
 xmlNamespaceManager
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnamespacemanager"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlnamespacemanager"}? IDENTIFIER
    ;
 
 xmlNameTable
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnametable"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlnametable"}? IDENTIFIER
    ;
 
 xmlNode
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnode"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlnode"}? IDENTIFIER
    ;
 
 xmlNodeList
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlnodelist"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlnodelist"}? IDENTIFIER
    ;
 
 xmlport
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlport"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlport"}? IDENTIFIER
    ;
 
 xmlProcessingInstruction
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlprocessinginstruction"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlprocessinginstruction"}? IDENTIFIER
    ;
 
 xmlReadOptions
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlreadoptions"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlreadoptions"}? IDENTIFIER
    ;
 
 xmlText
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmltext"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmltext"}? IDENTIFIER
    ;
 
 xmlWriteOptions
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "xmlwriteoptions"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "xmlwriteoptions"}? IDENTIFIER
+   ;
+
+action
+   : {_input.Lt(1).Text.ToLowerInvariant() == "action"}? IDENTIFIER
    ;
 
 auditCategory
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "auditcategory"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "auditcategory"}? IDENTIFIER
    ;
 
 clientType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "clienttype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "clienttype"}? IDENTIFIER
    ;
 
 commitBehavior
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "commitbehavior"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "commitbehavior"}? IDENTIFIER
    ;
 
 dataClassification
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "dataclassification"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "dataclassification"}? IDENTIFIER
    ;
 
 dataScope
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "datascope"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "datascope"}? IDENTIFIER
    ;
 
 defaultLayout
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "defaultlayout"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "defaultlayout"}? IDENTIFIER
    ;
 
 errorBehavior
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "errorbehavior"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "errorbehavior"}? IDENTIFIER
    ;
 
 errorType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "errortype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "errortype"}? IDENTIFIER
    ;
 
 executionContext
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "executioncontext"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "executioncontext"}? IDENTIFIER
    ;
 
 executionMode
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "executionmode"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "executionmode"}? IDENTIFIER
    ;
 
 fieldClass
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "fieldclass"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "fieldclass"}? IDENTIFIER
    ;
 
 fieldType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "fieldtype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "fieldtype"}? IDENTIFIER
    ;
 
 inherentPermissionsScope
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "inherentpermissionsscope"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "inherentpermissionsscope"}? IDENTIFIER
    ;
 
 isolationLevel
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "isolationlevel"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "isolationlevel"}? IDENTIFIER
    ;
 
 notificationScope
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "notificationscope"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "notificationscope"}? IDENTIFIER
    ;
 
 objectType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "objecttype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "objecttype"}? IDENTIFIER
    ;
 
 pageBackgroundTaskErrorLevel
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "pagebackgroundtaskerrorlevel"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "pagebackgroundtaskerrorlevel"}? IDENTIFIER
    ;
 
 permissionObjectType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "permissionobjecttype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "permissionobjecttype"}? IDENTIFIER
    ;
 
 reportFormat
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "reportformat"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "reportformat"}? IDENTIFIER
    ;
 
 reportLayoutType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "reportlayouttype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "reportlayouttype"}? IDENTIFIER
    ;
 
 securityFilter
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "securityfilter"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "securityfilter"}? IDENTIFIER
    ;
 
 securityOperationResult
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "securityoperationresult"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "securityoperationresult"}? IDENTIFIER
    ;
 
 tableConnectionType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "tableconnectiontype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "tableconnectiontype"}? IDENTIFIER
    ;
 
 telemetryScope
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "telemetryscope"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "telemetryscope"}? IDENTIFIER
    ;
 
 testPermissions
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "testpermissions"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "testpermissions"}? IDENTIFIER
    ;
 
 textEncoding
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "textencoding"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "textencoding"}? IDENTIFIER
    ;
 
 transactionModel
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "transactionmodel"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "transactionmodel"}? IDENTIFIER
    ;
 
 transactionType
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "transactiontype"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "transactiontype"}? IDENTIFIER
    ;
 
 verbosity
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "verbosity"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "verbosity"}? IDENTIFIER
    ;
 
 webServiceActionResultCode
-   : IDENTIFIER {$IDENTIFIER.text.ToLowerInvariant() == "webserviceactionresultcode"}?
+   : {_input.Lt(1).Text.ToLowerInvariant() == "webserviceactionresultcode"}? IDENTIFIER
    ;
 
 /*
@@ -865,7 +915,7 @@ variableTypeDeclaration
    | database
    | dataTransfer
    | date
-   | dateformula
+   | dateFormula
    | datetime
    | debugger
    | decimal
@@ -883,7 +933,7 @@ variableTypeDeclaration
    | httpContent
    | httpHeaders
    | httpRequestMessage
-   | httpresponsemessage
+   | httpResponseMessage
    | inStream
    | integer
    | isolatedStorage
@@ -923,7 +973,7 @@ variableTypeDeclaration
    | testFilterField
    | testPage
    | testPart
-   | testrequestpage
+   | testRequestPage
    | text sizeDeclaration
    | textBuilder
    | textConst IDENTIFIER EQUAL STRING_LITERAL
