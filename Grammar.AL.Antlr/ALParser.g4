@@ -52,6 +52,21 @@ options { tokenVocab=ALLexer; }
       };
 
       List<string> VarAppObjects = new List<string>() {"codeunit", "page", "requestpage", "dotnet", "enum", "query", "report", "xmlport"};
+
+      List<string> SimpleFieldTypes = new List<string>() 
+      {
+         "integer", "biginteger", "decimal", "boolean", "binary", "blob", "date", "time", "datetime", "dateformula", "duration", "recordid", "tablefilter", "option", "guid"
+      };
+
+      bool TokenMatches(string text)
+      {
+         return _input.Lt(1).Text.ToLowerInvariant() == text;
+      }
+
+      bool TokenMatches(List<string> values)
+      {
+         return values.Contains(_input.Lt(1).Text.ToLowerInvariant());
+      }
 }
 
 compileUnit
@@ -69,6 +84,10 @@ maxLength
 
 locked
    : IDENTIFIER
+   ;
+
+simpleProperty
+   : IDENTIFIER EQUAL (STRING_LITERAL | INTEGER_LITERAL | FLOAT_LITERAL | IDENTIFIER | booleanLiteral)
    ;
 
 /*
@@ -109,9 +128,6 @@ applicationObjectType
  * Field related rules
  */
 
-
-/******************************************************
-
 fieldValue
    : IDENTIFIER 
    | INTEGER_LITERAL 
@@ -148,66 +164,19 @@ qualifiedFieldReference
 
 /*
  * Table relations
- * /
-
-average
-   : IDENTIFIER
-   ;
-
-const
-   : IDENTIFIER
-   ;
-
-count
-   : IDENTIFIER
-   ;
-
-exist
-   : IDENTIFIER
-   ;
-
-field
-   : IDENTIFIER
-   ;
-
-filter
-   : IDENTIFIER
-   ;
-
-lookup
-   : IDENTIFIER
-   ;
-
-max
-   : IDENTIFIER
-   ;
-
-min
-   : IDENTIFIER
-   ;
-
-upperLimit
-   : IDENTIFIER
-   ;
-
-sum
-   : IDENTIFIER
-   ;
+ */
 
 tableRelationFilter
-   : IDENTIFIER EQUAL (field LEFTPAREN IDENTIFIER RIGHTPAREN | const LEFTPAREN (IDENTIFIER | DIGIT+) RIGHTPAREN)
+   : IDENTIFIER EQUAL ({TokenMatches("field")}? IDENTIFIER LEFTPAREN IDENTIFIER RIGHTPAREN 
+   | {TokenMatches("const")}? IDENTIFIER LEFTPAREN (IDENTIFIER | INTEGER_LITERAL+) RIGHTPAREN)
    ;
 
 tableRelationFilters
    : tableRelationFilter (COMMA tableRelationFilter)*?
    ;
 
-where
-   : IDENTIFIER
-   ;
-
 tableRelationWhereClause
-   : where LEFTPAREN tableRelationFilters RIGHTPAREN
+   : {TokenMatches("where")}? IDENTIFIER LEFTPAREN tableRelationFilters RIGHTPAREN
    ;
 
 fieldRelationClause
@@ -229,15 +198,15 @@ tableRelation
 
 /*
  * Flow fields
- * /
+ */
 
 calcFormulaTableFilterValue
-   : const LEFTPAREN fieldValue RIGHTPAREN
-   | filter LEFTPAREN compoundFilterRule RIGHTPAREN
-   | field LEFTPAREN IDENTIFIER RIGHTPAREN
-   | field LEFTPAREN upperLimit LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
-   | field LEFTPAREN filter LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
-   | field LEFTPAREN upperLimit LEFTPAREN filter LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN RIGHTPAREN
+   : {TokenMatches("const")}? IDENTIFIER LEFTPAREN fieldValue RIGHTPAREN
+   | {TokenMatches("filter")}? IDENTIFIER LEFTPAREN compoundFilterRule RIGHTPAREN
+   | {TokenMatches("field")}? IDENTIFIER LEFTPAREN IDENTIFIER RIGHTPAREN
+   | {TokenMatches("field")}? IDENTIFIER LEFTPAREN {TokenMatches("upperlimit")}? IDENTIFIER LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
+   | {TokenMatches("field")}? IDENTIFIER LEFTPAREN {TokenMatches("filter")}? IDENTIFIER LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN
+   | {TokenMatches("field")}? IDENTIFIER LEFTPAREN {TokenMatches("upperlimit")}? IDENTIFIER LEFTPAREN {TokenMatches("filter")}? IDENTIFIER LEFTPAREN IDENTIFIER RIGHTPAREN RIGHTPAREN RIGHTPAREN
    ;
 
 calcFormulaTableFilter
@@ -249,35 +218,35 @@ calcFormulaTableFilters
    ;
 
 calcFormulaWhereClause
-   : where LEFTPAREN calcFormulaTableFilters RIGHTPAREN
+   : {TokenMatches("where")}? IDENTIFIER LEFTPAREN calcFormulaTableFilters RIGHTPAREN
    ;
 
 calcFormulaExist
-   : MINUS exist LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS? {TokenMatches("exist")}? IDENTIFIER LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaCount
-   : count LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
+   : {TokenMatches("count")}? IDENTIFIER LEFTPAREN tableReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaSum
-   : MINUS sum LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS? {TokenMatches("sum")}? IDENTIFIER LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaAverage
-   : MINUS average LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : MINUS? {TokenMatches("average")}? IDENTIFIER LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
    
 calcFormulaMin
-   : min LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : {TokenMatches("min")}? IDENTIFIER LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaMax
-   : max LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : {TokenMatches("max")}? IDENTIFIER LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcFormulaLookup
-   : lookup LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
+   : {TokenMatches("lookup")}? IDENTIFIER LEFTPAREN qualifiedFieldReference calcFormulaWhereClause? RIGHTPAREN
    ;
 
 calcForumla
@@ -291,48 +260,71 @@ calcForumla
    ;
 
 /*
+ * Table Keys
+ */
+
+keyProperties
+   : (simpleProperty SEMICOLON)*?
+   ;
+
+keyFields
+   : IDENTIFIER (SEMICOLON IDENTIFIER)*?
+   ;
+
+tableKey
+   : {TokenMatches("key")}? IDENTIFIER LEFTPAREN keyFields RIGHTPAREN LEFTCBRACE keyProperties RIGHTCBRACE
+   ;
+
+tableKeys
+   : {TokenMatches("keys")}? IDENTIFIER LEFTCBRACE tableKey*? RIGHTCBRACE
+   ;
+
+/*
  * Tables
- * /
+ */
+
+tableProperties
+   : (simpleProperty SEMICOLON)*?
+   ;
 
 tableFieldId : INTEGER_LITERAL;
 
 tableFieldName : IDENTIFIER;
 
 tableFieldType
-   : INTEGER
-   | BIGINTEGER
-   | DECIMAL
-   | BOOLEAN
-   | BINARY
-   | BLOB
-   | CODE sizeDeclaration
-   | TEXT sizeDeclaration
-   | DATE
-   | TIME
-   | DATETIME
-   | DATEFORMULA
-   | DURATION
-   | RECORDID
-   | TABLEFILTER
-   | OPTION
-   | GUID
+   : {TokenMatches(SimpleFieldTypes)}? IDENTIFIER
+   | {TokenMatches("code")}? IDENTIFIER sizeDeclaration
+   | {TokenMatches("text")}? IDENTIFIER sizeDeclaration
    ;
 
-
+tableFieldProperty
+   : {TokenMatches("tablerelation")}? IDENTIFIER EQUAL tableRelation
+   | {TokenMatches("calcformula")}? IDENTIFIER EQUAL calcForumla
+   | simpleProperty
+   ;
 
 tableField
-   : field LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE RIGHTCBRACE;
+   : {TokenMatches("field")}? IDENTIFIER LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE (tableFieldProperty SEMICOLON)*? RIGHTCBRACE
+   ;
+
+tableFields
+   : {TokenMatches("fields")}? IDENTIFIER LEFTCBRACE tableField*? RIGHTCBRACE
+   ;
+
+table
+   : {TokenMatches("table")}? IDENTIFIER INTEGER_LITERAL IDENTIFIER LEFTCBRACE tableProperties tableFields tableKeys RIGHTCBRACE
+   ;
 
 /*
  * Method
- * /
+ */
 
 method
    : methodAttribute*? PROCEDURE IDENTIFIER LEFTPAREN parameterList? RIGHTPAREN returnValue? varBlock? statementBlock;
 
 /*
  * Method attributes
- * /
+ */
 
 attributeArgument
    : IDENTIFIER COLON builtinType;
@@ -342,8 +334,6 @@ attributeArgumentList
 
 methodAttribute
    : LEFTBRACKET IDENTIFIER (LEFTPAREN attributeArgumentList? RIGHTPAREN)? RIGHTBRACKET;
-
-***************************************/
 
 /*
  * Variables
@@ -396,16 +386,21 @@ objectId
    | INTEGER_LITERAL
    ;
 
+dimensions
+   : INTEGER_LITERAL (COMMA INTEGER_LITERAL)*?
+   ;
+
 variableTypeDeclaration
-   : {VariableTypes.Contains(_input.Lt(1).Text.ToLowerInvariant())}? IDENTIFIER #SimpleVariable
-   | {_input.Lt(1).Text.ToLowerInvariant() == "dictionary"}? IDENTIFIER OF LEFTBRACKET dictionaryKey COMMA dictionaryDataType RIGHTBRACKET #DictionaryVariable
-   | {VarAppObjects.Contains(_input.Lt(1).Text.ToLowerInvariant())}? IDENTIFIER objectId #ApplicationObjectVariable
-   | {_input.Lt(1).Text.ToLowerInvariant() == "label"}? IDENTIFIER labelText (COMMA labelArgs)? #LabelVariable
-   | {_input.Lt(1).Text.ToLowerInvariant() == "list"}? IDENTIFIER OF LEFTBRACKET variableTypeDeclaration RIGHTBRACKET #ListVariable
-   | {_input.Lt(1).Text.ToLowerInvariant() == "record"}? IDENTIFIER objectId TEMPORARY? #RecordVariable   
-   | {_input.Lt(1).Text.ToLowerInvariant() == "text"}? IDENTIFIER sizeDeclaration? #TextVariable
-   | {_input.Lt(1).Text.ToLowerInvariant() == "code"}? IDENTIFIER sizeDeclaration #CodeVariable
-   | {_input.Lt(1).Text.ToLowerInvariant() == "textconst"}? IDENTIFIER IDENTIFIER EQUAL STRING_LITERAL #TextConstantVariable
+   : {TokenMatches("dictionary")}? IDENTIFIER OF LEFTBRACKET dictionaryKey COMMA dictionaryDataType RIGHTBRACKET #DictionaryVariable
+   | {TokenMatches("list")}? IDENTIFIER OF LEFTBRACKET variableTypeDeclaration RIGHTBRACKET #ListVariable
+   | ARRAY LEFTBRACKET dimensions RIGHTBRACKET OF variableTypeDeclaration #ArrayVariable
+   | {TokenMatches(VarAppObjects)}? IDENTIFIER objectId #ApplicationObjectVariable
+   | {TokenMatches("label")}? IDENTIFIER labelText (COMMA labelArgs)? #LabelVariable   
+   | {TokenMatches("record")}? IDENTIFIER objectId TEMPORARY? #RecordVariable   
+   | {TokenMatches("text")}? IDENTIFIER sizeDeclaration? #TextVariable
+   | {TokenMatches("code")}? IDENTIFIER sizeDeclaration #CodeVariable
+   | {TokenMatches("textconst")}? IDENTIFIER IDENTIFIER EQUAL STRING_LITERAL #TextConstantVariable
+   | {TokenMatches(VariableTypes)}? IDENTIFIER #SimpleVariable
    ;
 
 parameterName
@@ -619,6 +614,7 @@ expression
    | FLOAT_LITERAL #FloatLiteralExpression
    | INTEGER_LITERAL #IntegerLiteralExpression
    | optionLiteral #OptionLiteralExpression
+   | MINUS expression #NegativeExpression
    ;
 
 methodCallArguments
