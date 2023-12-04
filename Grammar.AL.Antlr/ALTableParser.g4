@@ -144,15 +144,11 @@ calcForumla
  */
 
 keyProperties
-   : (simpleProperty SEMICOLON)*?
-   ;
-
-keyFields
-   : IDENTIFIER (SEMICOLON IDENTIFIER)*?
+   : simpleProperty*?
    ;
 
 tableKey
-   : {TokenMatches("key")}? IDENTIFIER LEFTPAREN keyFields RIGHTPAREN LEFTCBRACE keyProperties RIGHTCBRACE
+   : {TokenMatches("key")}? IDENTIFIER LEFTPAREN fieldNames RIGHTPAREN LEFTCBRACE keyProperties RIGHTCBRACE
    ;
 
 tableKeys
@@ -160,12 +156,29 @@ tableKeys
    ;
 
 /*
- * Tables
+ * Properties
  */
 
-tableProperties
-   : (simpleProperty SEMICOLON)*?
+languageCaption
+   : IDENTIFIER EQUAL STRING_LITERAL
    ;
+
+multiLangaugeCaptionPropertty
+   : {TokenMatches("captionml")}? IDENTIFIER EQUAL languageCaption (COMMA languageCaption)*? SEMICOLON
+   ;
+
+tableProperty
+   : multiLangaugeCaptionPropertty
+   | simpleProperty
+   ;
+
+tableProperties
+   : tableProperty*?
+   ;
+
+/*
+ * Tables
+ */
 
 tableFieldId : INTEGER_LITERAL;
 
@@ -178,19 +191,75 @@ tableFieldType
    ;
 
 tableFieldProperty
-   : {TokenMatches("tablerelation")}? IDENTIFIER EQUAL tableRelation
-   | {TokenMatches("calcformula")}? IDENTIFIER EQUAL calcForumla
+   : {TokenMatches("tablerelation")}? IDENTIFIER EQUAL tableRelation SEMICOLON
+   | {TokenMatches("calcformula")}? IDENTIFIER EQUAL calcForumla SEMICOLON
+   | multiLangaugeCaptionPropertty
    | simpleProperty
    ;
 
+tableFieldEntity
+   : triggerDeclaration
+   | tableFieldProperty
+   ;
+
+tableFieldGroupName
+   : {TokenMatches("dropdown")}? IDENTIFIER
+   | {TokenMatches("brick")}? IDENTIFIER
+   ;
+
+fieldNames
+   : IDENTIFIER (SEMICOLON IDENTIFIER)*?
+   ;
+
+tableFieldGroup
+   : {TokenMatches("fieldgroup")}? IDENTIFIER LEFTPAREN tableFieldGroupName SEMICOLON fieldNames RIGHTPAREN LEFTCBRACE simpleProperty*? RIGHTCBRACE
+   ;
+
+tableFieldGroups
+   : {TokenMatches("fieldgroups")}? IDENTIFIER LEFTCBRACE tableFieldGroup*? RIGHTCBRACE
+   ;
+
 tableField
-   : {TokenMatches("field")}? IDENTIFIER LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE (tableFieldProperty SEMICOLON)*? RIGHTCBRACE
+   : {TokenMatches("field")}? IDENTIFIER LEFTPAREN tableFieldId SEMICOLON tableFieldName SEMICOLON tableFieldType RIGHTPAREN LEFTCBRACE tableFieldEntity*? RIGHTCBRACE
    ;
 
 tableFields
    : {TokenMatches("fields")}? IDENTIFIER LEFTCBRACE tableField*? RIGHTCBRACE
    ;
 
+tableEntity
+   : tableFields
+   | tableKeys
+   | tableFieldGroups
+   ;
+
+tableEntities
+   : tableEntity+
+   ;
+
 table
-   : {TokenMatches("table")}? IDENTIFIER INTEGER_LITERAL IDENTIFIER LEFTCBRACE tableProperties tableFields tableKeys codeDeclarations? RIGHTCBRACE
+   : {TokenMatches("table")}? IDENTIFIER INTEGER_LITERAL IDENTIFIER LEFTCBRACE tableProperties tableEntities? codeDeclarations? RIGHTCBRACE
+   ;
+
+tableExtFieldGroup
+   : {TokenMatches("addlast")}? IDENTIFIER LEFTPAREN tableFieldGroupName SEMICOLON fieldNames RIGHTPAREN LEFTCBRACE simpleProperty*? RIGHTCBRACE
+   ;
+
+tableExtFieldGroups
+   : {TokenMatches("fieldgroups")}? IDENTIFIER LEFTCBRACE tableExtFieldGroup*? RIGHTCBRACE
+   ;
+
+tableExtEntity
+   : tableFields
+   | tableKeys
+   | tableExtFieldGroups
+   ;
+
+tableExtEntities
+   : tableExtEntity+
+   ;
+
+tableExtension
+   : {TokenMatches("tableextension")}? IDENTIFIER INTEGER_LITERAL IDENTIFIER {TokenMatches("extends")}? IDENTIFIER IDENTIFIER 
+      LEFTCBRACE tableProperties tableExtEntities? codeDeclarations? RIGHTCBRACE
    ;

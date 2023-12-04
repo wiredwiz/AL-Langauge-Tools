@@ -58,6 +58,27 @@ options { tokenVocab=ALLexer; }
          "integer", "biginteger", "decimal", "boolean", "binary", "blob", "date", "time", "datetime", "dateformula", "duration", "recordid", "tablefilter", "option", "guid"
       };
 
+      // Positioning keywords for various entities (Groups, Areas, Actions, Controls)
+      List<string> GroupPosKeywords = new List<string>() 
+      {
+         "addfirst", "addlast", "addafter", "addbefore", "movefirst", "movelast", "moveafter", "movebefore", "modify"
+      };
+      
+      List<string> AreaPosKeywords = new List<string>() 
+      {
+         "addfirst", "addlast", "movefirst", "movelast"
+      };
+
+      List<string> ActionPosKeywords = new List<string>() 
+      {
+         "addafter", "addbefore", "moveafter", "movebefore", "modify"
+      };
+
+      List<string> ControlPosKeywords = new List<string>() 
+      {
+         "addafter", "addbefore", "moveafter", "movebefore", "modify"
+      };
+
       // Define helper methods for token text matching
 
       bool TokenMatches(string text)
@@ -84,7 +105,7 @@ locked
    ;
 
 simpleProperty
-   : IDENTIFIER EQUAL (STRING_LITERAL | INTEGER_LITERAL | FLOAT_LITERAL | IDENTIFIER | booleanLiteral)
+   : IDENTIFIER EQUAL (STRING_LITERAL | INTEGER_LITERAL | FLOAT_LITERAL | IDENTIFIER | booleanLiteral) SEMICOLON
    ;
 
 /*
