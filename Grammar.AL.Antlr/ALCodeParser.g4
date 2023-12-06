@@ -55,7 +55,7 @@ options { tokenVocab=ALLexer; }
 
       List<string> SimpleFieldTypes = new List<string>() 
       {
-         "integer", "biginteger", "decimal", "boolean", "binary", "blob", "date", "time", "datetime", "dateformula", "duration", "recordid", "tablefilter", "option", "guid"
+         "integer", "biginteger", "decimal", "enum", "boolean", "binary", "blob", "date", "time", "datetime", "dateformula", "duration", "recordid", "tablefilter", "option", "guid"
       };
 
       // Positioning keywords for various entities (Groups, Areas, Actions, Controls)
@@ -104,8 +104,24 @@ locked
    : IDENTIFIER
    ;
 
-simpleProperty
+keyValueProperty
    : IDENTIFIER EQUAL (STRING_LITERAL | INTEGER_LITERAL | FLOAT_LITERAL | IDENTIFIER | booleanLiteral) SEMICOLON
+   ;
+
+identifierList
+   : IDENTIFIER (COMMA IDENTIFIER)*?
+   ;
+
+keyIdentifierListProperty
+   : IDENTIFIER EQUAL identifierList? SEMICOLON
+   ;
+
+permissionSpeficier
+   : {TokenMatches("tabledata")}? IDENTIFIER objectId EQUAL IDENTIFIER
+   ;
+
+permissionsProperty
+   : {TokenMatches("permissions")}? IDENTIFIER EQUAL permissionSpeficier (COMMA permissionSpeficier)*? SEMICOLON
    ;
 
 /*
@@ -317,7 +333,7 @@ forValue
    ;
 
 forControlStatement
-   : FOR IDENTIFIER ASSGN forValue (TO | DOWNTO) forValue DO;
+   : FOR IDENTIFIER ASSGN expression (TO | DOWNTO) expression DO;
 
 forStatement
    : forControlStatement statement;
@@ -439,6 +455,7 @@ expression
    | expression PERIOD IDENTIFIER (PERIOD IDENTIFIER)*? #MemberAccessExpression   
    | IDENTIFIER RIGHTPAREN #FunctionCallExpression
    | expression IN LEFTBRACKET valueSet? RIGHTBRACKET #InSetExpression
+   | GUIALLOWED #GuiAllowedFunctionExpression
    | booleanLiteral #BooleanLiteralExpression
    | DATE_LITERAL #DateLiteralExpression
    | TIME_LITERAL #TimeLiteralExpression

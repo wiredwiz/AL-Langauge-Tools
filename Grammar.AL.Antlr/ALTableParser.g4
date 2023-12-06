@@ -16,6 +16,7 @@ fieldValue
    | TIME_LITERAL 
    | DATETIME_LITERAL 
    | STRING_LITERAL
+   | booleanLiteral
    ;
 
 comparisonFilter
@@ -47,8 +48,10 @@ qualifiedFieldReference
  */
 
 tableRelationFilter
-   : IDENTIFIER EQUAL ({TokenMatches("field")}? IDENTIFIER LEFTPAREN IDENTIFIER RIGHTPAREN 
-   | {TokenMatches("const")}? IDENTIFIER LEFTPAREN (IDENTIFIER | INTEGER_LITERAL+) RIGHTPAREN)
+   : IDENTIFIER EQUAL 
+        ({TokenMatches("field")}? IDENTIFIER LEFTPAREN IDENTIFIER RIGHTPAREN 
+        | {TokenMatches("const")}? IDENTIFIER LEFTPAREN fieldValue RIGHTPAREN
+        | {TokenMatches("filter")}? IDENTIFIER LEFTPAREN (EQUAL|NOTEQUAL|LESSTHAN|GREATERTHAN|LESSTHANEQUAL|GREATERTHANEQUAL) fieldValue RIGHTPAREN)
    ;
 
 tableRelationFilters
@@ -144,7 +147,7 @@ calcForumla
  */
 
 keyProperties
-   : simpleProperty*?
+   : keyValueProperty*?
    ;
 
 tableKey
@@ -169,7 +172,9 @@ multiLangaugeCaptionPropertty
 
 tableProperty
    : multiLangaugeCaptionPropertty
-   | simpleProperty
+   | permissionsProperty
+   | keyIdentifierListProperty
+   | keyValueProperty   
    ;
 
 tableProperties
@@ -194,7 +199,8 @@ tableFieldProperty
    : {TokenMatches("tablerelation")}? IDENTIFIER EQUAL tableRelation SEMICOLON
    | {TokenMatches("calcformula")}? IDENTIFIER EQUAL calcForumla SEMICOLON
    | multiLangaugeCaptionPropertty
-   | simpleProperty
+   | keyIdentifierListProperty
+   | keyValueProperty   
    ;
 
 tableFieldEntity
@@ -212,7 +218,7 @@ fieldNames
    ;
 
 tableFieldGroup
-   : {TokenMatches("fieldgroup")}? IDENTIFIER LEFTPAREN tableFieldGroupName SEMICOLON fieldNames RIGHTPAREN LEFTCBRACE simpleProperty*? RIGHTCBRACE
+   : {TokenMatches("fieldgroup")}? IDENTIFIER LEFTPAREN tableFieldGroupName SEMICOLON fieldNames RIGHTPAREN LEFTCBRACE keyValueProperty*? RIGHTCBRACE
    ;
 
 tableFieldGroups
@@ -242,7 +248,7 @@ table
    ;
 
 tableExtFieldGroup
-   : {TokenMatches("addlast")}? IDENTIFIER LEFTPAREN tableFieldGroupName SEMICOLON fieldNames RIGHTPAREN LEFTCBRACE simpleProperty*? RIGHTCBRACE
+   : {TokenMatches("addlast")}? IDENTIFIER LEFTPAREN tableFieldGroupName SEMICOLON fieldNames RIGHTPAREN LEFTCBRACE keyValueProperty*? RIGHTCBRACE
    ;
 
 tableExtFieldGroups
